@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="theme/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="theme/web.select.css">
+<title>无标题文档</title>
+<style type="text/css">
+	.list{ width: 1200px; margin:10px auto; font-size: 0; overflow: hidden;}
+	.list tr td{ padding:0 5px; }
+	.hidden{ display:none;}
+	.group{ width: 290px; font-size: 14px; height: 38px; line-height: 38px; text-align: center; padding: 0 5px; float: left; cursor: pointer;}
+	.form-control{ border-radius:0; }
+	.row{margin:0;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="panel panel-primary">
+<div class="panel-heading">纵向</div>
+	<div class="panel-body">
+		<div class="form-horizontal">
+		  <div class="form-group">
+		    <label for="inputEmail3" class="col-sm-2 control-label">分组</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control select" id="inputEmail3" placeholder="请选择分组">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="inputPassword3" class="col-sm-2 control-label">节点</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control select" id="inputPassword3" placeholder="请选择节点">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      <div class="checkbox">
+		        <label>
+		          <input type="checkbox">记录选择
+		        </label>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <div class="col-sm-offset-2 col-sm-10">
+		      <button type="submit" class="btn btn-primary">提交</button>
+		    </div>
+		  </div>
+	</div>
+	</div>
+</div>
+<div class="panel panel-primary">
+<div class="panel-heading">水平</div>
+<div class="panel-body">
+	<div class="row">
+		<div class="col-md-3"><input type="text" disabled="disabled" class="form-control selectMenu"></div>
+		<div class="col-md-3"><input type="text" class="form-control selectMenu"></div>
+		<div class="col-md-3"><input type="text" class="form-control selectMenu"></div>
+		<div class="col-md-3"><input type="text" class="form-control selectMenu"></div>
+	</div>
+</div>
+</div>
+<div id="source" class="hidden source">
+	[{"name":"城市","code":"city"},{"name":"国家","code":"country"},{"name":"区域","code":"country"},{"name":"大区","code":"country"}]
+</div>
+</div>
+<script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="lib/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="ui/web.select.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#inputEmail3").WEB_selectMenu({
+		trigger:"click",//触发事件：目前仅支持click
+		isEdit:false,//是否可输入
+		beforeShow:function(){},//打开菜单前执行的方法
+		afterShow:function(){},//打开菜单后执行的方法
+		beforeHide:function(){},//关闭菜单前执行的方法
+		afterHide:function(){},//关闭菜单后执行的方法
+		onSelect:function(a){},//选择后触发的方法,参数为所有选中的项
+		isMultiple:true,//是否可多选
+		isValueSort:true,//选择结果是否支持排序
+		initFilter:false,///初始化时是否执行筛选
+		formatTemplate:"2",//自定义下拉菜单风格：目前仅支持1,2两种
+		isRemoteFilter:false,//远程接口是否支持filter：该参数目前仅支持false
+		indentX:10,//下拉菜单图标与输入框右侧的距离
+		separator:"|",//定义多选时写入到输入框的分隔符
+		showOptions:false,//多选时是否显示操作项(全选、取消)：该参数目前暂时无效
+		baseNumber:10,//用以确定下拉菜单的最大高度也是每页显示的数据量
+		scrollRate:1,//每次滚过的数量
+		pagerType:"local",//分页类型:remote表示远程服务器加载分页(暂不支持),local表示本地分页,为空表示不分页
+		"param":{//AJAX请求的参数
+			type:"POST",
+			cache:false,
+			timeout:3000,
+			data:{}
+		},
+		"dataPool":"http://localhost/jquery-plugin/select/test/data.json",//指定数据源
+		"formatData":function(data){//处理返回的数据格式
+			var formatArr=[];
+			$.each(data,function(i,d){
+				var param={"name":d.key,"code":d.value}
+				formatArr.push(param);
+			})
+			return formatArr;
+		}
+	})
+
+	$("#inputPassword3").WEB_selectMenu({
+		"dataPool":"http://localhost/jquery-plugin/select/test/number.json",
+		"formatData":function(data){
+			var formatArr=[];
+			$.each(data,function(i,d){
+				var param={"name":d.key,"code":d.value}
+				formatArr.push(param);
+			})
+			return formatArr;
+		},
+		isMultiple:false,
+		formatTemplate:"2",
+		onSelect:function (a) {
+			
+		}
+	});
+
+	$(".selectMenu").WEB_selectMenu({
+		"dataPool":"#source",
+		isMultiple:false
+	});
+})
+</script>
+</body>
+</html>

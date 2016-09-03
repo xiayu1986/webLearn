@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <script type="text/javascript" src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+  </head>
+  <body>
+  <div id="app">
+     <input v-on:keyup.13="eventFn('按下了回车')"/>
+  </div>
+<script type="text/javascript">
+new Vue({
+  el:"#app",
+  methods:{
+    eventFn:function(msg){
+      console.log(msg)
+    }
+  }
+})
+</script>
+  </body>
+</html>

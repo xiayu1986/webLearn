@@ -257,7 +257,6 @@
             })
         },
         _lockScrollbar:function(){//禁止滚动
-            console.log("禁用")
             $("html").css({"overflow":"hidden"});
             if($("#ui-modal").length==1){
                 $("#ui-modal").css({"width":$(window).width()})
@@ -270,15 +269,22 @@
             if(!this.settings.draggable){
                 return;
             }
-            var $this=$(this),T=$(this).offset().top,L=$(this).offset().left,_this=this,dragPanel=$(this).find(".WEB_dialog_title");
-            $(this).css({"marginTop":0,"marginLeft":0,"position":"absolute","top":T,"left":L});
-            var MaxY=$(window).height()-$(this).outerHeight(true),MaxX=$(window).width()-$(this).outerWidth(true);
+            var $this=$(this),_this=this,
+                dragPanel=$(this).find(".WEB_dialog_title"),
+                iY,iX,
+                MaxY=$(window).height()-$(this).outerHeight(),
+                MaxX=$(window).width()-$(this).outerWidth();
            this.dragging = false;
-            var iY,iX;
             dragPanel.mousedown(function(e) {
                 if(!_this.settings.draggable){
                     return;
                 }
+                var L=$this.offset().left,
+                    T=$this.offset().top,
+                    ST=$(window).scrollTop();
+                T=T-ST;
+                console.log("左边距："+L+"上边距："+T);
+                $this.css({"marginTop":0,"marginLeft":0,"left":L,"top":T});
                 if(_this.settings.dragStart && $.isFunction(_this.settings.dragStart)){
                     _this.settings.dragStart(_this.Event)
                 }
@@ -334,6 +340,10 @@
             titleBar.prependTo($(this));
         },
         _createScrollBar:function(){//创建滚动条
+            var mt=$(this).outerHeight(),vieH=$(window).height();
+            if(mt<vieH || mt<=200){
+                return;
+            }
             var clientH=viewHeight=$(window).height(),//获取当前可视区高度
                 borderW=parseInt($(this).css("borderLeftWidth"))||0,//弹出层边框宽度
                 padW=parseInt($(this).css("paddingLeft"))||0,//弹出层内边距宽度

@@ -160,3 +160,14 @@ pageApp.directive("calling",function(){
 		<button type="button" class="btn btn-primary" ng-click="call({name:userName})">确认</button>'
 	}
 })
+
+/*表单验证*/
+pageApp.controller("formCtrl",['$scope',function ($scope) {
+	$scope.user={
+		userName:"小明",
+		password:""
+	}
+	$scope.save=function () {
+		console.log("提交表单")
+	}
+}])

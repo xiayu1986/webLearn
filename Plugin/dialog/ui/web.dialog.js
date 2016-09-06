@@ -353,7 +353,6 @@
             }
             var scrollContainer=$(this).find(".WEB_dialog_scroll_container"),//重新获取包裹元素以便追加滚动条
             titlePanel=$(this).find(".WEB_dialog_title"),//获取弹出层标题
-            closeDom=$(this).find(".WEB_dialog_close"),//获取弹出层关闭按钮
             btnPanel=$(this).find(".WEB_dialog_panel");//获取弹出层按钮组
             viewHeight=viewHeight-borderW*2||0;
             viewHeight=viewHeight-padW*2||0;

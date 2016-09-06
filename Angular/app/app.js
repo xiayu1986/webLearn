@@ -5,21 +5,15 @@
 var pageApp = angular.module('pageApp', []);
 
 pageApp.run(function($templateCache) { //缓存模板
-	$templateCache.put("./template/hello.html", "<div>angular是一个MVVM的MVC框架</div>");
+	$templateCache.put("./template/hello.html", "<div>AEMC:angular是一个MVVM的MVC框架</div>");
 });
 
-/*pageApp.directive('hello', function(){
-	return {
-		restrict:"AECM",
-		templateUrl:"./template/hello.html",
-		replace:true
-	}
-})*/
 
 pageApp.directive("hello", function($templateCache) {
 	return {
-		restrict: "E",
-		template: $templateCache.get("./template/hello.html"),
+		restrict: "AEMC",/*restrict匹配模式 A：属性，默认值。E：元素。M：注释。C：class名。*/
+		template: $templateCache.get("./template/hello.html"),//缓存模板
+		//templateUrl: "./template/hello.html",
 		replace: true
 	}
 })
@@ -104,6 +98,7 @@ pageApp.directive("light",function(){
 		}
 	}
 })
+
 pageApp.directive("greet",function(){
 	return {
 		scope:{},
@@ -113,8 +108,10 @@ pageApp.directive("greet",function(){
 	}
 })
 
+/*双向 @ 绑定策略*/
+
 pageApp.controller('fruitCtrl', ['$scope', function(s){
-	s.favorite="我最喜欢吃的水果是：苹果";
+	s.favorite="单向：我最喜欢吃的水果是：苹果";
 }])
 pageApp.directive("fruit",function(){
 	return {
@@ -129,15 +126,37 @@ pageApp.directive("fruit",function(){
 	}
 })
 
+
+/*等于号 = 绑定策略*/
+
 pageApp.controller("enjoyCtrl",["$scope",function($scope){
 	$scope.enjoySome="美剧"
 }])
+
 pageApp.directive("enjoy",function(){
 	return {
 		restrict:"AE",
 		scope:{
 			favorite:"="
 		},
-		template:'<input type="text" ng-model="favorite" />'
+		template:'<input type="text" class="form-control" ng-model="favorite" />'
+	}
+})
+
+/*连字符 & 绑定策略*/
+
+pageApp.controller('callCtrl', ['$scope', function($scope){
+	$scope.callName=function(name){
+		console.log("你好："+name)
+	}
+}])
+pageApp.directive("calling",function(){
+	return {
+		restrict:"AE",
+		scope:{
+			call:"&"
+		},
+		template:'<input type="text" class="form-control" ng-model="userName">\
+		<button type="button" class="btn btn-primary" ng-click="call({name:userName})">确认</button>'
 	}
 })

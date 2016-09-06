@@ -2,25 +2,19 @@
 <html ng-app="pageApp">
 <head lang="en">
     <meta charset="UTF-8">
-    <title>指令</title>
+    <title>连字符绑定策略</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 </head>
 <body>
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<div class="panel-title">
-		   指令
+		   连字符绑定策略
 		</div>
 	</div>
-	<div class="panel-body">
+	<div class="panel-body" ng-controller="callCtrl">
 		<div class="row">
-			<div class="col-md-12">
-			<hello></hello>
-			<div hello></div>
-			<div class="hello"></div>
-			<!-- directive:hello -->
-			<div></div>
-			</div>
+			<calling call="callName(name)"></calling>
 		</div>
 	</div>
 </div>

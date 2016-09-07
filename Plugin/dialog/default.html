@@ -188,7 +188,7 @@ li{ list-style:none;}
 <script type="text/javascript">
 $(function(){
 	var conf1={
-				width:"80%",//设置弹出层的宽度可支持数字、百分比
+				width:"50%",//设置弹出层的宽度可支持数字、百分比
 				ESClose:false,//是否按ESC键关闭
 				modal:{ showModal:true,modalOpacity:0.5,modalColor:"#000",modalClass:9,modalClose:true},//半透明层配置
 				close:{showClose:true,closeInner:"×",auto:false,delay:2000},//关闭按钮配置
@@ -248,6 +248,7 @@ $(function(){
 
 			 	}
 			 }
+			 
 	$("#btn1").click(function(e){//测试弹出层1
 		 $("#a").WEB_dialog(conf1,e);
 	})

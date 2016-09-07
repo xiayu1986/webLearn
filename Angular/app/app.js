@@ -20,7 +20,7 @@ pageApp.directive("hello", function($templateCache) {
 
 pageApp.directive("trans",function(){//不替换内容
 	return {
-		restrict:"E",
+		restrict:"AE",
 		template:"<div>这是新增的内容<div ng-transclude></div></div>",
 		transclude:true
 	}
@@ -171,3 +171,12 @@ pageApp.controller("formCtrl",['$scope',function ($scope) {
 		console.log("提交表单")
 	}
 }])
+
+/*是否替换原有内容*/
+pageApp.directive("old",function(){
+	return {
+		restrict:"AEMC",
+		replace:true,//设置为false如果是以E模式渲染的还能看到原来的标签，这个标签浏览器是无法识别的,设置为true会将模板中的内容替换标签
+		template:'<div class="row">替换后的内容</div>',
+	}
+})

@@ -180,3 +180,23 @@ pageApp.directive("old",function(){
 		template:'<div class="row">替换后的内容</div>',
 	}
 })
+
+/*加载远程数据*/
+pageApp.controller('loadRemoteData', ['$scope','$http','$timeout',function($scope,$http,$timeout){
+	$scope.display=true;
+	$scope.loadRemote=function(){
+		$scope.display=true;
+		$timeout(function(){
+			$http({
+				method:"POST",
+				url:"data/data.json"
+			}).success(function(data, status, headers, config){
+				$scope.display=false;
+				$scope.books=data;
+			}).error(function(data, status, headers, config){
+
+			})	
+		},300);
+	}
+		
+}])

@@ -200,3 +200,35 @@ pageApp.controller('loadRemoteData', ['$scope','$http','$timeout',function($scop
 	}
 		
 }])
+
+/*数据加载服务*/
+pageApp.factory('getBookList', ['$http', function($http){
+	var requestBooks=function(keywords){
+		return $http({
+			method:"POST",
+			url:"data/data.json"
+		})
+	}
+	return {
+		books:function(keywords){
+			return requestBooks(keywords);
+		}
+	}
+}])
+
+
+pageApp.controller('getBookListCtrl', ['$scope','$timeout','getBookList', function($scope,$timeout,getBookList){
+	var timeout;
+	$scope.$watch('keywords', function(newValue, oldValue, scope) {
+		if(newValue){
+			if(timeout){//清除定时器
+				$timeout.cancel(timeout);
+			}
+			timeout=$timeout(function(){
+				getBookList.books(newValue).success(function(data){
+					$scope.books=data;
+				})
+			},350)
+		}
+	}, true);
+}])

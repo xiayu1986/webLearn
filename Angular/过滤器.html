@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="pageApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>过滤器</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+     <link rel="stylesheet" type="text/css" href="css/theme.css">
+</head>
+<body>
+<div class="container">
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-title">
+		   过滤器
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="form-line col-md-12">
+			<div class="col-md-2">日期：</div>
+			<div class="col-md-10"><input type="text" ng-model="dateFormat1" class="form-control" /></div>
+		</div>
+		<div class="form-line col-md-12">
+			<div class="col-md-2">过滤结果：</div>
+			<div class="col-md-10">{{dateFormat1 | date}}</div>
+		</div>
+		<div class="form-line col-md-12">
+			<div class="col-md-2">日期：</div>
+			<div class="col-md-10"><input type="text" ng-model="dateFormat2" class="form-control" /></div>
+		</div>
+		<div class="form-line col-md-12">
+		<!-- 1473470600000 -->
+			<div class="col-md-2">过滤结果：</div>
+			<div class="col-md-10">{{dateFormat2 | date:"yyyy-MM-dd hh:mm:ss"}}</div>
+		</div>
+		<div class="form-line col-md-12">
+			<div class="col-md-2">现金</div>
+			<div class="col-md-10"><input type="text" ng-model="money" class="form-control" /></div>
+		</div>
+		<div class="form-line col-md-12">
+		<!-- 1473470600000 -->
+			<div class="col-md-2">过滤结果：</div>
+			<div class="col-md-10">{{money | currency:"￥"}}</div>
+		</div>
+	</div>
+</div>
+</div>
+<script type="text/javascript" src="js/angular.js"></script>
+<script type="text/javascript" src="app/app.js"></script>
+</body>
+</html>

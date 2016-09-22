@@ -10,13 +10,13 @@
    <div class="panel panel-primary">
      <div class="panel-heading">行程单</div>
      <div class="panel-body">
-       <form role="form" name="trip" class="form-horizontal">
+       <form role="form" name="trip" id="trip" class="form-horizontal">
          <div class="form-group">
            <div class="col-xs-12 col-sm-4 col-md-3 form-group">
              <label for="" class="col-xs-6 control-label">行程类型：</label>
              <div class="col-xs-6">
-               <select autocomplete="off" class="form-control" v-model="{{tripParam.tripType}}">
-                  <option value="" selected>全部</option>
+               <select autocomplete="off" class="form-control" v-model="tripParam.tripType">
+                  <option value="">全部</option>
                   <option value="OW">单程</option>
                   <option value="RT">往返</option>
                   <option value="OT">其他</option>
@@ -26,8 +26,8 @@
            <div class="col-xs-12 col-sm-4 col-md-3 form-group">
              <label for="" class="col-xs-6 control-label">航空公司：</label>
              <div class="col-xs-6">
-               <select class="form-control" v-model="{{tripParam.airLine}}">
-                <option value="all">全部</option>
+               <select class="form-control" v-model="tripParam.airLine">
+                <option value="">全部</option>
                  <option value="0">东方航空</option>
                  <option value="1">南方航空</option>
                </select>
@@ -36,8 +36,8 @@
            <div class="col-xs-12 col-sm-4 col-md-3 form-group">
              <label for="" class="col-xs-6 control-label">舱位等级：</label>
              <div class="col-xs-6">
-               <select autocomplete="off" class="form-control" v-model="{{tripParam.seatClass}}">
-                  <option value="" selected>全部</option>
+               <select autocomplete="off" class="form-control" v-model="tripParam.seatClass">
+                  <option value="">全部</option>
                   <option value="Y">经济舱</option>
                   <option value="S">头等舱</option>
                   <option value="C">商务舱</option>
@@ -52,7 +52,7 @@
          <button class="btn btn-primary">新增</button><button class="btn btn-primary">修改</button><button class="btn btn-primary">停用</button><button class="btn btn-primary">导入</button><button class="btn btn-primary">导出</button>
        </div>
        <button class="btn btn-primary" type="button" @click="createTrip()">新增</button>
-        <button class="btn btn-success" type="reset" for="trip">重置</button>
+        <button class="btn btn-success" type="reset" form="trip">重置</button>
      </div>
    </div>
    <div class="panel panel-primary">
@@ -95,10 +95,11 @@ window.onload=function(){
     el:"body",
     data:{
       tripList:[],
+      //selected:"",
       tripParam:{
-        tripType:'OW',
-        airLine:'1',
-        seatClass:'S'
+        tripType:'',
+        airLine:'',
+        seatClass:''
       },
       deleteIndex:''
     },

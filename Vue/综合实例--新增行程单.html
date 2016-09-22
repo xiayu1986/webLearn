@@ -104,7 +104,8 @@ $(function(){
       ajaxResult:{
         waitStatus:true,
         failStatus:"",
-        successStatus:""
+        createStatus:"",
+        deleteStatus:""
       },
       deleteIndex:''
     },
@@ -113,11 +114,11 @@ $(function(){
         var _this=this;
         this.ajaxResult.waitStatus=true;
         this.ajaxResult.failStatus=false;
-        this.ajaxResult.successStatus=false;
+        this.ajaxResult.createStatus=false;
         $("#modalWait").modal();
         $.ajax({
           type:"POST",
-          url:"data/result.json",
+          url:"data/createResult.json",
           timeout:30000
         }).done(function(res){
           if(res.status!=1){
@@ -128,7 +129,7 @@ $(function(){
           }
            _this.ajaxResult.failStatus=false;
             _this.ajaxResult.waitStatus=false;
-            _this.ajaxResult.successStatus=true;
+            _this.ajaxResult.createStatus=true;
           setTimeout(function(){
               $("#modalWait").modal('hide');
               _this.tripList.push({
@@ -139,7 +140,7 @@ $(function(){
               _this.tripParam.tripType='';
               _this.tripParam.airLine='';
               _this.tripParam.seatClass='';
-          },300)  
+          },2000)  
         }).fail(function(xhr,error){
 
         });
@@ -178,11 +179,11 @@ $(function(){
       <div class="text-center">
       <span v-show="ajaxResult.waitStatus">请求处理中。。。。。。</span>
       <span v-show="ajaxResult.failStatus">操作失败！</span>
-      <span v-show="ajaxResult.successStatus">操作成功！</span>
+      <span v-show="ajaxResult.createStatus">操作成功！</span>
       </div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-default" data-dismiss="modal">取消</button>
+      <button class="btn btn-default" data-dismiss="modal">关闭</button>
     </div>
     </div>
   </div>

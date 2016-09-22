@@ -1,4 +1,4 @@
-var listApp=angular.module("listApp",['ui.router','ngGrid','bookListModule','bookDetailModule']);
+var listApp=angular.module("listApp",['ui.router','ngGrid','BookListModule','BookDetailModule']);
 listApp.run(function ($rootScope,$state,$stateParams) {
     $rootScope.$state=$state;
     $rootScope.$stateParams=$stateParams;

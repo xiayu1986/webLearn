@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function jquery(){
+        return new jquery.prototype.init()
+    }
+    jquery.prototype.init=function () {
+
+    }
+    jquery.prototype.css=function () {
+        console.log("获取样式")
+    }
+jquery.prototype.init.prototype=jquery.prototype;
+    var a=new jquery();
+    a.css()
+</script>
+</body>
+</html>

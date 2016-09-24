@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" ng-app>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="app">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>无标题文档</title>
@@ -13,35 +13,27 @@ li{ list-style:none;}
 </style>
 <script type="text/javascript" src="js/angular.min.js"></script>
 <script type="text/javascript">
-function ngFuncA($scope){
-    $scope.buyIphone={
-        price:6888,
-        num:2,
-        fre:20
-    }
-    $scope.sum=function(){
-        return $scope.buyIphone.price * $scope.buyIphone.num+$scope.buyIphone.fre;
-    }
-    /*$scope.$watch("buyIphone",function(newVal,oldVal){
-        console.log(newVal);
-        console.log(oldVal);
-    },true)*/
-
-   /* $scope.$watch($scope.sum,function(newVal,oldVal){
-        console.log(newVal);
-        console.log(oldVal);
-    },true)*/
-    $scope.$watch($scope.sum,function(newVal,oldVal){
-        $scope.buyIphone.fre=newVal>=6888?10:20;
-    },true)
-}
+    var app=angular.module("app",[]);
+    app.controller('ngFuncA',['$scope',function ($scope) {
+        $scope.buyIphone={
+            price:6888,
+            num:2,
+            free:20
+        }
+        $scope.sum=function(){
+            return $scope.buyIphone.price * $scope.buyIphone.num+$scope.buyIphone.free;
+        }
+        $scope.$watch($scope.sum,function(newVal,oldVal){
+            $scope.buyIphone.free=newVal>=6888?10:20;
+        },true)
+    }])
 </script>
 <body>
 <div class="model" ng-controller="ngFuncA">
     <p>单价:<input type="text" ng-model="buyIphone.price"></p><br />
     <p>数量:<input type="text" ng-model="buyIphone.num"></p><br />
     <p>费用:{{buyIphone.price * buyIphone.num | currency:"￥"}}</p><br />
-    <p>运费:{{buyIphone.fre | currency:"￥"}}</p><br/>
+    <p>运费:{{buyIphone.free | currency:"￥"}}</p><br/>
     <p>总价:<span>{{sum() | currency:"￥"}}</span></p>
 </div>
 </body>

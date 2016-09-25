@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>列表排序</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <script type="text/javascript" src="js/angular.min.js"></script>
+	<script>
+		var app=angular.module("app",[]);
+		app.controller("renderFlights",['$scope','$filter',function ($scope,$filter) {
+			var list=[
+				{"takeOffTime":"2016-09-25","landTime":"2016-09-26","flyTime":"2h30m","stayTime":"30m","flightNo":"CA587"},
+				{"takeOffTime":"2017-08-25","landTime":"2017-08-26","flyTime":"3h30m","stayTime":"40m","flightNo":"MU689"},
+				{"takeOffTime":"2017-05-25","landTime":"2017-05-26","flyTime":"1h30m","stayTime":"100m","flightNo":"CZ848"},
+				{"takeOffTime":"2017-07-25","landTime":"2017-07-26","flyTime":"1h35m","stayTime":"36m","flightNo":"CA787"},
+				{"takeOffTime":"2017-06-25","landTime":"2017-06-26","flyTime":"2h40m","stayTime":"70m","flightNo":"CM587"},
+				{"takeOffTime":"2016-10-25","landTime":"2017-10-26","flyTime":"3h50m","stayTime":"80m","flightNo":"CB988"},
+				{"takeOffTime":"2016-11-25","landTime":"2017-11-26","flyTime":"1h50m","stayTime":"90m","flightNo":"MU787"},
+				{"takeOffTime":"2016-12-25","landTime":"2017-12-26","flyTime":"4h30m","stayTime":"120m","flightNo":"CA777"},
+				{"takeOffTime":"2017-01-25","landTime":"2017-01-26","flyTime":"5h10m","stayTime":"130m","flightNo":"CA889"}
+			];
+			$scope.flights=list;
+			$scope.sortFlight=function (arg) {
+				arguments.callee['sort'+arg]=!arguments.callee['sort'+arg];
+				$scope.flights=$filter("orderBy")($scope.flights,arg,arguments.callee['sort'+arg]);
+			};
+			$scope.searchKeywords=function () {
+				$scope.flights=$filter("filter")(list,$scope.filterWord)
+			}
+		}])
+	</script>
+</head>
+<body>
+<div class="panel panel-primary" ng-controller="renderFlights">
+	<div class="panel-heading">
+		<div class="panel-title">
+			列表排序
+		</div>
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered table-striped">
+			<caption class="form-inline">
+				<input type="text" class="form-control" ng-model="filterWord"><button ng-click="searchKeywords()" class="btn btn-primary btn-sm">搜索</button>
+			</caption>
+			<thead>
+			<th ng-click="sortFlight('takeOffTime')">起飞时间</th>
+			<th ng-click="sortFlight('landTime')">到达时间</th>
+			<th ng-click="sortFlight('flyTime')">飞行时长</th>
+			<th ng-click="sortFlight('stayTime')">停留时长</th>
+			<th ng-click="sortFlight('flightNo')">航班号</th>
+			</thead>
+			<tbody>
+			<tr ng-repeat="item in flights">
+				<td>{{item.takeOffTime}}</td>
+				<td>{{item.landTime}}</td>
+				<td>{{item.flyTime}}</td>
+				<td>{{item.stayTime}}</td>
+				<td>{{item.flightNo}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>

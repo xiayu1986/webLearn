@@ -40,7 +40,7 @@
 	<div class="panel-body">
 		<table class="table table-bordered table-striped">
 			<caption class="form-inline">
-				<input type="text" class="form-control" ng-model="filterWord"><button ng-click="searchKeywords()" class="btn btn-primary btn-sm">搜索</button>
+				<input type="text" class="form-control" ng-model="filterWord" ng-keyup="searchKeywords()">
 			</caption>
 			<thead>
 			<th ng-click="sortFlight('takeOffTime')">起飞时间</th>

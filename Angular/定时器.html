@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>定时器</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <script type="text/javascript" src="js/angular.min.js"></script>
+	<script>
+		var app=angular.module("app",[]);
+		app.controller("timerCtrl",['$scope','$interval',function ($scope,$interval) {
+			$scope.timeNum=5;
+			$scope.isDisabled=true;
+			var timer=$interval(function () {
+				$scope.timeNum--;
+				if($scope.timeNum==0){
+					$interval.cancel(timer);
+					$scope.timeNum="点击";
+					$scope.isDisabled=false;
+				}
+			},1000)
+		}])
+	</script>
+</head>
+<body>
+<div class="panel panel-primary" ng-controller="timerCtrl">
+	<div class="panel-heading">
+		<div class="panel-title">
+			定时器
+		</div>
+	</div>
+	<div class="panel-body">
+		<button class="btn btn-primary" ng-disabled="isDisabled">{{timeNum}}</button>
+		<input type="text" class="form-control" ng-value="timeNum">
+	</div>
+</div>
+</body>
+</html>

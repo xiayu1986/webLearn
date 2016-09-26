@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div class="container-fluid" id="container">
+	<div class="panel panel-primary" data-toggle="popover" data-placement="bottom" data-trigger="hover" title="测试弹出框" data-content="测试内容">
+		<div class="panel-heading">前端自动化工具</div>
+		<div class="panel-body">
+			<button class="btn btn-primary">显示</button>
+		</div>
+	</div>
+</div>
+<script src="./main/page.js"></script>
+<div class="modal fade" id="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+        <h4 class="modal-title">模态框</h4>
+      </div>
+      <div class="modal-body">
+        弹出框测试
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary">确定</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+</html>

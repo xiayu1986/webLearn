@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>表单验证</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+</head>
+<body>
+<div class="container">
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<div class="panel-title">
+		   验证属性
+		</div>
+	</div>
+	<div class="panel-body">
+		<form class="form" name="collection" ng-controller="formCtrl">
+			<div class="form-group"><input type="text" required ng-minlength="2" ng-maxlength="3" ng-pattern="/\d+/gi" name="name" class="form-control" ng-model="text"></div>
+			<div class="form-group">有效：{{collection.name.$valid}}</div>
+			<div class="form-group">无效：{{collection.name.$invalid}}</div>
+			<div class="form-group">初始值：{{collection.name.$pristine}}</div>
+			<div class="form-group">脏值：{{collection.name.$dirty}}</div>
+			<div class="form-group">错误：{{collection.name.$error}}</div>
+		</form>
+	</div>
+</div>
+</div>
+<script type="text/javascript" src="js/angular.js"></script>
+<script>
+	var app=angular.module('app',[]);
+	app.controller('formCtrl',['$scope',function ($scope) {
+		$scope.text="小明同学"
+	}])
+</script>
+</body>
+</html>

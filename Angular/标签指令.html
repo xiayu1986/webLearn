@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>标签指令</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <script type="text/javascript" src="js/angular.min.js"></script>
+	<script>
+		var app=angular.module("app",[]);
+		app.controller("htmlCtrl",['$scope',function ($scope) {
+			$scope.list=[{"name":"东方航空"},{"name":"南方航空"},{"name":"中国国航"},{"name":"海南航空"},{"name":"深圳航空"}];
+			$scope.airLine={"name":"东方航空"};
+		}])
+	</script>
+</head>
+<body>
+<div class="panel panel-primary" ng-controller="htmlCtrl">
+	<div class="panel-heading">
+		<div class="panel-title">
+			标签指令
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="form-group" ><a href="" class="btn btn-primary">指令标签</a><span>您选择了：{{airLine.name}}</span></div>
+		<div class="form-group" id="airLineContainer">
+			<select  class="form-control" ng-options="airLine.name for airLine in list" ng-model="airLine">
+
+			</select>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

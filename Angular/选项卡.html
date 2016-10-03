@@ -9,23 +9,34 @@
 		var app=angular.module("app",[]);
 		app.directive("tab",function () {
 			return {
-				restrict:"AE",
+				restrict:"E",
 				replace:true,
+                scope:{
+				    tabId:'@',
+                    tabName:'='
+                },
+                controller:['$scope',function ($scope) {
+                    $scope.name="切换"
+                }],
 				templateUrl:'template/tab.html'
 			}
 		})
+        app.controller("tabCtrl",['$scope',function ($scope) {
+          $scope.name="切换"
+        }])
 	</script>
 </head>
-<body>
+<body ng-controller="tabCtrl">
 <div class="container-fluid">
-	<div class="panel panel-primary" ng-controller="renderFlights">
+	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<div class="panel-title">
 				选项卡
 			</div>
 		</div>
 		<div class="panel-body">
-			<tab></tab>
+			<tab tab-id="tab01" tab-name="name"></tab>
+            <tab tab-id="tab02" tab-name="name"></tab>
 		</div>
 	</div>
 </div>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>选项卡</title>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/angular.min.js"></script>
 	<script>
 		var app=angular.module("app",[]);
@@ -13,16 +14,25 @@
 				replace:true,
                 scope:{
 				    tabId:'@',
-                    tabName:'='
+					tabList:'='
                 },
                 controller:['$scope',function ($scope) {
                     $scope.name="切换"
                 }],
-				templateUrl:'template/tab.html'
+				templateUrl:'template/tab.html',
+				link:function (scope,element,attr) {
+						element.on('click','button',function (a) {
+							$(this).addClass("active").siblings().removeClass("active");
+							var ind=$(this).index();
+							$(this).parents(".form-group").find(".block").addClass("hidden");
+							$(this).parents(".form-group").find(".block").eq(ind).removeClass("hidden");
+						})
+				}
 			}
 		})
         app.controller("tabCtrl",['$scope',function ($scope) {
-          $scope.name="切换"
+        	$scope.list01=[{'text':'航班','content':'航班查询'},{'text':'酒店','content':'酒店预订'},{'text':'机票','content':'机票预订'}];
+			$scope.list02=[{'text':'新浪','content':'新浪新闻'},{'text':'百度','content':'百度百科'},{'text':'腾讯','content':'腾讯新闻'}];
         }])
 	</script>
 </head>
@@ -35,8 +45,8 @@
 			</div>
 		</div>
 		<div class="panel-body">
-			<tab tab-id="tab01" tab-name="name"></tab>
-            <tab tab-id="tab02" tab-name="name"></tab>
+			<tab tab-id="tab01" tab-list="list01"></tab>
+            <tab tab-id="tab02" tab-list="list02"></tab>
 		</div>
 	</div>
 </div>

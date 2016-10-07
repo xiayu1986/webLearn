@@ -1,0 +1,5 @@
+.WEB_tableSlider_container{ width: 100%; overflow-x: hidden; position: relative;}
+.WEB_tableSlider{position: relative;left: 0; top: 0;}
+.WEB_tableSlider_button{ width: 50%; height: 100%; position: absolute;top: 0; cursor: pointer; opacity: 0.5;}
+.WEB_tableSlider_prev{ background: #2aabd2;left:0;}
+.WEB_tableSlider_next{ background: #1C0978;right:0;}

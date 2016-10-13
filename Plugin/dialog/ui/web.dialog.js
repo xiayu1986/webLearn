@@ -403,6 +403,7 @@
             })
         },
         _createDialogCell:function(){//为内层元素添加特定class名
+            $(this).addClass("WEB_dialog");
             var dialogChildren=$(this).children();
             !dialogChildren.hasClass("WEB_dialog_body")?dialogChildren.addClass("WEB_dialog_cell"):null;
         }

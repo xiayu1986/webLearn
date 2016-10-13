@@ -200,7 +200,7 @@ $(function(){
 						{btnText:"取消",btnFn:function(){}}
 					]
 				},
-				lockScrollbar:false,//是否锁定滚动条，如果弹出层里面的内容高度超出当前可视区高度，即使设置为true也会出现滚动条
+				lockScrollBar:true,//是否锁定滚动条，如果弹出层里面的内容高度超出当前可视区高度，即使设置为true也会出现滚动条
 				draggable:true,//是否支持拖拽，如果设置为true则必须显示标题，因为拖拽事件是绑定在标题上的
 				beforeOpen:function(e){
 					//弹出层打开前执行的方法
@@ -229,7 +229,7 @@ $(function(){
 			 	modal:{modalColor:"#3C0",showModal:true},
 			 	ESClose:true,
 				draggable:true,
-				lockScrollbar:false,
+				 lockScrollBar:true,
 			 	title:{titleInner:"删除用户信息"},
 		 	    buttons:{showButton:true,panel:[{btnText:"确定",close:false,btnFn:function(){
 					$(".ui-dialog").WEB_dialog("close");
@@ -249,9 +249,9 @@ $(function(){
 			 	}
 			 }
 			 
-	$("#btn1").click(function(e){//测试弹出层1
-		 $("#a").WEB_dialog(conf1,e);
-	})
+	//$("#btn1").click(function(e){//测试弹出层1
+		 $("#a").WEB_dialog(conf1);
+	//})
 
 
 	$("#btn2").click(function(e){//测试弹出层2

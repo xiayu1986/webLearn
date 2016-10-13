@@ -5,12 +5,12 @@
     var defaults={//默认配置
         modal:{ showModal:true,modalOpacity:0.5,modalColor:"#000",modalClass:9,modalClose:true},//半透明层配置
         ESClose:true,//是否按ESC键关闭
-        lockScrollbar:false,//是否锁定浏览器滚动条
+        lockScrollBar:false,//是否锁定浏览器滚动条
         title:{showTitle:true,titleInner:"标题"},//标题配置
         close:{showClose:true,closeInner:"×",auto:false,delay:2000},//关闭按钮配置
         buttons:{showButton:true,panel:[]},//按钮配置
         draggable:false,//是否可拖拽
-        scrollerRate:5,//滚动速度 
+        scrollRate:5,//滚动速度
         beforeOpen:function(){},//弹出层打开前执行的方法
         afterOpen:function(){},//弹出层打开后执行的方法
         afterClose:function(){},//弹出层关闭后执行的方法
@@ -102,8 +102,8 @@
             methods._createDialogCell.call(this);//为内层包裹的元素添加特定class名
             methods._createButton.call(this);//调用创建按钮
             methods._createModal.call(this);//调用创建遮罩层方法
-            if(this.settings.lockScrollbar){
-                methods._lockScrollbar.call(this);//调用锁定浏览器滚动条方法
+            if(this.settings.lockScrollBar){
+                methods._lockScrollBar.call(this);//调用锁定浏览器滚动条方法
             }
             methods._dialogCenter.call(this);//调用位置居中方法
             if(this.settings.close.auto){
@@ -118,7 +118,6 @@
             if(this.settings.afterOpen && $.isFunction(this.settings.afterOpen)){
                 this.settings.afterOpen(this.Event)
             }
-            methods._resetModal.call(_this);//重置遮罩层
             $(document).on("keydown",function(e){
                 if(e.keyCode==27){
                 	if(!_this.settings.ESClose){
@@ -138,7 +137,7 @@
         },
         _createButton:function(){//生成按钮及按钮事件
             var _this=this;
-            $(this).find(".WEB_dialog_title,.WEB_dialog_close,.WEB_dialog_panel").remove();
+            $(this).find(".WEB_dialog_title,.WEB_dialog_close,.WEB_dialog_footer").remove();
             if(this.settings.draggable){//如果配置了拖拽则必须创建标题
                 methods._createDialogTitle.call(this);
             }else{
@@ -163,7 +162,7 @@
 
             }
             if(this.settings.buttons.showButton){//创建右下角按钮
-                var btnPanel=$('<div class="WEB_dialog_panel"></div>');
+                var btnPanel=$('<div class="WEB_dialog_footer"></div>');
                 btnPanel.css({"marginRight":0,"marginLeft":0,"paddingRight":0,"paddingLeft":0});
                 $.each(this.settings.buttons.panel,function(ind,data){
                     if(data.userClass!=undefined && data.userClass!=""){
@@ -198,9 +197,9 @@
                 this.settings.beforeClose(this.Event)
             }
             $(this).css({"display":"none"});
-            $("#ui-modal").remove();
-            if(this.settings.lockScrollbar){
-                methods._unLockScrollbar.call(this);//调用解除锁定浏览器滚动条方法
+            $("#WEB_dialog_back").remove();
+            if(this.settings.lockScrollBar){
+                methods._unLockScrollBar.call(this);//调用解除锁定浏览器滚动条方法
             }
             if(this.settings.afterClose && $.isFunction(this.settings.afterClose)){
                 this.settings.afterClose(this.Event);
@@ -214,16 +213,12 @@
         },
         _createModal:function(){//创建遮罩层
             var _this=this;
-            $("#ui-modal").remove();
+            $("#WEB_dialog_back").remove();
             if(this.settings.modal.showModal){
-                $("#ui-modal").remove();
-                var modal=$('<div id="ui-modal"></div>');
-                modal.css({"width":$(window).width(),
-                    "height":$(document).height(),
+                $("#WEB_dialog_back").remove();
+                var modal=$('<div id="WEB_dialog_back"></div>');
+                modal.css({
                     "background":this.settings.modal.modalColor,
-                    "position":"absolute",
-                    "left":0,
-                    "top":0,
                     "opacity":this.settings.modal.modalOpacity,
                     "zIndex":this.settings.modal.modalClass
                 })
@@ -236,33 +231,15 @@
                     })
                 }
                 modal.appendTo($("body"));
-
             }
         },
-        _resetModal:function(){//重置遮罩层大小
-            var _this=this;
-            $(window).on("resize",function(){
-                methods._createScrollBar.call(_this);//重置弹出层高度
-                if($("#ui-modal").length==1){
-                    $("#ui-modal").css({"width":$(window).width(),"height":$(document).height()})
-                }
-                if(!_this.settings.draggable){
-                    methods._dialogCenter.call(_this);
-                }
-
-            }).on("scroll",function () {
-                if($("#ui-modal").length==1){
-                    $("#ui-modal").css({"width":$(window).width(),"height":$(document).height()})
-                }
-            })
-        },
-        _lockScrollbar:function(){//禁止滚动
+        _lockScrollBar:function(){//禁止滚动
             $("html").css({"overflow":"hidden"});
-            if($("#ui-modal").length==1){
-                $("#ui-modal").css({"width":$(window).width()})
+            if($("#WEB_dialog_back").length==1){
+                $("#WEB_dialog_back").css({"width":$(window).width()})
             }
         },
-        _unLockScrollbar:function(){//恢复滚动
+        _unLockScrollBar:function(){//恢复滚动
             $("html").css({"overflow":"auto","height":"auto"});
         },
         _dragDialog:function () {
@@ -347,13 +324,13 @@
             var clientH=viewHeight=$(window).height(),//获取当前可视区高度
                 borderW=parseInt($(this).css("borderLeftWidth"))||0,//弹出层边框宽度
                 padW=parseInt($(this).css("paddingLeft"))||0,//弹出层内边距宽度
-                dialogCell=$(this).find(".WEB_dialog_cell"),scrollContainer=$(this).find(".WEB_dialog_scroll_container");//查找内层元素
+                dialogCell=$(this).find(".WEB_dialog_cell"),scrollContainer=$(this).find(".WEB_dialog_body");//查找内层元素
             if(scrollContainer.length==0){
-              dialogCell.wrap('<div class="WEB_dialog_scroll_container"></div>');//将内层元素包裹起来  
+              dialogCell.wrap('<div class="WEB_dialog_body"></div>');//将内层元素包裹起来  
             }
-            var scrollContainer=$(this).find(".WEB_dialog_scroll_container"),//重新获取包裹元素以便追加滚动条
+            var scrollContainer=$(this).find(".WEB_dialog_body"),//重新获取包裹元素以便追加滚动条
             titlePanel=$(this).find(".WEB_dialog_title"),//获取弹出层标题
-            btnPanel=$(this).find(".WEB_dialog_panel");//获取弹出层按钮组
+            btnPanel=$(this).find(".WEB_dialog_footer");//获取弹出层按钮组
             viewHeight=viewHeight-borderW*2||0;
             viewHeight=viewHeight-padW*2||0;
             viewHeight=viewHeight-titlePanel.height()||0;
@@ -374,7 +351,7 @@
             methods._createScroller.call(this);
         },
         _createScroller:function(){//为滚动条添加事件
-            var _this=this,scrollContainer=$(this).find(".WEB_dialog_scroll_container"),
+            var _this=this,scrollContainer=$(this).find(".WEB_dialog_body"),
                 scrollCell=scrollContainer.find(".WEB_dialog_cell"),
                 slider=$(this).find(".WEB_dialog_scroll_slider"),
                 maxTop=slider.parent().height()-slider.height(),//滚动条可以滑动的最大高度
@@ -406,9 +383,9 @@
             $(this).off("mousewheel").on("mousewheel",function(e){
                         e.preventDefault();
                         var dir=e.deltaY,//滚动方向
-                            rate=dir*_this.settings.scrollerRate,//每次滚动时的高度
+                            rate=dir*_this.settings.scrollRate,//每次滚动时的高度
                             basePos=$(this).find(".WEB_dialog_cell").position().top,
-                            scrollerRate;
+                            scrollRate;
                         basePos+=rate;
                         if(dir<0){
                             if(Math.abs(basePos)>=maxH){
@@ -421,13 +398,13 @@
                         }
                         scrollCell.css({"top":basePos});
                         //联动滚动条
-                        scrollerRate=basePos/maxH;
-                        slider.css({"top":-maxTop*scrollerRate});
+                        scrollRate=basePos/maxH;
+                        slider.css({"top":-maxTop*scrollRate});
             })
         },
         _createDialogCell:function(){//为内层元素添加特定class名
             var dialogChildren=$(this).children();
-            !dialogChildren.hasClass("WEB_dialog_scroll_container")?dialogChildren.addClass("WEB_dialog_cell"):null;
+            !dialogChildren.hasClass("WEB_dialog_body")?dialogChildren.addClass("WEB_dialog_cell"):null;
         }
     }
     $.fn.WEB_dialog=function(){

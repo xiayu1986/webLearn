@@ -11,6 +11,7 @@
         buttons:{showButton:true,panel:[]},//按钮配置
         draggable:false,//是否可拖拽
         scrollRate:5,//滚动速度
+        dialogScroll:true,//是否允许弹出框内出现滚动条
         beforeOpen:function(){},//弹出层打开前执行的方法
         afterOpen:function(){},//弹出层打开后执行的方法
         afterClose:function(){},//弹出层关闭后执行的方法
@@ -39,7 +40,7 @@
             })
         },
         _dialogCenter:function(){//设置弹出层居中
-            var minW=parseInt($(this).find(".WEB_dialog_title").css("minWidth")),//最小宽度
+            var minW=parseInt($(this).find(".WEB_dialog_title").css("minWidth")),_this=this,//最小宽度
                 view=$(window).width(),//当前视口宽度
                 borderW=parseInt($(this).css("borderLeftWidth"))||0,//弹出层边框宽度
                 padW=parseInt($(this).css("paddingLeft"))||0,//弹出层内边距宽度
@@ -73,16 +74,26 @@
             }else{
                 $(this).css({"marginLeft":-ml/2});
             }
+
             if(mt>$(window).height()){
-                $(this).css({"height":$(window).height()-2*padW-2*borderW,"marginTop":0,"top":0,"overflow":"hidden"});
-                methods._createScrollBar.call(this);
-                /*var DT=$(document).scrollTop();
-                $(this).css({"marginTop":0,"top":DT,"position":"absolute"});
-                var h=$(this).outerHeight();
-                if(mt<$(document).height()){
-                    h=$(document).height();
+                console.log(this.settings.dialogScroll)
+                //$(this).css({"height":$(window).height()-2*padW-2*borderW,"marginTop":0,"top":0,"overflow":"hidden"});
+                $(this).css({"marginTop":0,"top":0,"overflow":"hidden"});
+                if(this.settings.dialogScroll){
+                    methods._createScrollBar.call(this);
+                }else{
+                    var DT=$(document).scrollTop(),scrollContainer=$(this).find(".WEB_dialog_scroll");//复制内层元素
+                    if(scrollContainer.length>0){
+                        var dialogCellClone=$(this).find(".WEB_dialog_body").clone(true);
+                        scrollContainer.remove();
+                    }
+                    $(this).css({"marginTop":0,"top":DT,"position":"absolute"});
+                    var h=$(this).outerHeight();
+                    if(mt<$(document).height()){
+                        h=$(document).height();
+                    }
+                    $("html").css({"overflow-y":"auto"});
                 }
-                $("html").css({"overflow-y":"auto"});*/
             }else{
                 $(this).css({"marginTop":-mt/2,"top":"50%","position":"fixed"});
             }
@@ -93,13 +104,13 @@
         },
         _createDialog:function(){//生成弹出层
              var _this=this;
-            if(this.settings.beforeOpen && $.isFunction(this.settings.beforeOpen)){
+            if(this.settings.beforeOpen && $.isFunction(this.settings.beforeOpen)){//生成弹出层前调用的方法
                 this.settings.beforeOpen(this.Event)
             }
            /* this.e = $.Event('webDialog.beforeOpen');
            	$(this).trigger(this.e);*/
-            $(this).css({"display":"block"});
-            methods._createDialogCell.call(this);//为内层包裹的元素添加特定class名
+            $(this).addClass("WEB_dialog").css({"display":"block"});
+            methods._createDialogBody.call(this);//为内层包裹的元素添加特定class名
             methods._createButton.call(this);//调用创建按钮
             methods._createModal.call(this);//调用创建遮罩层方法
             if(this.settings.lockScrollBar){
@@ -137,61 +148,53 @@
         },
         _createButton:function(){//生成按钮及按钮事件
             var _this=this;
-            $(this).find(".WEB_dialog_title,.WEB_dialog_close,.WEB_dialog_footer").remove();
-            if(this.settings.draggable){//如果配置了拖拽则必须创建标题
+            $(this).find(".WEB_dialog_title,.WEB_dialog_close,.WEB_dialog_footer").remove();//清空标题 按钮
+            if(this.settings.draggable ||this.settings.title.showTitle ){//配置了拖拽或者设置了创建标题项则创建标题
                 methods._createDialogTitle.call(this);
-            }else{
-                if(this.settings.title.showTitle){//创建标题
-                    methods._createDialogTitle.call(this);
-                }
             }
             if(this.settings.close.showClose){//创建关闭按钮
-                var closeInner=this.settings.close.closeInner;
-                var closeBtn=$('<div class="WEB_dialog_close">'+closeInner+'</div>');
+                var closeInner=this.settings.close.closeInner,
+                    closeBtn=$('<div class="WEB_dialog_close">'+closeInner+'</div>');
                 closeBtn.on("click",function(){
-                    if(_this.settings.close.auto){
+                    if(_this.settings.close.auto){//先清除自动关闭定时器
                         clearTimeout(_this.timer);
                     }
-                    methods._closeDialog.call(_this);
-
+                    methods._closeDialog.call(_this);//调用关闭方法
                 })
                 if(closeInner && closeInner!=""){
                     closeBtn.css("backgroundImage","");
                 }
                 closeBtn.prependTo($(this));
-
             }
             if(this.settings.buttons.showButton && !$.isEmptyObject(this.settings.buttons.panel)){//创建右下角按钮
                 var btnPanel=$('<div class="WEB_dialog_footer"></div>');
-                btnPanel.css({"marginRight":0,"marginLeft":0,"paddingRight":0,"paddingLeft":0});
+                btnPanel.css({"margin":0,"padding":0});
                 $.each(this.settings.buttons.panel,function(ind,data){
-                    if(data.userClass!=undefined && data.userClass!=""){
-                        var eachBtn=$('<div class="WEB_dialog_button '+data.userClass+'"><span class="dialog_button">'+data.btnText+'</span></div>');
-                    }else{
-                        var eachBtn=$('<div class="WEB_dialog_button"><span class="dialog_button">'+data.btnText+'</span></div>');
+                    var userClassName='';
+                    if(data.userClass){
+                        userClassName=" "+data.userClass;
                     }
+                    var eachBtn=$('<div class="WEB_dialog_button'+userClassName+'"><span class="dialog_button">'+data.btnText+'</span></div>');
                     eachBtn.on("click",function(e){
-                        if(data.btnFn && $.isFunction(data.btnFn)){
+                        if($.isFunction(data.btnFn)){
                             data.btnFn(e);
                         }
                         clearTimeout(_this.timer);
-                        if(data.close || data.close==undefined){
-                            methods._closeDialog.call(_this);
-                        }else if($.isNumeric(data.close)){
+                       if($.isNumeric(data.close)){
                             _this.timer=setTimeout(function(){
                                 methods._closeDialog.call(_this);
                             },data.close)
+                        }else if(data.close!==false){
+                            methods._closeDialog.call(_this);
                         }
-
                     });
                     eachBtn.appendTo(btnPanel);
-
                 })
                 btnPanel.appendTo(this);
             }
         },
         _closeDialog:function(){//关闭
-            if(this.settings.beforeClose && $.isFunction(this.settings.beforeClose)){
+            if($.isFunction(this.settings.beforeClose)){
                 this.settings.beforeClose(this.Event)
             }
             $(this).css({"display":"none"});
@@ -199,10 +202,9 @@
             if(this.settings.lockScrollBar){
                 methods._unLockScrollBar.call(this);//调用解除锁定浏览器滚动条方法
             }
-            if(this.settings.afterClose && $.isFunction(this.settings.afterClose)){
+            if($.isFunction(this.settings.afterClose)){
                 this.settings.afterClose(this.Event);
             }
-
         },
         close:function(){//关闭弹出层
            return this.each(function(){
@@ -233,9 +235,6 @@
         },
         _lockScrollBar:function(){//禁止滚动
             $("html").css({"overflow":"hidden"});
-            if($("#WEB_dialog_back").length==1){
-                $("#WEB_dialog_back").css({"width":$(window).width()})
-            }
         },
         _unLockScrollBar:function(){//恢复滚动
             $("html").css({"overflow":"auto","height":"auto"});
@@ -311,7 +310,7 @@
         _createDialogTitle:function () {
             var titleInner=this.settings.title.titleInner||"请配置标题",
                 titleBar=$('<div class="WEB_dialog_title"><div class="title">'+titleInner+'</div></div>');
-            titleBar.css({"marginRight":0,"marginLeft":0,"paddingRight":0,"paddingLeft":0});
+            titleBar.css({"margin":0,"padding":0});
             titleBar.prependTo($(this));
         },
         _createScrollBar:function(){//创建滚动条
@@ -322,7 +321,8 @@
             var clientH=viewHeight=$(window).height(),//获取当前可视区高度
                 borderW=parseInt($(this).css("borderLeftWidth"))||0,//弹出层边框宽度
                 padW=parseInt($(this).css("paddingLeft"))||0,//弹出层内边距宽度
-                dialogCell=$(this).find(".WWEB_dialog_body"),scrollContainer=$(this).find(".WEB_dialog_scroll");//查找内层元素
+                dialogCell=$(this).find(".WEB_dialog_body"),
+                scrollContainer=$(this).find(".WEB_dialog_scroll");//查找内层元素
             if(scrollContainer.length==0){
               dialogCell.wrap('<div class="WEB_dialog_scroll"></div>');//将内层元素包裹起来  
             }
@@ -346,11 +346,11 @@
             var scroller=$(this).find(".WEB_dialog_scroll_bar"),
             SH=scroller.height(),ST=(clientH-SH)/2;
             scroller.css({"top":ST});
-            methods._createScroller.call(this);
+            methods.createScroll.call(this);
         },
-        _createScroller:function(){//为滚动条添加事件
+        createScroll:function(){//为滚动条添加事件
             var _this=this,scrollContainer=$(this).find(".WEB_dialog_scroll"),
-                scrollCell=scrollContainer.find(".WWEB_dialog_body"),
+                scrollCell=scrollContainer.find(".WEB_dialog_body"),
                 slider=$(this).find(".WEB_dialog_scroll_slider"),
                 maxTop=slider.parent().height()-slider.height(),//滚动条可以滑动的最大高度
                 maxH=scrollCell.outerHeight()-scrollContainer.height(),//滚动区可以滚动的最大高度
@@ -382,7 +382,7 @@
                         e.preventDefault();
                         var dir=e.deltaY,//滚动方向
                             rate=dir*_this.settings.scrollRate,//每次滚动时的高度
-                            basePos=$(this).find(".WWEB_dialog_body").position().top,
+                            basePos=$(this).find(".WEB_dialog_body").position().top,
                             scrollRate;
                         basePos+=rate;
                         if(dir<0){
@@ -400,10 +400,9 @@
                         slider.css({"top":-maxTop*scrollRate});
             })
         },
-        _createDialogCell:function(){//为内层元素添加特定class名
-            $(this).addClass("WEB_dialog");
+        _createDialogBody:function(){//为内层元素添加特定class名
             var dialogChildren=$(this).children();
-            !dialogChildren.hasClass("WEB_dialog_scroll")?dialogChildren.addClass("WWEB_dialog_body"):null;
+            !dialogChildren.hasClass("WEB_dialog_scroll")?dialogChildren.addClass("WEB_dialog_body"):null;
         }
     }
     $.fn.WEB_dialog=function(){

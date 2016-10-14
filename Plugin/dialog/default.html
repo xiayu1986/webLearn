@@ -193,10 +193,11 @@ $(function(){
 				modal:{ showModal:true,modalOpacity:0.5,modalColor:"#000",modalClass:9,modalClose:true},//半透明层配置
 				close:{showClose:true,closeInner:"×",auto:false,delay:2000},//关闭按钮配置
 				title:{showTitle:true,titleInner:"修改用户信息"},
+				dialogScroll:true,
 				buttons:{//生成按钮配置
 					showButton:true,//是否生成操作按钮
 					panel:[//生成的按钮文字及点击相应按钮执行的方法
-						{btnText:"确定",btnFn:function(){}},
+						{btnText:"确定",btnFn:null},
 						{btnText:"取消",btnFn:function(){}}
 					]
 				},
@@ -207,12 +208,6 @@ $(function(){
 				},
 				afterOpen:function(){
 				//弹出层打开后执行的方法
-				},
-				beforeClose:function(){
-				//弹出层关闭前执行的方法
-				},
-				afterClose:function(){
-					//弹出层关闭后执行的方法
 				},
 				dragIng:function(){
 					//拖拽过程中过执行的方法
@@ -229,8 +224,9 @@ $(function(){
 			 	modal:{modalColor:"#3C0",showModal:true},
 			 	ESClose:true,
 				draggable:true,
-				 lockScrollBar:true,
+				lockScrollBar:true,
 			 	title:{titleInner:"删除用户信息"},
+				dialogScroll:false,
 		 	    buttons:{showButton:true,panel:[{btnText:"确定",close:false,btnFn:function(){
 					$(".ui-dialog").WEB_dialog("close");
 		 	    }},{btnText:"重置",close:6000,userClass:"reset",btnFn:function(){
@@ -249,13 +245,13 @@ $(function(){
 			 	}
 			 }
 			 
-	//$("#btn1").click(function(e){//测试弹出层1
+	$("#btn1").click(function(e){//测试弹出层1
 		 $("#a").WEB_dialog(conf1);
-	//})
+	})
 
 
 	$("#btn2").click(function(e){//测试弹出层2
-		$("#b").WEB_dialog();
+		$("#a").WEB_dialog(conf2);
 	});
 
 

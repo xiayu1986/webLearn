@@ -1,4 +1,4 @@
-.WEB_dialog{ display: none; position: fixed; z-index: 9999999999;min-height: 100px; left: 50%; top: 50%; background: #fff; border: #428bca 1px solid; border-radius: 3px; box-shadow: 1px 1px 5px #000;zoom:1;}
+.WEB_dialog{ display: none;position: fixed; z-index: 9999999999;min-height: 100px; left: 50%; top: 50%; background: #fff; border: #428bca 1px solid; border-radius: 4px; box-shadow: 1px 1px 5px #000;zoom:1;}
 .WEB_dialog_title{ height: 30px; line-height: 30px;min-width: 200px; background: #428bca; color: #ffffff;}
 .WEB_dialog_title .title{padding: 0 10px;}
 .WEB_dialog_close{ position: absolute; right: 7px; top: 5px; padding: 0px 5px;line-height: 20px;cursor: pointer; z-index: 3; font-size: 20px; font-weight: bold;color: #ffffff;}
@@ -10,3 +10,4 @@
 .WEB_dialog_scroll_bar{ z-index: 2; width: 6px; border-style-width:0; position: absolute; background:#999999; border-radius: 6px; height: 90%; top: 0; right: 0px; overflow: hidden;}
 .WEB_dialog_scroll_slider{ width: 6px; min-height: 20px; font-size:0; line-height: 0; height: 20%; position: absolute; background: #ccc; left:0px; overflow: hidden;border-radius:6px; cursor: move;}
 #WEB_dialog_back{ width: 100%;height:100%;position:fixed;left:0;top:0;}
+.WEB_dialog_body{ min-height: 50px;}

@@ -260,12 +260,11 @@ $(function(){
 					]
 				},
 				lockScrollBar:true,//是否锁定滚动条，如果弹出层里面的内容高度超出当前可视区高度，即使设置为true也会出现滚动条
-				draggable:false,//是否支持拖拽，如果设置为true则必须显示标题，因为拖拽事件是绑定在标题上的
+				draggable:true,//是否支持拖拽，如果设置为true则必须显示标题，因为拖拽事件是绑定在标题上的
 				beforeOpen:function(e){
 					//弹出层打开前执行的方法
 				},
 				afterOpen:function(){
-				//弹出层打开后执行的方法
 				},
 				dragIng:function(){
 					//拖拽过程中过执行的方法

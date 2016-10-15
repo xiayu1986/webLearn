@@ -105,7 +105,7 @@
             }
             this.e = $.Event('webDialog.beforeOpen');
            	$(this).trigger(this.e);
-            $(this).addClass("WEB_dialog").css({"display":"block","width":"auto"});
+            $(this).addClass("WEB_dialog").css({"display":"block","width":"auto","padding":0});
             methods._createDialogBody.call(this);//为内层包裹的元素添加特定class名
             methods._createButton.call(this);//调用创建按钮
             methods._createModal.call(this);//调用创建遮罩层方法
@@ -242,11 +242,20 @@
             var $this=$(this),_this=this,
                 dragPanel=$(this).find(".WEB_dialog_title"),
                 iY,iX,
-                MaxY=$(window).height()-$(this).outerHeight(),
-                MaxX=$(window).width()-$(this).outerWidth();
+                dialogH=$this.outerHeight(),
+                dialogW=$this.outerWidth(),
+                clientH=$(window).height(),
+                clientW=$(window).width(),
+                MaxY=clientH-dialogH;
+                MaxX=clientW-dialogW;
            this.dragging = false;
             dragPanel.mousedown(function(e) {
-                var dialogH=$(this).outerHeight(),clientH=$(this).height();
+                    dialogH=$this.outerHeight();
+                    dialogW=$this.outerWidth();
+                    clientH=$(window).height();
+                    clientW=$(window).width();
+                    MaxY=clientH-dialogH;
+                    MaxX=clientW-dialogW;
                 if(!_this.settings.draggable){
                     return;
                 }
@@ -255,9 +264,11 @@
                     ST=$(window).scrollTop();
                 if(dialogH<=clientH){
                     T=T-ST;
+                }else{
+                    T=ST;
                 }
                 $this.css({"marginTop":0,"marginLeft":0,"left":L,"top":T});
-                if(_this.settings.dragStart && $.isFunction(_this.settings.dragStart)){
+                if( $.isFunction(_this.settings.dragStart)){
                     _this.settings.dragStart(_this.Event)
                 }
                 _this.dragging = true;
@@ -271,15 +282,15 @@
                     return;
                 }
                 if (_this.dragging) {
-                    if(_this.settings.dragIng && $.isFunction(_this.settings.dragIng)){
+                    if($.isFunction(_this.settings.dragIng)){
                         _this.settings.dragIng(_this.Event)
                     }
-                    var oY = e.clientY - iY;
-                    var oX = e.clientX - iX;
-                    if(oY<0){
+                    var oY = e.clientY - iY,
+                        oX = e.clientX - iX;
+                    if(oY<=0){
                         oY=0
                     }else if(oY>=MaxY){
-                        oY=MaxY
+                        oY=MaxY;
                     }
                     if(oX<0){
                         oX=0
@@ -314,10 +325,10 @@
         _createScrollBar:function(){//创建滚动条
             var dialogH=$(this).outerHeight(),//弹出框的实际高度
                 viewH=$(window).height();//可视区的实际高度
-            $(this).css({"height":viewH})
+            var dialogBorder=parseInt($(this).css("borderTopWidth"))+parseInt($(this).css("borderBottomWidth"));
+            $(this).css({"height":viewH-dialogBorder})
             var clientH=viewH,//获取当前可视区高度
-                borderW=parseInt($(this).css("borderLeftWidth"))||0,//弹出层边框宽度
-                padW=parseInt($(this).css("paddingLeft"))||0,//弹出层内边距宽度
+                borderW=parseInt($(this).css("borderLeftWidth")),//弹出层边框宽度
                 dialogCell=$(this).find(".WEB_dialog_body"),
                 scrollContainer=$(this).find(".WEB_dialog_scroll");//查找内层元素
             if(scrollContainer.length==0){
@@ -326,10 +337,9 @@
             var scrollContainer=$(this).find(".WEB_dialog_scroll"),//重新获取包裹元素以便追加滚动条
             titlePanel=$(this).find(".WEB_dialog_title"),//获取弹出层标题
             btnPanel=$(this).find(".WEB_dialog_footer");//获取弹出层按钮组
-            viewH=viewH-borderW*2||0;
-            viewH=viewH-padW*2||0;
-            viewH=viewH-titlePanel.height()||0;
-            viewH=viewH-btnPanel.height()||0;//设置弹出层内可滚动区高度
+            viewH=viewH-borderW*2;
+            viewH=viewH-titlePanel.height();
+            viewH=viewH-btnPanel.height();//设置弹出层内可滚动区高度
             clientH=viewH;
             scrollContainer.css({"height":clientH});
             dialogCell.css({"position":"relative","left":0,"top":0});
@@ -339,7 +349,9 @@
                 clientH=minScrollHeight;
             }
             var dialogScrollBar=$('<div class="WEB_dialog_scroll_bar"><div class="WEB_dialog_scroll_slider"></div></div>');//创建滚动条
-            scrollContainer.append(dialogScrollBar);
+            if($(this).find(".WEB_dialog_scroll_bar").length==0){
+                scrollContainer.append(dialogScrollBar);
+            }
             var scrollBar=$(this).find(".WEB_dialog_scroll_bar"),
             SH=scrollBar.height(),ST=(clientH-SH)/2;
             scrollBar.css({"top":ST});
@@ -413,6 +425,7 @@
             var _this=this;
             $(window).off(".resetDialog").on("resize.resetDialog",function () {
                 methods._createScrollBar.call(_this);
+                methods._dragDialog.call(_this);
             })
         }
     }

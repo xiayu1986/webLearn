@@ -125,6 +125,8 @@
             if(this.settings.afterOpen && $.isFunction(this.settings.afterOpen)){
                 this.settings.afterOpen(this.Event)
             }
+            this.e = $.Event('webDialog.afterOpen');
+            $(this).trigger(this.e);
             $(document).on("keydown",function(e){
                 if(e.keyCode==27){
                 	if(!_this.settings.ESClose){
@@ -193,6 +195,8 @@
             if($.isFunction(this.settings.beforeClose)){
                 this.settings.beforeClose(this.Event)
             }
+            this.e=$.Event("webDialog.beforeClose");
+            $(this).trigger(this.e)
             $(this).css({"display":"none"});
             $("#WEB_dialog_back").remove();
             if(this.settings.lockScrollBar){
@@ -201,6 +205,8 @@
             if($.isFunction(this.settings.afterClose)){
                 this.settings.afterClose(this.Event);
             }
+            this.e=$.Event("webDialog.afterClose");
+            $(this).trigger(this.e)
         },
         close:function(){//关闭弹出层
            return this.each(function(){

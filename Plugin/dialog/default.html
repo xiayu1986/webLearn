@@ -301,7 +301,14 @@ $(function(){
 
 			 	}
 			 }
-			 
+    $("#a").off("webDialog.beforeOpen").on("webDialog.beforeOpen",function (e) {
+        console.log(e);
+        console.log("打开前")
+    })
+    $("#a").off("webDialog.afterOpen").on("webDialog.afterOpen",function (e) {
+        console.log(e);
+        console.log("打开后")
+    })
 	$("#btn1").click(function(e){//测试弹出层1
 		 $("#a").WEB_dialog(conf1);
 	})

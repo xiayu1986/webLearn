@@ -398,11 +398,14 @@
             })
         },
         _createDialogBody:function(){//为内层元素添加特定class名
-            var dialogChildren=$(this).children();
-            !dialogChildren.hasClass("WEB_dialog_scroll")?dialogChildren.addClass("WEB_dialog_body"):null;
+            var dialogChildren=$(this).children(),dialogBody=$(this).find(".WEB_dialog_body");
+            if(dialogBody.length==0){
+                dialogChildren.wrapAll('<div class="WEB_dialog_body"></div>')
+            }
             var dialogBodyClone=$(this).find(".WEB_dialog_body").css({"left":0,"top":0}).clone(true),
                 dialogScroll= $(this).find(".WEB_dialog_scroll");
-            if(dialogScroll.length>0){dialogScroll.remove();
+            if(dialogScroll.length>0){
+                dialogScroll.remove();
                 dialogBodyClone.appendTo($(this))
             }
         },

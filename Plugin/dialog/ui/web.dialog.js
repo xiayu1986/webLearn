@@ -83,7 +83,6 @@
                     methods._createScrollBar.call(this);
                     methods._resizeDialog.call(this);
                 }else{//固定弹出层的位置
-                    console.log("我是固定的")
                     $(this).off("mousewheel");
                     $(window).off(".resetDialog");
                     var DT=$(window).scrollTop();//当前页面卷过去的高度
@@ -315,9 +314,7 @@
         _createScrollBar:function(){//创建滚动条
             var dialogH=$(this).outerHeight(),//弹出框的实际高度
                 viewH=$(window).height();//可视区的实际高度
-            if(dialogH<viewH || dialogH<=200){
-                return;
-            }
+            $(this).css({"height":viewH})
             var clientH=viewH,//获取当前可视区高度
                 borderW=parseInt($(this).css("borderLeftWidth"))||0,//弹出层边框宽度
                 padW=parseInt($(this).css("paddingLeft"))||0,//弹出层内边距宽度

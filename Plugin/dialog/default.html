@@ -18,6 +18,7 @@ li{ list-style:none;}
 <div style="height: 1000px;"></div>
 <div class="button" id="btn1">修改</div>
 <div class="button" id="btn2">删除</div>
+<div class="button" id="btn3">禁用</div>
 <div>又一项中国企业在英国的投资被英媒盯上了。
 
 　　“中国国企的深水钻井平台成了战略武器”。8月23日，英国第一主流大报《泰晤士报》在头版刊登报道称，“中国已成为北海最大的油田运营商，中国海洋石油总公司（CNOOC，中海油）经营着北海两座最大的油田，旗下的尼克森（Nexen）公司在该地区的产量占其总产量的10%以上。”
@@ -220,15 +221,15 @@ $(function(){
 				}
 			 }
 			 var conf2={
-				// width:"60%",
+				width:"20%",
 			 	modal:{modalColor:"#3C0",showModal:true},
 			 	ESClose:true,
 				draggable:true,
-				lockScrollBar:true,
+				lockScrollBar:false,
 			 	title:{titleInner:"删除用户信息"},
 				dialogScroll:false,
 		 	    buttons:{showButton:true,panel:[{btnText:"确定",close:false,btnFn:function(){
-					$(".ui-dialog").WEB_dialog("close");
+
 		 	    }},{btnText:"重置",close:6000,userClass:"reset",btnFn:function(){
 		 	    	
 		 	    }},{btnText:"取消",btnFn:function(){
@@ -253,6 +254,10 @@ $(function(){
 	$("#btn2").click(function(e){//测试弹出层2
 		$("#a").WEB_dialog(conf2);
 	});
+
+    $("#btn3").click(function(e){//测试弹出层2
+        $("#b").WEB_dialog(conf2);
+    });
 
 
 })

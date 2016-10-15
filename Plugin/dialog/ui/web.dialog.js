@@ -7,7 +7,7 @@
         ESClose:true,//是否按ESC键关闭
         lockScrollBar:false,//是否锁定浏览器滚动条
         title:{showTitle:true,titleInner:"标题"},//标题配置
-        close:{showClose:true,closeInner:"×",auto:false,delay:2000},//关闭按钮配置
+        close:{showClose:true,closeInner:"&times;",auto:false,delay:2000},//关闭按钮配置
         buttons:{showButton:true,panel:[]},//按钮配置
         draggable:false,//是否可拖拽
         scrollRate:5,//滚动速度
@@ -40,61 +40,58 @@
             })
         },
         _dialogCenter:function(){//设置弹出层居中
-            var minW=parseInt($(this).find(".WEB_dialog_title").css("minWidth")),_this=this,//最小宽度
-                view=$(window).width(),//当前视口宽度
+            var minW=parseInt($(this).find(".WEB_dialog_title").css("minWidth")),//最小宽度
+                _this=this,
+                clientW=$(window).width(),//当前视口宽度
+                clientH=$(window).height(),//当前视口高度
                 borderW=parseInt($(this).css("borderLeftWidth"))||0,//弹出层边框宽度
                 padW=parseInt($(this).css("paddingLeft"))||0,//弹出层内边距宽度
                 curWidth=minW;//存储当前宽度
-            $(this).css({"marginLeft":0,"marginTop":0,"width":minW,"height":"auto","left":"50%","top":"50%","position":"fixed"});//重置弹出层样式
-            if(this.settings.width!=undefined && $.isNumeric(Number(this.settings.width)) && Number(this.settings.width)>0){//用于支持数字
+            $(this).css({"margin":0,"width":minW,"height":"auto","left":"50%","top":"50%","position":"fixed"});//重置弹出层样式
+            if(this.settings.width && $.isNumeric(Number(this.settings.width))){//用于支持数字
                 curWidth=this.settings.width;
             }else if("string"==typeof this.settings.width){//用于支持百分比
                 var rule=/^(1[0-9]?|[2-9]\d?)%$/gi;
                 if(rule.test(this.settings.width)){
                     var wRate=this.settings.width.replace(rule,"$1");
                     wRate=wRate/100;
-                    curWidth=view*wRate;
+                    curWidth=clientW*wRate;
                     if(!$.isNumeric(curWidth)){
                         curWidth=minW;
                     }
                 }
             }
-            if(curWidth>=view){//确定当前弹出层的宽度
-                curWidth=view-2*borderW-2*padW;
+            if(curWidth>=clientW){//确定当前弹出层的宽度
+                curWidth=clientW-2*borderW-2*padW;
             }else if(curWidth<minW){
                 curWidth=minW
             }
             $(this).css({"width":curWidth});//设置当前弹出层的宽度
-            if(this.settings.height!=undefined && this.settings.height>0){
+            if(this.settings.height){
                 $(this).css({"height":this.settings.height});
             }
-            var ml=$(this).outerWidth(),mt=$(this).outerHeight();
-            if(ml>=view){
+            var ml=$(this).outerWidth(),
+                mt=$(this).outerHeight();
+            if(ml>=clientW){
                 $(this).css({"marginLeft":0,"left":0});
             }else{
                 $(this).css({"marginLeft":-ml/2});
             }
-
-            if(mt>$(window).height()){
-                console.log(this.settings.dialogScroll)
-                //$(this).css({"height":$(window).height()-2*padW-2*borderW,"marginTop":0,"top":0,"overflow":"hidden"});
-                $(this).css({"marginTop":0,"top":0,"overflow":"hidden"});
-                if(this.settings.dialogScroll){
+            if(mt>clientH){//当前弹出层的实际高度大于当前可视区的高度
+                $(this).css({"marginTop":0,"height":"auto","top":0,"overflow":"hidden"});
+                if(_this.settings.dialogScroll){//在弹出层内创建滚动条
                     methods._createScrollBar.call(this);
-                }else{
-                    var DT=$(document).scrollTop(),scrollContainer=$(this).find(".WEB_dialog_scroll");//复制内层元素
-                    if(scrollContainer.length>0){
-                        var dialogCellClone=$(this).find(".WEB_dialog_body").clone(true);
-                        scrollContainer.remove();
-                    }
-                    $(this).css({"marginTop":0,"top":DT,"position":"absolute"});
-                    var h=$(this).outerHeight();
-                    if(mt<$(document).height()){
-                        h=$(document).height();
-                    }
+                    methods._resizeDialog.call(this);
+                }else{//固定弹出层的位置
+                    console.log("我是固定的")
+                    $(this).off("mousewheel");
+                    $(window).off(".resetDialog");
+                    var DT=$(window).scrollTop();//当前页面卷过去的高度
+                    $(this).css({"top":DT,"position":"absolute"});
                     $("html").css({"overflow-y":"auto"});
                 }
             }else{
+                $(this).off("mousewheel");
                 $(this).css({"marginTop":-mt/2,"top":"50%","position":"fixed"});
             }
             $("html").css({"overflow-x":"hidden"});//用于消除横向滚动条
@@ -107,9 +104,9 @@
             if(this.settings.beforeOpen && $.isFunction(this.settings.beforeOpen)){//生成弹出层前调用的方法
                 this.settings.beforeOpen(this.Event)
             }
-           /* this.e = $.Event('webDialog.beforeOpen');
-           	$(this).trigger(this.e);*/
-            $(this).addClass("WEB_dialog").css({"display":"block"});
+            this.e = $.Event('webDialog.beforeOpen');
+           	$(this).trigger(this.e);
+            $(this).addClass("WEB_dialog").css({"display":"block","width":"auto"});
             methods._createDialogBody.call(this);//为内层包裹的元素添加特定class名
             methods._createButton.call(this);//调用创建按钮
             methods._createModal.call(this);//调用创建遮罩层方法
@@ -250,14 +247,16 @@
                 MaxX=$(window).width()-$(this).outerWidth();
            this.dragging = false;
             dragPanel.mousedown(function(e) {
+                var dialogH=$(this).outerHeight(),clientH=$(this).height();
                 if(!_this.settings.draggable){
                     return;
                 }
                 var L=$this.offset().left,
                     T=$this.offset().top,
                     ST=$(window).scrollTop();
-                T=T-ST;
-                console.log("左边距："+L+"上边距："+T);
+                if(dialogH<=clientH){
+                    T=T-ST;
+                }
                 $this.css({"marginTop":0,"marginLeft":0,"left":L,"top":T});
                 if(_this.settings.dragStart && $.isFunction(_this.settings.dragStart)){
                     _this.settings.dragStart(_this.Event)
@@ -314,26 +313,27 @@
             titleBar.prependTo($(this));
         },
         _createScrollBar:function(){//创建滚动条
-            var mt=$(this).outerHeight(),vieH=$(window).height();
-            if(mt<vieH || mt<=200){
+            var dialogH=$(this).outerHeight(),//弹出框的实际高度
+                viewH=$(window).height();//可视区的实际高度
+            if(dialogH<viewH || dialogH<=200){
                 return;
             }
-            var clientH=viewHeight=$(window).height(),//获取当前可视区高度
+            var clientH=viewH,//获取当前可视区高度
                 borderW=parseInt($(this).css("borderLeftWidth"))||0,//弹出层边框宽度
                 padW=parseInt($(this).css("paddingLeft"))||0,//弹出层内边距宽度
                 dialogCell=$(this).find(".WEB_dialog_body"),
                 scrollContainer=$(this).find(".WEB_dialog_scroll");//查找内层元素
             if(scrollContainer.length==0){
-              dialogCell.wrap('<div class="WEB_dialog_scroll"></div>');//将内层元素包裹起来  
+              dialogCell.wrap('<div class="WEB_dialog_scroll"></div>');//将内层元素包裹起来
             }
             var scrollContainer=$(this).find(".WEB_dialog_scroll"),//重新获取包裹元素以便追加滚动条
             titlePanel=$(this).find(".WEB_dialog_title"),//获取弹出层标题
             btnPanel=$(this).find(".WEB_dialog_footer");//获取弹出层按钮组
-            viewHeight=viewHeight-borderW*2||0;
-            viewHeight=viewHeight-padW*2||0;
-            viewHeight=viewHeight-titlePanel.height()||0;
-            viewHeight=viewHeight-btnPanel.height()||0;//设置弹出层内可滚动区高度
-            clientH=viewHeight;
+            viewH=viewH-borderW*2||0;
+            viewH=viewH-padW*2||0;
+            viewH=viewH-titlePanel.height()||0;
+            viewH=viewH-btnPanel.height()||0;//设置弹出层内可滚动区高度
+            clientH=viewH;
             scrollContainer.css({"height":clientH});
             dialogCell.css({"position":"relative","left":0,"top":0});
             $(this).find(".WEB_dialog_scroll_bar").remove();
@@ -343,9 +343,9 @@
             }
             var dialogScrollBar=$('<div class="WEB_dialog_scroll_bar"><div class="WEB_dialog_scroll_slider"></div></div>');//创建滚动条
             scrollContainer.append(dialogScrollBar);
-            var scroller=$(this).find(".WEB_dialog_scroll_bar"),
-            SH=scroller.height(),ST=(clientH-SH)/2;
-            scroller.css({"top":ST});
+            var scrollBar=$(this).find(".WEB_dialog_scroll_bar"),
+            SH=scrollBar.height(),ST=(clientH-SH)/2;
+            scrollBar.css({"top":ST});
             methods.createScroll.call(this);
         },
         createScroll:function(){//为滚动条添加事件
@@ -403,6 +403,17 @@
         _createDialogBody:function(){//为内层元素添加特定class名
             var dialogChildren=$(this).children();
             !dialogChildren.hasClass("WEB_dialog_scroll")?dialogChildren.addClass("WEB_dialog_body"):null;
+            var dialogBodyClone=$(this).find(".WEB_dialog_body").css({"left":0,"top":0}).clone(true),
+                dialogScroll= $(this).find(".WEB_dialog_scroll");
+            if(dialogScroll.length>0){dialogScroll.remove();
+                dialogBodyClone.appendTo($(this))
+            }
+        },
+        _resizeDialog:function () {//重置弹出框大小及位置
+            var _this=this;
+            $(window).off(".resetDialog").on("resize.resetDialog",function () {
+                methods._createScrollBar.call(_this);
+            })
         }
     }
     $.fn.WEB_dialog=function(){

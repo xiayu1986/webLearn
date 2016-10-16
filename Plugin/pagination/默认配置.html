@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="theme/web.pagination.css">
+<title>无标题文档</title>
+</head>
+<style type="text/css">
+*{ margin:0; padding:0;}
+body{ font:12px/14px "微软雅黑"; color:#000;}
+a{ text-decoration:none; color:#000;}
+img{ border:none;}
+li{ list-style:none;}
+</style>
+<body>
+<div id="page1" class="WEB_pagination clearfix"></div>
+<div id="page2" class="WEB_pagination clearfix"></div>
+<script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="ui/web.pagination.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#page1").WEB_pagination({"totalPage":20});
+	$("#page2").WEB_pagination({"totalPage":30});
+})
+/*function turnpage(opt){
+	var numSource="";
+	for(var i=1;i<=opt.num;++i){
+		if(i<=opt.step && i<=opt.num){
+
+		}else{
+		numSource+='<a href="javascript:" class="num">'+i+'</a>';	
+		}
+		
+	}
+	$(opt.pager).html('<a href="javascript:" class="btn prev">上一页</a>'+numSource+'<a href="javascript:" class="btn next">下一页</a>');
+	$(opt.pager).find(".num").first().addClass("current").siblings().removeClass("current");
+	$(opt.pager).on("click",".prev",function(){
+		var num=$(opt.pager).find(".current").index();
+		if(num<=0){
+			num=0;
+			return;
+		}else{
+			num--;
+			$(opt.pager).find(".num").eq(num-1).addClass("current").siblings().removeClass("current");
+		}
+		
+	})
+	$(opt.pager).on("click",".next",function(){
+		
+		var num=$(opt.pager).find(".current").index();
+		if(num==opt.num){
+			num=opt.num;
+			return;
+		}else{
+			num++;
+			$(opt.pager).find(".num").eq(num-1).addClass("current").siblings().removeClass("current");
+		}
+	})
+}
+
+turnpage({
+	pager:"#page",
+	num:20,
+	step:6
+})*/
+</script>
+</body>
+</html>

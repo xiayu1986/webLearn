@@ -32,6 +32,12 @@
 		      <input type="text" class="form-control select" id="inputPassword3" placeholder="请选择节点">
 		    </div>
 		  </div>
+			<div class="form-group">
+				<label for="inputPassword3" class="col-sm-2 control-label">监控</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control select" id="monitor" placeholder="请选择监控人">
+				</div>
+			</div>
 		  <div class="form-group">
 		    <div class="col-sm-offset-2 col-sm-10">
 		      <div class="checkbox">
@@ -94,7 +100,7 @@ $(function(){
 			timeout:3000,
 			data:{}
 		},
-		"dataPool":"http://localhost/jquery-plugin/select/test/data.json",//指定数据源
+		"dataPool":"http://localhost/workspace/Plugin/select/test/data.json",//指定数据源
 		"formatData":function(data){//处理返回的数据格式
 			var formatArr=[];
 			$.each(data,function(i,d){
@@ -106,7 +112,7 @@ $(function(){
 	})
 
 	$("#inputPassword3").WEB_selectMenu({
-		"dataPool":"http://localhost/jquery-plugin/select/test/number.json",
+		"dataPool":"http://localhost/workspace/Plugin/select/test/number.json",
 		"formatData":function(data){
 			var formatArr=[];
 			$.each(data,function(i,d){
@@ -118,7 +124,15 @@ $(function(){
 		isMultiple:false,
 		formatTemplate:"2",
 		onSelect:function (a) {
-			
+			var data={};
+			if(a==1){
+				data=[{"name":"城市","code":"city"},{"name":"国家","code":"country"},{"name":"区域","code":"country"},{"name":"大区","code":"country"}]
+			}else if(a==2){
+				data=[{"name":"大区","code":"country"},{"name":"国家","code":"country"},{"name":"区域","code":"country"},{"name":"城市","code":"city"}]
+			}
+			$("#monitor").WEB_selectMenu({
+				"dataPool":data
+			})
 		}
 	});
 

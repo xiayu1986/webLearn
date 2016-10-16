@@ -10,7 +10,7 @@
         close:{showClose:true,closeInner:"&times;",auto:false,delay:2000},//关闭按钮配置
         buttons:{showButton:true,panel:[]},//按钮配置
         draggable:false,//是否可拖拽
-        scrollRate:5,//滚动速度
+        scrollRate:20,//滚动速度
         dialogScroll:true,//是否允许弹出框内出现滚动条
         beforeOpen:function(){},//弹出层打开前执行的方法
         afterOpen:function(){},//弹出层打开后执行的方法
@@ -77,6 +77,15 @@
             }else{
                 $(this).css({"marginLeft":-ml/2});
             }
+            var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,"");
+            if(ieVersion=="MSIE8.0"){
+                var titleDom=$(this).find(".WEB_dialog_title"),
+                    footerDom=$(this).find(".WEB_dialog_footer"),
+                    BTW=parseInt($(this).css("borderTopWidth")),
+                    BBW=parseInt($(this).css("borderBottomWidth")),
+                    bodyDom=$(this).find(".WEB_dialog_body");
+                mt=(bodyDom.outerHeight()||0)+(titleDom.outerHeight()||0)+(footerDom.outerHeight()||0)+BTW+BBW;
+            }
             if(mt>clientH){//当前弹出层的实际高度大于当前可视区的高度
                 $(this).css({"marginTop":0,"height":"auto","top":0,"overflow":"hidden"});
                 if(_this.settings.dialogScroll){//在弹出层内创建滚动条
@@ -90,6 +99,7 @@
                     $("html").css({"overflow-y":"auto"});
                 }
             }else{
+                console.log("我是IE8")
                 $(this).off("mousewheel");
                 $(this).css({"marginTop":-mt/2,"top":"50%","position":"fixed"});
             }
@@ -164,29 +174,32 @@
                 }
                 closeBtn.prependTo($(this));
             }
-            if(this.settings.buttons.showButton && !$.isEmptyObject(this.settings.buttons.panel)){//创建右下角按钮
+            if(this.settings.buttons.showButton){//创建右下角按钮
                 var btnPanel=$('<div class="WEB_dialog_footer"></div>');
                 btnPanel.css({"margin":0,"padding":0});
+                console.log(this.settings.buttons.panel)
                 $.each(this.settings.buttons.panel,function(ind,data){
-                    var userClassName='';
-                    if(data.userClass){
-                        userClassName=" "+data.userClass;
-                    }
-                    var eachBtn=$('<div class="WEB_dialog_button'+userClassName+'"><span class="dialog_button">'+data.btnText+'</span></div>');
-                    eachBtn.on("click",function(e){
-                        if($.isFunction(data.btnFn)){
-                            data.btnFn(e);
+                    if(data && !$.isEmptyObject(data)){
+                        var userClassName='';
+                        if(data.userClass){
+                            userClassName=" "+data.userClass;
                         }
-                        clearTimeout(_this.timer);
-                       if($.isNumeric(data.close)){
-                            _this.timer=setTimeout(function(){
+                        var eachBtn=$('<div class="WEB_dialog_button'+userClassName+'"><span class="dialog_button">'+data.btnText+'</span></div>');
+                        eachBtn.on("click",function(e){
+                            if($.isFunction(data.btnFn)){
+                                data.btnFn(e);
+                            }
+                            clearTimeout(_this.timer);
+                            if($.isNumeric(data.close)){
+                                _this.timer=setTimeout(function(){
+                                    methods._closeDialog.call(_this);
+                                },data.close)
+                            }else if(data.close!==false){
                                 methods._closeDialog.call(_this);
-                            },data.close)
-                        }else if(data.close!==false){
-                            methods._closeDialog.call(_this);
-                        }
-                    });
-                    eachBtn.appendTo(btnPanel);
+                            }
+                        });
+                        eachBtn.appendTo(btnPanel);
+                    }
                 })
                 btnPanel.appendTo(this);
             }
@@ -323,7 +336,7 @@
             })
         },
         _createDialogTitle:function () {
-            var titleInner=this.settings.title.titleInner||"请配置标题",
+            var titleInner=this.settings.title.titleInner,
                 titleBar=$('<div class="WEB_dialog_title"><div class="title">'+titleInner+'</div></div>');
             titleBar.css({"margin":0,"padding":0});
             titleBar.prependTo($(this));

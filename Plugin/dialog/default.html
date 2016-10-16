@@ -248,19 +248,20 @@ $(function(){
 	var conf1={
 				width:"50%",//设置弹出层的宽度可支持数字、百分比
 				ESClose:false,//是否按ESC键关闭
-				modal:{ showModal:true,modalOpacity:0.5,modalColor:"#000",modalClass:9,modalClose:true},//半透明层配置
-				close:{showClose:true,closeInner:"×",auto:false,delay:2000},//关闭按钮配置
+				modal:{ showModal:true,modalOpacity:0.5,modalColor:"#000",modalClass:9,modalClose:false},//半透明层配置
+				close:{showClose:false,closeInner:"&times;",auto:false,delay:2000},//关闭按钮配置
 				title:{showTitle:true,titleInner:"修改用户信息"},
 				dialogScroll:true,
 				buttons:{//生成按钮配置
 					showButton:true,//是否生成操作按钮
 					panel:[//生成的按钮文字及点击相应按钮执行的方法
-						{btnText:"确定",btnFn:null},
+						{btnText:"确定",close:true,btnFn:null},
+                        null,
 						{btnText:"取消",btnFn:function(){}}
 					]
 				},
 				lockScrollBar:true,//是否锁定滚动条，如果弹出层里面的内容高度超出当前可视区高度，即使设置为true也会出现滚动条
-				draggable:true,//是否支持拖拽，如果设置为true则必须显示标题，因为拖拽事件是绑定在标题上的
+				draggable:false,//是否支持拖拽，如果设置为true则必须显示标题，因为拖拽事件是绑定在标题上的
 				beforeOpen:function(e){
 					//弹出层打开前执行的方法
 				},
@@ -277,13 +278,14 @@ $(function(){
 				}
 			 }
 			 var conf2={
-				width:"20%",
-			 	modal:{modalColor:"#3C0",showModal:true},
-			 	ESClose:true,
+				width:"60%",
+                 ESClose:true,
+                 modal:{modalColor:"#3C0",showModal:true},
+                close:{showClose:true,closeInner:"&times;",auto:false,delay:2000},//关闭按钮配置
 				draggable:true,
 				lockScrollBar:false,
-			 	title:{titleInner:"删除用户信息"},
-				dialogScroll:false,
+			 	title:{showTitle:false,titleInner:"删除用户信息"},
+				dialogScroll:true,
 		 	    buttons:{showButton:true,panel:[{btnText:"确定",close:false,btnFn:function(){
 
 		 	    }},{btnText:"重置",close:6000,userClass:"reset",btnFn:function(){
@@ -302,28 +304,20 @@ $(function(){
 			 	}
 			 }
     $("#a").off("webDialog.beforeOpen").on("webDialog.beforeOpen",function (e) {
-        console.log(e);
-        console.log("打开前")
+
     })
     $("#a").off("webDialog.afterOpen").on("webDialog.afterOpen",function (e) {
-        console.log(e);
-        console.log("打开后")
     })
 	$("#btn1").click(function(e){//测试弹出层1
 		 $("#a").WEB_dialog(conf1);
 	})
 
-
 	$("#btn2").click(function(e){//测试弹出层2
 		$("#a").WEB_dialog(conf2);
 	});
-
     $("#btn3").click(function(e){//测试弹出层2
-        $("#b").WEB_dialog(conf2);
+        $("#b").WEB_dialog({"width":"20%"});
     });
-    $("#testModal").click(function (e) {
-        console.log(e)
-    })
 })
 </script>
 </body>

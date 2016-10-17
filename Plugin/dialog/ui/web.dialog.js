@@ -136,7 +136,7 @@
             }
             this.e = $.Event('webDialog.afterOpen');
             $(this).trigger(this.e);
-            $(document).on("keydown",function(e){
+            $(document).off("keydown").on("keydown",function(e){
                 if(e.keyCode==27){
                 	if(!_this.settings.ESClose){
                 		return;

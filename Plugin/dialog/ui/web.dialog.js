@@ -99,7 +99,6 @@
                     $("html").css({"overflow-y":"auto"});
                 }
             }else{
-                console.log("我是IE8")
                 $(this).off("mousewheel");
                 $(this).css({"marginTop":-mt/2,"top":"50%","position":"fixed"});
             }
@@ -177,7 +176,6 @@
             if(this.settings.buttons.showButton){//创建右下角按钮
                 var btnPanel=$('<div class="WEB_dialog_footer"></div>');
                 btnPanel.css({"margin":0,"padding":0});
-                console.log(this.settings.buttons.panel)
                 $.each(this.settings.buttons.panel,function(ind,data){
                     if(data && !$.isEmptyObject(data)){
                         var userClassName='';

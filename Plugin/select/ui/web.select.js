@@ -47,7 +47,9 @@
 			methods._createTriangle.call(this);//创建三角标识
 		},
 		_initSelect:function () {//初始化输入框
-			$(this).attr("selectId",this.uid);//为输入框添加Id
+			if(!$(this).attr("selectId")){
+				$(this).attr("selectId",this.uid);//为输入框添加Id
+			}
 			if(!this.settings.isEdit){
 				$(this).prop("readonly",true)
 			}else{
@@ -187,7 +189,7 @@
 			$(".WEB_select_current").removeClass('WEB_select_current');//移除当前输入框高亮
 			$(this).addClass('WEB_select_current');//为当前输入框添加高亮
 			$(".WEB_selectIndent_active").removeClass('WEB_selectIndent_active');//移除当前下拉菜单展开标志
-			this.indent.addClass('WEB_selectIndent_active');//为下拉添加展开标志
+			$(".WEB_selectIndent[targetid="+this.uid+"]").addClass('WEB_selectIndent_active');//为下拉添加展开标志
 			methods._position.call(this);//设置下拉菜单位置
 			methods._getSelectMenuData.call(this);//获取下拉菜单数据
 			$(window).on("resize",function(){//可视区大小改变重置下拉菜单位置
@@ -226,7 +228,7 @@
                 this.settings.beforeHide.call(this);
             }
 			$("#WEB_selectMenu_container").html("").css({"display":"none"}).off("mousewheel");
-			this.indent.removeClass('WEB_selectIndent_active');
+			$(".WEB_selectIndent[targetid="+this.uid+"]").removeClass('WEB_selectIndent_active');
 			$(this).removeClass('WEB_select_current');
             if($.isFunction(this.settings.afterHide)){
                 this.settings.afterHide.call(this);
@@ -234,10 +236,12 @@
 			methods._setTrianglePosition.call(this);//重新设置下拉菜单标志符的位置
 		},
 		_createTriangle:function(){//创建标识
-			var _this=this,$this=$(this);
+			var _this=this,$this=$(this),sid=$(this).attr("id");
 			this.indent=$('<div class="WEB_selectIndent"></div>');
 			this.indent.attr("targetId",_this.uid);
-			this.indent.appendTo($("body"));
+			if($(".WEB_selectIndent[targetid="+_this.uid+"]").length==0){
+				this.indent.appendTo($("body"));
+			}
 			methods._setTrianglePosition.call(this);//设置下拉菜单标志符的位置
 			this.indent.off("click").on("click",function (e) {
 				if(!$this.hasClass('WEB_select_current')){
@@ -256,13 +260,15 @@
 			var _this=this;
 			$(".WEB_selectIndent").each(function () {
 				var uid=$(this).attr("targetId"),selectDom=$("input[selectId="+uid+"]");
-				var X=selectDom.offset().left,
+				if(selectDom.length>0){
+					var X=selectDom.offset().left,
 					Y=selectDom.offset().top,
 					H=selectDom.outerHeight(),
 					W=selectDom.outerWidth(),
 					inW=$(this).outerWidth(),
 					inH=$(this).outerHeight();
-				$(this).css({"left":X+W-inW-_this.settings.indentX,"top":Y+(H-inH)/2});
+					$(this).css({"left":X+W-inW-_this.settings.indentX,"top":Y+(H-inH)/2});
+				}	
 			})
 		},
 		_initSelectClass:function(){//初始化选中状态
@@ -591,8 +597,10 @@
 			return filterData;
 		},
 		_createSelectId:function () {//为每个select输入框生成随机ID
-			this.uid="select"+Math.random()*10000000000;
-			this.uid=this.uid.replace(/(.*)\..*/gi,'$1');
+			if(!this.uid){
+				this.uid="select"+Math.random()*10000000000;
+				this.uid=this.uid.replace(/(.*)\..*/gi,'$1');
+			}
 		}
 	}
     

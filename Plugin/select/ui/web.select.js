@@ -584,6 +584,7 @@
 		},
 		_matchKeywords:function (targetStr,data) {//匹配要搜索的关键字
 			var filterData=[];
+			var d1=Date.now();
 			$.each(data,function(i,D){
 				var Name=""+D.name;
 				Name=Name.toLowerCase();
@@ -594,6 +595,8 @@
 					filterData.push(D);
 				}
 			})
+			var d2=Date.now();
+			console.log("筛选用时："+(d2-d1)/1000+"秒")
 			return filterData;
 		},
 		_createSelectId:function () {//为每个select输入框生成随机ID

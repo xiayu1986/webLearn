@@ -112,19 +112,19 @@ $(function(){
 	})
 
 	$("#inputPassword3").WEB_selectMenu({
-		"dataPool":"http://localhost/workspace/Plugin/select/test/number.json",
+		"dataPool":"http://localhost/workspace/Plugin/select/test/code.json",
 		"formatData":function(data){
-			var formatArr=[];
+			/*var formatArr=[];
 			$.each(data,function(i,d){
 				var param={"name":d.key,"code":d.value}
 				formatArr.push(param);
 			})
-			return formatArr;
+			return formatArr;*/
 		},
 		isMultiple:false,
 		formatTemplate:"2",
 		onSelect:function (a) {
-			var data={};
+			/*var data={};
 			if(a==1){
 				data=[{"name":"城市","code":"city"},{"name":"国家","code":"country"},{"name":"区域","code":"country"},{"name":"大区","code":"country"}]
 			}else if(a==2){
@@ -134,7 +134,7 @@ $(function(){
 			}
 			$("#monitor").WEB_selectMenu({
 				"dataPool":data
-			})
+			})*/
 		}
 	});
 

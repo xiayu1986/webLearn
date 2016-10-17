@@ -162,7 +162,7 @@
             if(this.settings.close.showClose){//创建关闭按钮
                 var closeInner=this.settings.close.closeInner,
                     closeBtn=$('<div class="WEB_dialog_close">'+closeInner+'</div>');
-                closeBtn.on("click",function(){
+                closeBtn.off("click").on("click",function(){
                     if(_this.settings.close.auto){//先清除自动关闭定时器
                         clearTimeout(_this.timer);
                     }
@@ -183,7 +183,7 @@
                             userClassName=" "+data.userClass;
                         }
                         var eachBtn=$('<div class="WEB_dialog_button'+userClassName+'"><span class="dialog_button">'+data.btnText+'</span></div>');
-                        eachBtn.on("click",function(e){
+                        eachBtn.off("click").on("click",function(e){
                             if($.isFunction(data.btnFn)){
                                 data.btnFn(e);
                             }
@@ -236,7 +236,7 @@
                     "zIndex":this.settings.modal.modalClass
                 })
                 if(this.settings.modal.modalClose){
-                    modal.on("click",function(){
+                    modal.off("click").on("click",function(){
                         if(_this.settings.close.auto){
                             clearTimeout(_this.timer);
                         }

@@ -7,13 +7,10 @@
         defaultDate:"2016-01-16",
         startDate:"",
         endDate:"",
-        change:function(value){
-
-        },
-        beforeOpen:function(){},//日历组件调用前执行的方法
-        afterOpen:function(){},//日历组件调用后执行的方法
-        afterClose:function(){},//日历组件关闭后执行的方法
-        beforeClose:function(){},//日历组件关闭前执行的方法
+        double:true,
+        change:function(value){},
+        open:function(){},//日历组件调用后执行的方法
+        close:function(){},//日历组件关闭时执行的方法
     }
     
     var methods={
@@ -30,14 +27,14 @@
                 methods._createCalendar.call(this);//调用日历组件
             })
         },
-        _createCalendar:function(){
+        _createCalendar:function(){//创建日期
             var _this=this,nameSpace=".calendar";
             $(this).off(nameSpace).on(_this.settings.trigger+nameSpace,function (e) {
                 e.stopPropagation();
                 methods._createCalendarElement.call(_this);
             })
         },
-        _isLeapYear:function(year){
+        _isLeapYear:function(year){//判断是平年还是闰年
             if(year){
                 return (year%4==0 && year%100!=0)||(year%400==0)?true:false;//true为闰年,false为平年
             }
@@ -56,7 +53,7 @@
             }
             return defaultDate;
         },
-        _createCalendarElement:function(initDate) {
+        _createCalendarElement:function(initDate) {//创建日历元素
             var _this = this,
                 defaultDate = initDate || methods._getNowDate.call(this),
                 Y = "",//年
@@ -83,12 +80,15 @@
             if ($(".WEB_datePicker").length == 0) {
                 dateContainer = $('<div class="WEB_datePicker"><div class="WEB_datePicker_title"><a class="prev">&lt;</a><div class="dateNow">' + Y + '年' + M + '月</div><a class="next">&gt;</a></div></div>');
                 dateContainer.appendTo($("body"));
+                var dateBody=$('<div class="WEB_datePicker_body"></div>');//主日历容器
+                var pickerFrame=$('<div class="WEB_datePicker_frame"></div>');//单日历容器
+
                 var weeks = $('<div class="WEB_datePicker_week"></div>'), weeksHtml = "", $this = $(this);//创建星期
                 $.each(dayNames, function (ind, val) {
                     weeksHtml += '<span>' + val + '</span>'
                 })
                 weeks.html(weeksHtml);
-                weeks.appendTo(dateContainer);
+                weeks.appendTo(pickerFrame);
 
                 var days = $('<div class="WEB_datePicker_day"></div>');//创建日期
                 for (var i = 0; i < loop; i++) {
@@ -105,7 +105,9 @@
                     startDay += '<a href="javascript:" class="empty"></a>';
                 }
                 days.html(startDay + daysHtml);
-                days.appendTo(dateContainer);
+                days.appendTo(pickerFrame);
+                pickerFrame.appendTo(dateBody);
+                dateBody.appendTo(dateContainer);
             }else{
                 $(".WEB_datePicker").css({"display":"block"});
                 $(".dateNow").html(Y+'年'+M+'月');

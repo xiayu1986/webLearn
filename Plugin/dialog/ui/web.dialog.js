@@ -345,7 +345,7 @@
             var dialogBorder=parseInt($(this).css("borderTopWidth"))+parseInt($(this).css("borderBottomWidth"));
             $(this).css({"height":viewH-dialogBorder})
             var clientH=viewH,//获取当前可视区高度
-                borderW=parseInt($(this).css("borderLeftWidth")),//弹出层边框宽度
+                borderW=parseInt($(this).css("borderTopWidth")),//弹出层边框宽度
                 dialogCell=$(this).find(".WEB_dialog_body"),
                 scrollContainer=$(this).find(".WEB_dialog_scroll");//查找内层元素
             if(scrollContainer.length==0){
@@ -355,10 +355,11 @@
             titlePanel=$(this).find(".WEB_dialog_title"),//获取弹出层标题
             btnPanel=$(this).find(".WEB_dialog_footer");//获取弹出层按钮组
             viewH=viewH-borderW*2;
-            viewH=viewH-titlePanel.height();
-            viewH=viewH-btnPanel.height();//设置弹出层内可滚动区高度
+            viewH=viewH-(titlePanel.height()||0);
+            viewH=viewH-(btnPanel.height()||0);//设置弹出层内可滚动区高度
             clientH=viewH;
-            scrollContainer.css({"height":clientH});
+            var otherH=parseInt(scrollContainer.css("borderTopWidth"))+parseInt(scrollContainer.css("borderBottomWidth"))+parseInt(scrollContainer.css("paddingTop"))+parseInt(scrollContainer.css("paddingBottom"));
+            scrollContainer.css({"height":clientH-otherH});
             dialogCell.css({"position":"relative","left":0,"top":0});
             $(this).find(".WEB_dialog_scroll_bar").remove();
             var minScrollHeight=parseInt(scrollContainer.css("minHeight"));

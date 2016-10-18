@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<title>获取节点</title>
+</head>
+
+<body>
+	<div class="container">
+			<div class="panel panel-primary">
+				<div class="panel-body" id="container">
+					
+				</div>
+			</div>
+	</div>
+	<script src="script/react.js"></script>
+	<script src="script/react-dom.js"></script>
+	<script src="script/browser.min.js"></script>
+	<script type="text/babel">
+	var GetDom=React.createClass({
+		getInitialState:function(){
+			return {
+				"status":true
+			}
+		},
+		clickHandle:function(e){
+			this.setState({"status":!this.state.status});
+			console.log(this.state.status)
+			if(!this.state.status){
+				this.refs.password.focus();
+			}
+		},
+		render:function(){
+			return (<div><div className="form-group"><input ref="password" disabled={this.state.status} className="form-control" /></div>
+			<div className="form-group"><button className="btn btn-primary" onClick={this.clickHandle}>禁用/启用</button></div></div>)
+		}
+	});
+	ReactDOM.render(<GetDom />,document.querySelector("#container"));
+	</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<title>实时更新数据</title>
+</head>
+
+<body>
+	<div class="container">
+	<div id="container"></div>
+	</div>
+	<script src="script/react.js"></script>
+	<script src="script/react-dom.js"></script>
+	<script src="script/browser.min.js"></script>
+	<script type="text/babel">
+	var UpdateForm=React.createClass({
+		getInitialState:function(){
+			return {"greet":"您好"}
+		},
+		changeHandle:function(e){
+			this.setState({"greet":e.target.value})
+		},
+		render:function(){
+			var val=this.state.greet;
+			return <div className="panel panel-primary"><div className="panel-body"><div className="form-inline"><div className="form-group"><input value={val} onChange={this.changeHandle} className="form-control"/><span>{val}</span></div></div></div></div>
+		}
+	})
+	ReactDOM.render(<UpdateForm />,document.querySelector("#container"))
+	</script>
+</body>
+</html>

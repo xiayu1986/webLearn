@@ -340,8 +340,7 @@
             titleBar.prependTo($(this));
         },
         _createScrollBar:function(){//创建滚动条
-            var dialogH=$(this).outerHeight(),//弹出框的实际高度
-                viewH=$(window).height();//可视区的实际高度
+            var viewH=$(window).height();//可视区的实际高度
             var dialogBorder=parseInt($(this).css("borderTopWidth"))+parseInt($(this).css("borderBottomWidth"));
             $(this).css({"height":viewH-dialogBorder})
             var clientH=viewH,//获取当前可视区高度

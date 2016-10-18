@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="script/react.js"></script>
+<script type="text/javascript" src="script/react-dom.js"></script>
+<script type="text/javascript" src="script/JSXTransformer.js"></script>
+<title>无标题文档</title>
+</head>
+<style type="text/css">
+*{ margin:0; padding:0;}
+body{ font:12px/14px "微软雅黑"; color:#000;}
+a{ text-decoration:none; color:#000;}
+img{ border:none;}
+li{ list-style:none;}
+</style>
+<body>
+<div id="container"></div>
+ <script type="text/jsx">
+ var content=["11月17日，俄罗斯空军出动11架图-160、图-95MS战略轰炸机对叙利亚境内的IS武装分子目标发射了34枚X-55MS和X-101常规远程巡航导弹","引起世间轰动，随后俄军又两次出动图-160轰炸机再次向叙利亚境内的目标发射巡航导弹，甚至其中一次是从位于俄远程轰炸航空兵位于萨拉托夫州的恩格斯基地起飞，向西进入波罗的海—北海，从英国西部海域绕过整个欧洲，在地中海中部海域向叙利亚境内发射了巡航导弹，从而实现了强大的震慑效果，给美英法等西方国家以极大威慑。"]
+ React.render(<div>{
+content.map(function(text){
+return  <p>{text}</p>
+})
+ }</div>,document.getElementById("container"));
+</script>
+</body>
+</html>

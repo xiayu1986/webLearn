@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>$http服务</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+     <link rel="stylesheet" type="text/css" href="css/theme.css">
+</head>
+<body>
+<div class="container">
+<div class="panel panel-primary" ng-controller="loadDataCtrl">
+	<div class="panel-heading">
+		<div class="panel-title">
+		   加载远程数据
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="wait" ng-show="waitStatus"></div>
+		<ul class="list-group" ng-repeat="item in booklist">
+			<li class="list-group-item">{{item.name}}</li>
+		</ul>
+	</div>
+	<div class="panel-footer">
+		<button type="button" class="btn btn-primary" ng-click="loadData()">加载数据</button>
+	</div>
+</div>
+</div>
+<script type="text/javascript" src="js/angular.js"></script>
+<script>
+var app=angular.module("app",[]);
+	app.controller("loadDataCtrl",['$scope','$http',function ($scope,$http) {
+		$scope.waitStatus=false;
+		$scope.loadData=function () {
+			$scope.waitStatus=true;
+			$http({
+				method:"GET",
+				url:"data/data.json"
+			}).success(function (res) {
+				if(res && res.length>0){
+					$scope.waitStatus=false;
+					$scope.booklist=res;
+				}
+			}).error(function (error) {
+				
+			})
+		}
+	}])
+</script>
+</body>
+</html>

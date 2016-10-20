@@ -1,4 +1,4 @@
-[
+{"data":[
 {"key":"A","value":"a"},
 {"key":"B","value":"b"},
 {"key":"C","value":"c"},
@@ -25,4 +25,4 @@
 {"key":"X","value":"x"},
 {"key":"Y","value":"y"},
 {"key":"Z","value":"z"}
-]
+],"total":26}

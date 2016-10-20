@@ -1,44 +1,47 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<script type="text/javascript" src="script/react.js"></script>
-<script type="text/javascript" src="script/react-dom.js"></script>
-<script type="text/javascript" src="script/JSXTransformer.js"></script>
-<title>无标题文档</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<title>模板</title>
 </head>
-<style type="text/css">
-*{ margin:0; padding:0;}
-body{ font:12px/14px "微软雅黑"; color:#000;}
-a{ text-decoration:none; color:#000;}
-img{ border:none;}
-li{ list-style:none;}
-.greet{ width: 200px; height: 30px; background: #3c0; color: #fff; text-align: center; margin: auto; line-height: 30px;}
-.container{ width: 1200px; margin:10px auto;}
-.searchList{ overflow:hidden; border: #ccc 1px solid; padding: 10px; position: relative;}
-.searchList .search{ float: left; margin: 0 5px 5px 0; overflow: hidden; line-height: 30px;}
-.searchList .search .ST{ float: left; width: 60px; line-height: 30px; text-align: right; padding: 0 5px 0 0;}
-.searchList .search .SC{ float: left; width: 98px; padding: 4px 1px; border: #ccc 1px solid; height: 20px; line-height: 20px;}
-.button{ padding: 0 10px; background: blue; line-height: 30px; position: absolute; top: 10px; right: 10px; height: 30px; border-radius: 4px; color: #fff;
-cursor: pointer;}
-</style>
-<body>
-<div id="container" class="container"></div>
- <script type="text/jsx">
-var Search=React.createClass({
-  render:function(){
-    return (<div className="search"><span className="ST">{this.props.searchType}:</span><input autoComplete="off" className="SC" type="text" /></div>)
-  }
-})
 
-var Page=React.createClass({
-  render:function(){
-    return (<div className="searchList">
-    <Search searchType="订单号" /><Search searchType="支付单号" /><Search searchType="客户ID" /><span className="button">查询</span>
-    </div>);
-  }
-})
-ReactDOM.render(<Page />,document.getElementById("container"));
-</script>
+<body>
+	<div class="container">
+	<div class="panel panel-default">
+		<div class="panel-heading" id="container"></div>
+		<div class="panel-body">
+			查询结果显示
+		</div>
+	</div>
+	</div>
+	<script src="script/react.js"></script>
+	<script src="script/react-dom.js"></script>
+	<script src="script/browser.min.js"></script>
+	<script type="text/babel">
+		var SearchCondition=React.createClass({
+			render:function(){
+				return (
+						<div className="col-sm-3">
+								<label className="col-sm-5 control-label">{this.props.label}</label>
+								<div className="col-sm-7"><input type="text" className="form-control" /></div>
+						</div>
+				)
+			}
+		});
+		var SearchContainer=React.createClass({
+			render:function(){
+				return (
+					<div className="form clearfix">
+						<SearchCondition label="应用ID：" />
+						<SearchCondition label="应用名称：" />
+						<SearchCondition label="序号：" />
+						<div className="col-sm-3"><button className="btn btn-primary">查询</button></div>
+					</div>
+				)
+			}
+		});
+		ReactDOM.render(<SearchContainer />,document.querySelector("#container"))
+	</script>
 </body>
 </html>

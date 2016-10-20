@@ -259,7 +259,7 @@
 			if(source.totalSize>this.settings.baseNumber){//需要生成滚动条(也即需要分页)
 				var firstPageArr=source.data.slice(0,9);//截取第一页的数据
 				var doneData={"data":firstPageArr,"totalSize":source.totalSize};
-				methods._createScroller.call(doneData,source);
+				methods._createScroller.call(this,doneData,source);
 			}else{//不需要生成滚动条 也即不需要分页，直接进入渲染状态
 				methods._renderSelectMenu.call(this,source)
 			}
@@ -370,7 +370,7 @@
 				h=H*0.95;
 				t=(H-h)/2;
 			}
-			var rate=this.settings.baseNumber/data.length,
+			var rate=this.settings.baseNumber/firstPageData.data.length,
 				menuSlider=$("#WEB_selectMenu_scroller .scroller_slider"),
 				sh=rate*h<=30?30:rate*h,
 				l=(webSelectScroller.width()-menuSlider.width())/2;

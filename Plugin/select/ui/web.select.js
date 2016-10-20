@@ -273,7 +273,7 @@
                 this.settings.afterShow.call(this);
             }
 			//methods._position.call(this);//设置下拉菜单位置
-			methods._initSelectClass.call(this,totalData);//初始化被选中的状态
+			methods._initSelectClass.call(this,incomeData);//初始化被选中的状态
 			var baseH=container.find(".WEB_selectMenu_list:first").outerHeight(true),
 				baseNumber=this.settings.baseNumber>10?10:this.settings.baseNumber,
 				maxH=baseH*baseNumber;
@@ -289,7 +289,7 @@
 				iconHtml=this.settings.isMultiple?'<span class="multipleIcon"></span>':'<span class="radioIcon"></span>';
 			}
 			$.each(source.data,function(i,d){
-				sourceHtml+='<li class="WEB_selectMenu_list" title="'+d[_tihs.settings.textField]+'" code="'+d[_tihs.settings.valueField]+'">'+iconHtml+d[_tihs.settings.textField]+'</li>'
+				sourceHtml+='<li class="WEB_selectMenu_list" title="'+d[_this.settings.textField]+'" code="'+d[_this.settings.valueField]+'">'+iconHtml+d[_this.settings.textField]+'</li>'
 			})
 			if(isInit){
 				if(this.settings.showOptions && this.settings.isMultiple){

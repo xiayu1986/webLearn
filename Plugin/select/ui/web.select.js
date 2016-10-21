@@ -246,7 +246,9 @@
 					container.append($('<div class="WEB_selectMenu_list_wait"></div>'));
 					methods._setWaitIconPosition.call(this);//设置加载状态的样式
 				}
+				var slider=$("#WEB_selectMenu_scroller .scroller_slider");
 				container.off("mousewheel");
+				slider.off("mousedown");
 			}
 
 			$.ajax(param)
@@ -427,7 +429,7 @@
 				dY1=0,
 				dY2=0,
 				maxTop=slider.parent().height()-slider.height();//滚动条可以滑动的最大高度
-		        slider.mousedown(function(e) {//鼠标按下时的方法
+		        slider.on("mousedown",function(e) {//鼠标按下时的方法
 		            dragging = true;
 		            iY = e.clientY - $(this).position().top;
 		            this.setCapture && this.setCapture();

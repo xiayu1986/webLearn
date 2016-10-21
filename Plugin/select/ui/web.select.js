@@ -255,7 +255,7 @@
 				})
 			}
 		},
-		_localDataHandle:function(source){//过滤下拉菜单数据 data为所有数据集合 startInd为分页开始的数量
+		_localDataHandle:function(source){//过滤下拉菜单数据 source为所有数据集合
 			if(source.totalSize>this.settings.baseNumber){//需要生成滚动条(也即需要分页)
 				var firstPageArr=source.data.slice(0,9);//截取第一页的数据
 				var doneData={"data":firstPageArr,"totalSize":source.totalSize};
@@ -370,7 +370,7 @@
 				h=H*0.95;
 				t=(H-h)/2;
 			}
-			var rate=this.settings.baseNumber/firstPageData.data.length,
+			var rate=this.settings.baseNumber/totalData.totalSize,
 				menuSlider=$("#WEB_selectMenu_scroller .scroller_slider"),
 				sh=rate*h<=30?30:rate*h,
 				l=(webSelectScroller.width()-menuSlider.width())/2;
@@ -467,7 +467,6 @@
 			var _this=this,filterData={},//定义搜索后的结果集
 				inStr=$(this).val(),//获取当前输入框内的关键字
 				filterData=methods._matchKeywords.call(this,inStr,sourceData);
-
 			if(inStr=="" || (inStr!="" && inStr.indexOf(this.settings.separator)>-1) || filterData.totalSize==0){
 				methods._localDataHandle.call(_this,sourceData);
 			}else{
@@ -500,7 +499,7 @@
 				curPage=curPage+1;//加载第二页的数据
 				var startIndex=(curPage-1)*this.settings.baseNumber,
 					endPoint=(curPage-1)*this.settings.baseNumber+(this.settings.baseNumber-1),
-					appendData=d.data.slice(startIndex,endPoint+1);
+					appendData={"data":d.data.slice(startIndex,endPoint+1)};
 				methods._appendPagerItem.call(this,appendData);
 			}
 		},
@@ -575,7 +574,7 @@
 		_matchKeywords:function (targetStr,data) {//匹配要搜索的关键字
 			var filterDataArr=[];
 			var d1=Date.now();
-			$.each(data,function(i,D){
+			$.each(data.data,function(i,D){
 				var Name=""+D.name;
 				Name=Name.toLowerCase();
 				targetStr=$.trim(targetStr.toLowerCase());

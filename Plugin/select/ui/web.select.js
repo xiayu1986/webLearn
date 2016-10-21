@@ -26,9 +26,6 @@
 				}
 			}
 		},
-		loadData:{//从服务器加载数据
-
-		},
 		isRemoteFilter:false,//远程接口是否支持filter
 		indentX:10,//下拉菜单图标与输入框右侧的距离
 		separator:"|",//定义多选时写入到输入框的分隔符
@@ -63,6 +60,14 @@
 			methods._initSelectField.call(this);//初始化输入框
 			methods._initSelectContainer.call(this);//初始化容器
 			methods._createSelectIdent.call(this);//创建下拉标识
+			if(this.settings.isRemoteFilter){//从远程服务器筛选数据
+				var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,""),
+					eventType=(ieVersion=="MSIE8.0"||ieVersion=="MSIE9.0")?'keyup.filter':'input.filter';//定义事件类型
+				$(this).off(".filter").on(eventType,function (e) {
+					methods._remoteFilterKeywords.call(this)//筛选数据
+				})
+			}
+			
 		},
 		_initSelectField:function () {//初始化输入框
 			$(this).addClass("WEB_select_field");
@@ -82,7 +87,7 @@
 				container=$('<div class="WEB_selectMenu_container" id="WEB_selectMenu_container"></div>');
 				container.appendTo($("body"));
 			}
-			container.css({"display":"none"});
+			//container.css({"display":"none"});
 			methods._createContainerEvent.call(this);//为容器绑定事件
 		},
 		_createContainerEvent:function(){//绑定事件
@@ -178,6 +183,7 @@
             if(!$(this).hasClass("WEB_select_current")){
                 return;
             }
+            $(this).removeProp("disabled");//启用输入框
             if($.isFunction(this.settings.beforeHide)){
                 this.settings.beforeHide.call(this);
             }
@@ -227,19 +233,27 @@
 				methods._processData.call(_this,sourceData);//处理数据
 			}
 		},
-		_loadRemoteData:function(){//获取远程数据
-			var _this=this,$this=$(this),container=$("#WEB_selectMenu_container"),param=this.settings.param();
+		_loadRemoteData:function(key){//获取远程数据,key为关键字,key值存在表示是按关键字过滤不存在表示是加载全部数据
+			var arg=arguments;
+			$(this).prop("disabled",true);//禁用当前输入框，防止重复发送AJAX
+			var _this=this,$this=$(this),container=$("#WEB_selectMenu_container"),param=this.settings.param(key);
 			param.url=this.settings.dataSource;
 			$.ajax(param)
 			.done(function(res){
+				$this.removeProp("disabled");//启用输入框
 				if(res.data && res.data.length>0){//有数据返回
-					$this.trigger("load",res);
-					methods._processData.call(_this,res);
+					if(arg.length>0){
+						var totalData=_this.settings.formatData(res)||res;
+						methods._localDataHandle.call(_this,totalData);//本地处理数据
+					}else{
+						methods._processData.call(_this,res);
+					}
 				}else{
 					container.html('<div class="WEB_select_noResult">没有获取到数据！</div>')
 				}
 			})
 			.fail(function(xhr){
+				$this.removeProp("disabled");//启用输入框
 				var errMsg="错误码:"+xhr.status+"&nbsp;"+xhr.statusText;
 				container.html('<div class="WEB_select_error">'+errMsg+'</div>')
 			})
@@ -251,7 +265,7 @@
 				var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,""),
 					eventType=(ieVersion=="MSIE8.0"||ieVersion=="MSIE9.0")?'keyup.filter':'input.filter';//定义事件类型
 				$(this).off(".filter").on(eventType,function (e) {
-					methods._filterKeywords.call(_this,totalData);//关键字过滤
+					methods._localFilterKeywords.call(_this,totalData);//关键字过滤
 				})
 			}
 		},
@@ -305,6 +319,7 @@
 		_bindSelectListEvent:function(){//为下拉菜单中的选项绑定点击事件
 			var container=$("#WEB_selectMenu_container"),$this=$(this),_this=this;
 			container.off("click").on("click",".WEB_selectMenu_list",function(e){
+				var curItem=$(this);
 				if(_this.settings.isMultiple){//如果是多选
 					e.stopPropagation();
 					var s=$(this).hasClass('WEB_selectMenu_list_active');
@@ -312,14 +327,14 @@
 				}else{
                    $(this).addClass('WEB_selectMenu_list_active').siblings('.WEB_selectMenu_list').removeClass('WEB_selectMenu_list_active');
 				}
-				methods._setSelectedValue.call(_this,$this);//设置输入框的value
+				methods._setSelectedValue.call(_this,curItem);//设置输入框的value
 			}).on("click",".WEB_selectMenu_options",function(e){
 				e.stopPropagation();
 			}).on("click",".select_no_items",function(){//点击取消按钮
 				methods._closeSelectMenu.call(_this);
 				$this.val("").removeAttr("code title");
 			}).on("click",".select_all_items",function(){//点击全选按钮
-				methods._setSelectedValue.call(_this,$this);
+				methods._setSelectedValue.call(_this);
 			}).on("click",".select_close_items",function(){//点击关闭按钮
 				methods._closeSelectMenu.call(_this);
 			})
@@ -462,22 +477,37 @@
 				methods._createPagination.call(this,sourceData);
 			}
 		},
-		_filterKeywords:function(sourceData){//关键字过滤,sourceData指总数据
+		_localFilterKeywords:function(sourceData){//关键字过滤,sourceData指总数据
 			var _this=this,filterData={},//定义搜索后的结果集
 				inStr=$(this).val();//获取当前输入框内的关键字
-				
+				var fP={"keywords":inStr}
+				this.settings.param(fP);
 			if(inStr=="" || (inStr!="" && inStr.indexOf(this.settings.separator)>-1)){
 				methods._localDataHandle.call(_this,sourceData);
 			}else{
 				$("#WEB_selectMenu_container").off("mousewheel");
 				var filterData=methods._matchKeywords.call(this,inStr,sourceData);
-				methods._localDataHandle.call(_this,filterData);
+				if(filterData.data.length==0){
+					methods._localDataHandle.call(_this,sourceData);
+				}else{
+					methods._localDataHandle.call(_this,filterData);
+				}
+				
 			}
 			var codeArr=inStr.split(_this.settings.separator);
 			$(this).attr({"code":codeArr,"title":inStr});
 			if($.isFunction(this.settings.onSelect)){
-				this.settings.onSelect.call(this,this.settings.isMultiple?codeArr:inStr)
+				this.settings.onSelect.call(this,codeArr,codeArr);
 			}
+		},
+		_remoteFilterKeywords:function(){//关键字过滤,从服务器查询数据
+			var _this=this,filterData={},//定义搜索后的结果集
+				inStr=$(this).val();//获取当前输入框内的关键字
+				if(inStr!="" && inStr.indexOf(this.settings.separator)==-1){
+					methods._loadRemoteData.call(this,inStr);
+				}else{
+					methods._loadRemoteData.call(this);
+				}
 		},
 		_createPagination:function(d){//创建分页
 			var container=$("#WEB_selectMenu_container"),
@@ -516,22 +546,50 @@
 			},300)
 			methods._initSelectClass.call(this);//初始化选中样式
 		},
-		_setSelectedValue:function(curObj){//设置选中的数据
-			var container=$("#WEB_selectMenu_container"),
+		_setSelectedValue:function(curItem){//设置选中的数据,curItem为当前选择的项，不传表示是全选 或者 反选
+			var container=$("#WEB_selectMenu_container"),$this=$(this),
+				actives=container.find(".WEB_selectMenu_list_active"),
+				oldValue=$(this).val(),
+				oldValueArr=oldValue.length>0?oldValue.split(this.settings.separator):[],
+				oldCode=$(this).attr("code")?$(this).attr("code"):'',
+				oldCodeArr=oldCode.length>0?oldCode.split(this.settings.separator):[],
 				valueArr=[],//存放选中的text值
 				codeArr=[];//存放选中的code值
-			curObj.val("").removeAttr("code title");
-			var actives=container.find(".WEB_selectMenu_list_active");
-			actives.each(function(){
-				var t=$(this).text(),
-					c=$(this).attr("code");
-				if($.inArray(t,valueArr)<0){
-					valueArr.push(t);
+				if(this.settings.isMultiple){//多选
+					if(arguments.length==0){//多选中的全选
+						actives.each(function(){
+							var t=$(this).text(),c=$(this).attr("code");
+							if($.inArray(t,valueArr)<0){
+								valueArr.push(t);
+							}
+							if($.inArray(c,codeArr)<0){
+								codeArr.push(c);
+							}
+						})
+					}else{//多选中的选择	
+						var curValue=curItem.text(),curInd=$.inArray(curValue,oldValueArr),
+							curCode=curItem.attr("code");
+						if(curItem.hasClass('WEB_selectMenu_list_active')){//选择
+							if(curInd<0){
+								oldValueArr.push(curValue);
+								oldCodeArr.push(curCode);
+							}
+						}else{//取消选择
+							if(curInd>=0){
+								oldValueArr.splice(curInd,1);
+								oldCodeArr.splice(curInd,1);
+							}
+						}
+						valueArr=oldValueArr.concat([]);
+						codeArr=oldCodeArr.concat([]);
+						console.log(codeArr)
+					}
+				}else{//单选
+					$(this).val("").removeAttr("code title");
+					valueArr.push(curItem.text());
+					codeArr.push(curItem.attr("code"));
 				}
-				if($.inArray(c,codeArr)<0){
-					codeArr.push(c);
-				}
-			})
+				
 			if(valueArr.length==0){
 				methods._openSelectMenu.call(this);//重新渲染下拉菜单
 			}
@@ -539,9 +597,10 @@
 				valueArr=methods._sortSelectedValue(valueArr);
 				codeArr=methods._sortSelectedValue(codeArr);
 			}
-			curObj.val(valueArr.join(this.settings.separator)).attr({"code":codeArr,"title":valueArr.join(this.settings.separator)});
+			var lastValue=valueArr.join(this.settings.separator),lastCode=codeArr.join(this.settings.separator);
+			$(this).val(lastValue).attr({"code":lastCode,"title":lastValue});
             if($.isFunction(this.settings.onSelect)){
-                this.settings.onSelect.call(this,this.settings.isMultiple?codeArr:codeArr.length==0?"":codeArr.toString())
+                this.settings.onSelect.call(this,valueArr,codeArr)
             }
 		},
 		_sortSelectedValue:function(arr){//排序

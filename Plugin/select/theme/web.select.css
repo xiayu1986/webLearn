@@ -12,7 +12,7 @@ input::-ms-clear { display: none; }
 .WEB_selectMenu_loading{width:32px; height:32px; background:url("wait.gif"); margin:auto;}
 .WEB_selectMenu_list_wait{ width:32px; height:32px; background:url("wait.gif");position:absolute; z-index:3;}
 .WEB_select_noResult,.WEB_select_error{line-height:32px; text-align:center;}
-.WEB_selectMenu{ position: relative;left: 0; top: 0; z-index: 1; }
+.WEB_selectMenu{ position: relative;left: 0; top: 0; z-index: 1; margin:0; padding:0;}
 .WEB_selectMenu .WEB_selectMenu_list{ padding: 5px 10px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 .WEB_selectMenu .WEB_selectMenu_list span{ display:inline-block; width:18px; height:18px; vertical-align:middle; margin:0 10px 0 0;}
 .WEB_selectMenu .WEB_selectMenu_list .multipleIcon{ background:url("icon.png") -20px 0 no-repeat; }

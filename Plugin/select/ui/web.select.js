@@ -240,7 +240,7 @@
 			var _this=this,$this=$(this),container=$("#WEB_selectMenu_container"),param=this.settings.param(key);
 			param.url=this.settings.dataSource;
 			if(key && key.page){//分页的时候需要禁用滚动条
-				param.url="http://localhost/workspace/Plugin/select/test/page"+key.page+".json"||this.settings.dataSource;
+				param.url=this.settings.dataSource;
 				var waitDom=container.find(".WEB_selectMenu_list_wait");
 				if(waitDom.length==0){
 					container.append($('<div class="WEB_selectMenu_list_wait"></div>'));
@@ -257,9 +257,7 @@
 				if(res.data && res.data.length>0){//有数据返回
 					if(arg.length>0){
 						var totalData=_this.settings.formatData(res)||res;
-						setTimeout(function(){
-							methods._localDataHandle.call(_this,totalData);//本地处理数据	
-						},2000)
+						methods._localDataHandle.call(_this,totalData);//本地处理数据
 					}else{
 						methods._processData.call(_this,res);
 					}
@@ -429,7 +427,7 @@
 				dY1=0,
 				dY2=0,
 				maxTop=slider.parent().height()-slider.height();//滚动条可以滑动的最大高度
-		        slider.on("mousedown",function(e) {//鼠标按下时的方法
+		        slider.off("mousedown").on("mousedown",function(e) {//鼠标按下时的方法
 		            dragging = true;
 		            iY = e.clientY - $(this).position().top;
 		            this.setCapture && this.setCapture();
@@ -446,7 +444,7 @@
 		                    oY=maxTop
 		                }
 		                slider.css({"top":oY });
-		                methods._scroller.call(_this,oY/maxTop,dY1-dY2,sourceData); 
+		                methods._scroller.call(_this,oY/maxTop,dY1-dY2,sourceData);
 		                return false;
 		            }
 		        })
@@ -469,7 +467,7 @@
 							maxH=menu.height()-container.height();
 						}
 						if(dir<0){
-							if(Math.abs(basePos)>=maxH){
+							if(Math.abs(basePos)>maxH){
 								basePos=-maxH;
 							}
 						}else{
@@ -485,6 +483,10 @@
 					})	
 		},
 		_scroller:function(rate,scrollDir,sourceData){//滚动
+			var menu=$("#WEB_selectMenu_container .WEB_selectMenu");
+			var curLen=menu.find(".WEB_selectMenu_list").length;
+			var totalLen=sourceData.totalSize;
+			var remainRate=curLen/totalLen;
 			var scrollMaxDis=0,
 				container=$("#WEB_selectMenu_container"),
         		menu=$("#WEB_selectMenu_container .WEB_selectMenu");
@@ -493,7 +495,7 @@
 			}else{//单选
 				scrollMaxDis=menu.height()-container.height();
 			}
-			menu.css({"top":-rate*scrollMaxDis});
+			menu.css({"top":-rate*scrollMaxDis*remainRate});
 			if(scrollDir<0){
 				methods._createPagination.call(this,sourceData);
 			}

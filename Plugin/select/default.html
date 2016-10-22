@@ -110,11 +110,11 @@ $(function(){
 				data:req
 			}
 		},
-		"dataSource":"http://localhost/workspace/Plugin/select/test/page.json",//指定数据源
+		"dataSource":"http://localhost:8090/listData",//指定数据源
 		"formatData":function(res){//处理返回的数据格式
 			var formatArr=[];
 			$.each(res.data,function(i,d){
-				var param={"name":d.key||d.name,"code":d.value||d.code}
+				var param={"name":d.text,"code":d.id}
 				formatArr.push(param);
 			})
 			return {"data":formatArr,"totalSize":res.totalSize};

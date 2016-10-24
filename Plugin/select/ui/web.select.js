@@ -62,10 +62,11 @@
 			methods._initSelectContainer.call(this);//初始化容器
 			methods._createSelectIdent.call(this);//创建下拉标识
 			if(this.settings.isRemoteFilter){//从远程服务器筛选数据
+				var _this=this;
 				var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,""),
 					eventType=(ieVersion=="MSIE8.0"||ieVersion=="MSIE9.0")?'keyup.filter':'input.filter';//定义事件类型
 				$(this).off(".filter").on(eventType,function (e) {
-					methods._remoteFilterKeywords.call(this)//筛选数据
+					methods._remoteFilterKeywords.call(_this)//筛选数据
 				})
 			}
 			

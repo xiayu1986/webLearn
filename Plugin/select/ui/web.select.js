@@ -237,7 +237,7 @@
 		},
 		_loadRemoteData:function(key){//获取远程数据,key为关键字或者页码,key值存在且是字符串类型表示是按关键字过滤，是数字类型表示是分页，不存在表示是加载全部数据
 			var arg=arguments;
-			$(this).prop("disabled",true);//禁用当前输入框，防止重复发送AJAX
+			//$(this).prop("disabled",true);//禁用当前输入框，防止重复发送AJAX
 			var _this=this,$this=$(this),container=$("#WEB_selectMenu_container"),param=this.settings.param(key);
 			param.url=this.settings.dataSource;
 			if(key && key.page){//分页的时候需要禁用滚动条

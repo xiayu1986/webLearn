@@ -50,6 +50,7 @@
 		  <div class="form-group">
 		    <div class="col-sm-offset-2 col-sm-10">
 		      <button type="submit" class="btn btn-primary">提交</button>
+		      <button type="button" class="btn btn-primary" id="loadBtn">加载</button>
 		    </div>
 		  </div>
 	</div>
@@ -72,7 +73,8 @@
 </div>
 <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="lib/jquery.mousewheel.js"></script>
-<script type="text/javascript" src="ui/web.select.min.js"></script>
+<script type="text/javascript" src="lib/bootstrap.min.js"></script>
+<script type="text/javascript" src="ui/web.select.js"></script>
 <script type="text/javascript">
 $(function(){
 	$("#inputEmail3").WEB_selectMenu({
@@ -154,7 +156,40 @@ $(function(){
 		"dataSource":"#source",
 		isMultiple:false
 	});
+	
+	$("#loadBtn").click(function(){
+		$("#modal").modal();
+	})
+	
+	$("#modal").on("show.bs.modal",function(){
+		$(".modalSelect").WEB_selectMenu({
+			"dataSource":"#source",
+			isMultiple:false,
+			isCreateIndent:false,
+			content:$("#modal")
+		});
+	})
 })
 </script>
+
+<div class="modal" id="modal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+		<div class="modal-header"></div>
+			<div class="modal-body">
+				<div class="form">
+					<div class="form-group clearfix">
+						<label for="" class="control-label col-sm-2">姓名：</label>
+						<div class="col-sm-10"><input type="text" class="form-control modalSelect" /></div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="" class="control-label col-sm-2">地址：</label>
+						<div class="col-sm-10"><input type="text" class="form-control modalSelect" /></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 </html>

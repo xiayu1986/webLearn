@@ -5,6 +5,8 @@
 	var defaults={//默认配置
 		trigger:"click",//触发事件：click
 		isEdit:true,//是否可输入
+		container:$("body"),
+		isCreateIndent:true,//是否创建下拉菜单标识
 		beforeShow:function(){},//打开菜单前执行的方法 
 		afterShow:function(){},//打开菜单后执行的方法
 		beforeHide:function(){},//关闭菜单前执行的方法 
@@ -60,7 +62,10 @@
 			methods._createSelectId.call(this);//生成用于将当前输入框及三角标识联系起来的唯一ID
 			methods._initSelectField.call(this);//初始化输入框
 			methods._initSelectContainer.call(this);//初始化容器
-			methods._createSelectIdent.call(this);//创建下拉标识
+			if(this.settings.isCreateIndent){
+				methods._createSelectIdent.call(this);//创建下拉标识
+			}
+
 			if(this.settings.isRemoteFilter){//从远程服务器筛选数据
 				var _this=this;
 				var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,""),
@@ -87,7 +92,7 @@
 			var container=$("#WEB_selectMenu_container");
 			if(container.length==0){
 				container=$('<div class="WEB_selectMenu_container" id="WEB_selectMenu_container"></div>');
-				container.appendTo($("body"));
+				container.appendTo(this.settings.container||$("body"));
 			}
 			//container.css({"display":"none"});
 			methods._createContainerEvent.call(this);//为容器绑定事件
@@ -132,7 +137,7 @@
 			this.indent.attr("targetId",_this.uid);
 
 			if($(".WEB_selectIndent[targetid="+_this.uid+"]").length==0){
-				this.indent.appendTo($("body"));
+				this.indent.appendTo(this.settings.container||$("body"));
 			}
 			methods._setSelectIdentPosition.call(this);//设置下拉菜单标志符的位置
 
@@ -605,7 +610,6 @@
 						}
 						valueArr=oldValueArr.concat([]);
 						codeArr=oldCodeArr.concat([]);
-						console.log(codeArr)
 					}
 				}else{//单选
 					$(this).val("").removeAttr("code title");

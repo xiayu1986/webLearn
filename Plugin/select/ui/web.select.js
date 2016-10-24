@@ -213,7 +213,7 @@
 				urlRule=/^((https|http)?:\/\/)[^\s]+/gi,//匹配URL规则
 				container=$("#WEB_selectMenu_container");
 			if(!sourceData){
-				container.html('<div class="WEB_selectMenu_noResult">没有获取到数据！</div>');
+				container.html('<div class="WEB_select_noResult">没有获取到数据！</div>');
 				return;
 			}
 			if($.type(sourceData)==="string"){
@@ -247,8 +247,8 @@
 					methods._setWaitIconPosition.call(this);//设置加载状态的样式
 				}
 				var slider=$("#WEB_selectMenu_scroller .scroller_slider");
-				container.off("mousewheel");
-				slider.off("mousedown");
+				//container.off("mousewheel");
+				//slider.off("mousedown");
 			}
 
 			$.ajax(param)
@@ -377,13 +377,7 @@
 			}
 		},
 		_createScroller:function(firstPageData,totalData){//创建滚动条并设置样式,第一个参数是当前页的数据，第二个参数是总数据
-			if($("#WEB_selectMenu_container .WEB_selectMenu .WEB_selectMenu_list").length==0){
 				methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
-			}
-			else{
-				methods._appendPagerItem.call(this,totalData);//追加数据
-			}
-
 			var webSelectScroller=$("#WEB_selectMenu_scroller"),
 				container=$("#WEB_selectMenu_container"),
 				t=0,//定义并初始化滚动条的位置
@@ -495,7 +489,7 @@
 			}else{//单选
 				scrollMaxDis=menu.height()-container.height();
 			}
-			menu.css({"top":-rate*scrollMaxDis*remainRate});
+			menu.css({"top":-rate*scrollMaxDis});
 			if(scrollDir<0){
 				methods._createPagination.call(this,sourceData);
 			}
@@ -511,7 +505,8 @@
 				$("#WEB_selectMenu_container").off("mousewheel");
 				var filterData=methods._matchKeywords.call(this,inStr,sourceData);
 				if(filterData.data.length==0){
-					methods._localDataHandle.call(_this,sourceData);
+					$("#WEB_selectMenu_container").html('<div class="WEB_select_noResult">没有搜索到数据！</div>')
+					//methods._localDataHandle.call(_this,sourceData);
 				}else{
 					methods._localDataHandle.call(_this,filterData);
 				}
@@ -526,7 +521,7 @@
 		_remoteFilterKeywords:function(){//关键字过滤,从服务器查询数据
 			var _this=this,filterData={},//定义搜索后的结果集
 				inStr=$(this).val();//获取当前输入框内的关键字
-				if(inStr!="" && inStr.indexOf(this.settings.separator)==-1){
+				if(inStr!=""){
 					methods._loadRemoteData.call(this,{"keywords":inStr});
 				}else{
 					methods._loadRemoteData.call(this);

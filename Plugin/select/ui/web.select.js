@@ -90,11 +90,10 @@
 		},
 		_initSelectContainer:function(){//初始化容器
 			var container=$("#WEB_selectMenu_container");
-			container.remove();
-			//if(container.length==0){
-				var container=$('<div class="WEB_selectMenu_container" id="WEB_selectMenu_container"></div>');
+			if(container.length==0){
+				container=$('<div class="WEB_selectMenu_container" id="WEB_selectMenu_container"></div>');
 				container.appendTo(this.settings.container||$("body"));
-			//}
+			}
 			//container.css({"display":"none"});
 			methods._createContainerEvent.call(this);//为容器绑定事件
 		},

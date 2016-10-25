@@ -217,7 +217,7 @@
 				X=$(this).offset().left,
 				Y=$(this).offset().top,
 				H=$(this).outerHeight(),
-				W=$(this).outerWidth()-2*parseInt(container.css("borderLeftWidth"))||0,
+				W=$(this).outerWidth()-(2*parseInt(container.css("borderLeftWidth"))||0),
 				BW=parseInt($(this).css("borderTopWidth"))||parseInt($(this).css("borderBottomWidth"))||0;
 			container.css({"width":W,"left":X,"top":Y+H-BW});
 			methods._setSelectIdentPosition.call(this);//设置小三角标志的位置
@@ -251,17 +251,9 @@
 			}
 		},
 		_loadRemoteData:function(key){//获取远程数据,key为关键字或者页码,key值存在且是字符串类型表示是按关键字过滤，是数字类型表示是分页，不存在表示是加载全部数据
-			
-
 			var arg=arguments;
 			//$(this).prop("disabled",true);//禁用当前输入框，防止重复发送AJAX
 			var _this=this,$this=$(this),container=$("#WEB_selectMenu_container"),param=this.settings.param(key);
-			if(this.settings.isRemoteFilter && $(this).val()===""){
-				container.html('<div class="WEB_select_noResult">请输入关键字！</div>');	
-				return;
-			}
-			container.html('<div class="WEB_selectMenu_list_wait"></div>');	
-			methods._setWaitIconPosition.call(this);//设置加载状态的样式
 			param.url=this.settings.dataSource;
 			if(key && key.page){//分页的时候需要禁用滚动条
 				param.url=this.settings.dataSource;
@@ -545,11 +537,10 @@
 		},
 		_remoteFilterKeywords:function(){//关键字过滤,从服务器查询数据
 			var inStr=$(this).val();//获取当前输入框内的关键字
-				if(inStr!=""){
-					methods._loadRemoteData.call(this,{"keywords":inStr});
+				if(inStr!="" && inStr.indexOf(this.settings.separator)==-1){
+					methods._loadRemoteData.call(this,{"keywords":inStr});//待处理：目前该控件暂不支持服务器分页，后期该功能加上后此处需要传递分页数据
 				}else{
-					$("#WEB_selectMenu_container").html('<div class="WEB_select_noResult">请输入关键字！</div>')
-					//methods._loadRemoteData.call(this);
+					methods._loadRemoteData.call(this);
 				}
 		},
 		_createPagination:function(d){//创建分页

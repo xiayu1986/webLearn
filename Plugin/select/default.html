@@ -71,7 +71,7 @@
 	{"data":[{"name":"城市","code":"city"},{"name":"国家","code":"country"},{"name":"区域","code":"country"},{"name":"大区","code":"country"}],"total":4}
 </div>
 </div>
-
+<div style="height: 2000px;"></div>
 <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="lib/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="lib/bootstrap.min.js"></script>
@@ -164,7 +164,7 @@ $(function(){
 	
 	$("#modal").on("shown.bs.modal",function(){
 		$(".modalSelect").WEB_selectMenu({
-			"dataSource":"#source",
+			"dataSource":"http://localhost/workspace/Plugin/select/test/code.json",
 			isMultiple:false,
 			isCreateIndent:true,
 			container:$("#modal")

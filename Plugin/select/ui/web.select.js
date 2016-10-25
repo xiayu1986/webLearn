@@ -6,6 +6,7 @@
 		trigger:"click",//触发事件：click
 		isEdit:true,//是否可输入
 		container:$("body"),
+		isScrollClose:true,
 		isCreateIndent:true,//是否创建下拉菜单标识
 		beforeShow:function(){},//打开菜单前执行的方法 
 		afterShow:function(){},//打开菜单后执行的方法
@@ -92,7 +93,7 @@
 			var container=$("#WEB_selectMenu_container");
 			if(container.length==0){
 				container=$('<div class="WEB_selectMenu_container" id="WEB_selectMenu_container"></div>');
-				container.appendTo(this.settings.container||$("body"));
+				container.appendTo($("body"));
 			}
 			//container.css({"display":"none"});
 			methods._createContainerEvent.call(this);//为容器绑定事件
@@ -130,6 +131,15 @@
 			$(document).click(function(e){//点击任意空白处收起
 				methods._closeSelectMenu.call(_this);
 			})
+			var containerDOM=this.settings.container;
+			if(this.settings.container.is("body")){
+				containerDOM=$(window)
+			}
+			if(this.settings.isScrollClose){//滚动容器时收起下拉菜单
+				containerDOM.on("scroll",function(){
+					methods._closeSelectMenu.call(_this);
+				})
+			}
 		},
 		_createSelectIdent:function(){//创建下拉菜单标识
 			var _this=this,$this=$(this);
@@ -231,7 +241,7 @@
 				else if(arrRule.test(sourceData)){//数组	
 					sourceData=$.parseJSON(sourceData);
 					methods._processData.call(_this,sourceData);//处理数据
-				}else if(sourceData.indexOf("/")!=-1 && urlRule.test(sourceData)){//从服务器上取数据
+				}else if(sourceData.indexOf("/")!=-1 || urlRule.test(sourceData)){//从服务器上取数据
 					if(!container.is(":hidden")){
 						methods._loadRemoteData.call(_this);//处理数据
 					}
@@ -241,9 +251,17 @@
 			}
 		},
 		_loadRemoteData:function(key){//获取远程数据,key为关键字或者页码,key值存在且是字符串类型表示是按关键字过滤，是数字类型表示是分页，不存在表示是加载全部数据
+			
+
 			var arg=arguments;
 			//$(this).prop("disabled",true);//禁用当前输入框，防止重复发送AJAX
 			var _this=this,$this=$(this),container=$("#WEB_selectMenu_container"),param=this.settings.param(key);
+			if(this.settings.isRemoteFilter && $(this).val()===""){
+				container.html('<div class="WEB_select_noResult">请输入关键字！</div>');	
+				return;
+			}
+			container.html('<div class="WEB_selectMenu_list_wait"></div>');	
+			methods._setWaitIconPosition.call(this);//设置加载状态的样式
 			param.url=this.settings.dataSource;
 			if(key && key.page){//分页的时候需要禁用滚动条
 				param.url=this.settings.dataSource;
@@ -252,7 +270,7 @@
 					container.append($('<div class="WEB_selectMenu_list_wait"></div>'));
 					methods._setWaitIconPosition.call(this);//设置加载状态的样式
 				}
-				var slider=$("#WEB_selectMenu_scroller .scroller_slider");
+				//var slider=$("#WEB_selectMenu_scroller .scroller_slider");
 				//container.off("mousewheel");
 				//slider.off("mousedown");
 			}
@@ -268,7 +286,8 @@
 						methods._processData.call(_this,res);
 					}
 				}else{
-					container.html('<div class="WEB_select_noResult">没有获取到数据！</div>')
+					var msg="没有获取到数据！";
+					container.html('<div class="WEB_select_noResult">'+msg+'</div>')
 				}
 			})
 			.fail(function(xhr){
@@ -484,9 +503,9 @@
 		},
 		_scroller:function(rate,scrollDir,sourceData){//滚动
 			var menu=$("#WEB_selectMenu_container .WEB_selectMenu");
-			var curLen=menu.find(".WEB_selectMenu_list").length;
-			var totalLen=sourceData.totalSize;
-			var remainRate=curLen/totalLen;
+			//var curLen=menu.find(".WEB_selectMenu_list").length;
+			//var totalLen=sourceData.totalSize;
+			//var remainRate=curLen/totalLen;
 			var scrollMaxDis=0,
 				container=$("#WEB_selectMenu_container"),
         		menu=$("#WEB_selectMenu_container .WEB_selectMenu");
@@ -525,12 +544,12 @@
 			}
 		},
 		_remoteFilterKeywords:function(){//关键字过滤,从服务器查询数据
-			var _this=this,filterData={},//定义搜索后的结果集
-				inStr=$(this).val();//获取当前输入框内的关键字
+			var inStr=$(this).val();//获取当前输入框内的关键字
 				if(inStr!=""){
 					methods._loadRemoteData.call(this,{"keywords":inStr});
 				}else{
-					methods._loadRemoteData.call(this);
+					$("#WEB_selectMenu_container").html('<div class="WEB_select_noResult">请输入关键字！</div>')
+					//methods._loadRemoteData.call(this);
 				}
 		},
 		_createPagination:function(d){//创建分页
@@ -575,7 +594,7 @@
 			methods._initSelectClass.call(this);//初始化选中样式
 		},
 		_setSelectedValue:function(curItem){//设置选中的数据,curItem为当前选择的项，不传表示是全选 或者 反选
-			var container=$("#WEB_selectMenu_container"),$this=$(this),
+			var container=$("#WEB_selectMenu_container"),
 				actives=container.find(".WEB_selectMenu_list_active"),
 				oldValue=$(this).val(),
 				oldValueArr=oldValue.length>0?oldValue.split(this.settings.separator):[],

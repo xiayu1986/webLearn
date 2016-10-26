@@ -33,5 +33,5 @@ input::-ms-clear { display: none; }
 .select_all_items{float: left;}
 .select_no_items{ float: right; }
 .select_close_items{ margin:0 auto; }
-.WEB_selectMenu_scroller{ z-index: 2; width: 6px; position: absolute; background:#eeeeee; border-radius: 6px; border-width: 0;}
-.WEB_selectMenu_scroller .scroller_slider{ width: 6px; height: 20px; font-size:0; line-height: 0; overflow: hidden; position: absolute; background: #ccc; left:0px; border-radius:6px; cursor: move;}
+.WEB_selectMenu_scroll{ z-index: 2; width: 6px; position: absolute; background:#eeeeee; border-radius: 6px; border-width: 0;}
+.WEB_selectMenu_scroll .scroll_slider{ width: 6px; height: 20px; font-size:0; line-height: 0; overflow: hidden; position: absolute; background: #ccc; left:0px; border-radius:6px; cursor: move;}

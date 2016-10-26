@@ -12,9 +12,9 @@
 	.group{ width: 290px; font-size: 14px; height: 38px; line-height: 38px; text-align: center; padding: 0 5px; float: left; cursor: pointer;}
 	.form-control{ border-radius:0; }
 	.row{margin:0;}
-	.col-sm-2{ width:20%; }
+	.col-sm-2{  width:20%; }
 	.col-sm-10{ width: 70%; }
-	.col-sm-2,.col-sm-10{ float:none; display:inline-block; padding-left:0; padding-right:0; }
+	.col-sm-2,.col-sm-10{ }
 </style>
 </head>
 <body>
@@ -94,7 +94,7 @@ $(function(){
 		initFilter:false,///初始化时是否执行筛选
 		formatTemplate:"2",//自定义下拉菜单风格：目前仅支持1,2两种
 		isRemoteFilter:true,//远程接口是否支持filter：该参数目前仅支持false
-		isRemotePager:false,//线上分页
+		isRemotePager:true,//线上分页
 		indentX:10,//下拉菜单图标与输入框右侧的距离
 		separator:"|",//定义多选时写入到输入框的分隔符
 		showOptions:false,//多选时是否显示操作项(全选、取消)：该参数目前暂时无效

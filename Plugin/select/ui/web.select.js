@@ -397,12 +397,12 @@
 			}
 		},
 		_createScroll:function(firstPageData,totalData){//创建滚动条并设置样式,第一个参数是当前页的数据，第二个参数是总数据
-			if($("#WEB_selectMenu_container .WEB_selectMenu .WEB_selectMenu_list").length==0){
+			//if($("#WEB_selectMenu_container .WEB_selectMenu .WEB_selectMenu_list").length==0){
 				methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
-			}
-			else{
-				methods._appendPagerItem.call(this,totalData);//追加数据
-			}
+			//}
+			//else{
+				///methods._appendPagerItem.call(this,totalData);//追加数据
+			//}
 				//methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
 			var webSelectScroll=$("#WEB_selectMenu_scroll"),
 				container=$("#WEB_selectMenu_container"),
@@ -479,7 +479,7 @@
 							rate=dir*_this.settings.scrollRate*baseH,//每次滚动时的高度
 							basePos=$("#WEB_selectMenu_container .WEB_selectMenu").position().top,
 							maxH=0,
-							scrollerRate;
+							scrollRate;
 						basePos+=rate;
 						if(_this.settings.isMultiple && _this.settings.showOptions){//多选
 							maxH=menu.height()-container.height()+$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight();
@@ -497,8 +497,8 @@
 						}
 						menu.css({"top":basePos});
 						//联动滚动条
-						scrollerRate=basePos/maxH;
-						slider.css({"top":-maxTop*scrollerRate});
+						scrollRate=basePos/maxH;
+						slider.css({"top":-maxTop*scrollRate});
 						methods._createPagination.call(_this,sourceData);//如果数据总量大于每页可显示的数量调用分页方法
 					})	
 		},

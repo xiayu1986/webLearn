@@ -6,7 +6,7 @@
 		trigger:"click",//触发事件：click
 		isEdit:true,//是否可输入
 		container:$("body"),
-		isScrollClose:true,
+		isScrollClose:false,
 		isCreateIndent:true,//是否创建下拉菜单标识
 		beforeShow:function(){},//打开菜单前执行的方法 
 		afterShow:function(){},//打开菜单后执行的方法
@@ -146,7 +146,7 @@
 			this.indent=$('<div class="WEB_selectIndent"></div>');
 			this.indent.attr("targetId",_this.uid);
 
-			if($(".WEB_selectIndent[targetid="+_this.uid+"]").length==0){
+			if($(".WEB_selectIndent[targetId="+_this.uid+"]").length==0){
 				this.indent.appendTo(this.settings.container||$("body"));
 			}
 			methods._setSelectIdentPosition.call(this);//设置下拉菜单标志符的位置
@@ -188,7 +188,7 @@
 			$(".WEB_select_current").removeClass('WEB_select_current');//移除当前输入框高亮
 			$(this).addClass('WEB_select_current');//为当前输入框添加高亮
 			$(".WEB_selectIndent_active").removeClass('WEB_selectIndent_active');//移除当前下拉菜单展开标志
-			$(".WEB_selectIndent[targetid="+this.uid+"]").addClass('WEB_selectIndent_active');//为下拉添加展开标志
+			$(".WEB_selectIndent[targetId="+this.uid+"]").addClass('WEB_selectIndent_active');//为下拉添加展开标志
 			methods._position.call(this);//设置下拉菜单位置
 			methods._getSelectMenuData.call(this);//获取下拉菜单数据
 			$(window).on("resize",function(){//可视区大小改变重置下拉菜单位置
@@ -205,7 +205,7 @@
                 this.settings.beforeHide.call(this);
             }
 			$("#WEB_selectMenu_container").html("").css({"display":"none"}).off("mousewheel");
-			$(".WEB_selectIndent[targetid="+this.uid+"]").removeClass('WEB_selectIndent_active');
+			$(".WEB_selectIndent[targetId="+this.uid+"]").removeClass('WEB_selectIndent_active');
 			$(this).removeClass('WEB_select_current');
             if($.isFunction(this.settings.afterHide)){
                 this.settings.afterHide.call(this);
@@ -315,9 +315,7 @@
 		_renderSelectMenu:function(incomeData){//渲染列表
 			var container=$("#WEB_selectMenu_container"),sourceHtml="",
 				sourceHtml=methods._createSelectTemplate.call(this,incomeData,true);
-			if($(this).hasClass("WEB_select_current")){
 				container.html(sourceHtml);
-			}
             if($.isFunction(this.settings.afterShow)){
                 this.settings.afterShow.call(this);
             }
@@ -399,16 +397,22 @@
 			}
 		},
 		_createScroll:function(firstPageData,totalData){//创建滚动条并设置样式,第一个参数是当前页的数据，第二个参数是总数据
+			if($("#WEB_selectMenu_container .WEB_selectMenu .WEB_selectMenu_list").length==0){
 				methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
-			var webSelectScroller=$("#WEB_selectMenu_scroll"),
+			}
+			else{
+				methods._appendPagerItem.call(this,totalData);//追加数据
+			}
+				//methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
+			var webSelectScroll=$("#WEB_selectMenu_scroll"),
 				container=$("#WEB_selectMenu_container"),
 				t=0,//定义并初始化滚动条的位置
 				r,
 				h=0,//定义并初始化滚动条的最大高度
 				H=parseInt(container.css("maxHeight"));//用于确定滚动条的最大高度
-			if(webSelectScroller.length==0){
-				webSelectScroller=$('<div class="WEB_selectMenu_scroll" id="WEB_selectMenu_scroll"><div class="scroll_slider"></div></div>');
-				webSelectScroller.appendTo(container);
+			if(webSelectScroll.length==0){
+				webSelectScroll=$('<div class="WEB_selectMenu_scroll" id="WEB_selectMenu_scroll"><div class="scroll_slider"></div></div>');
+				webSelectScroll.appendTo(container);
 			}
 			if(this.settings.isMultiple && this.settings.showOptions){//针对多选设置
 				var optionsH=$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight();
@@ -421,13 +425,13 @@
 			var rate=this.settings.baseNumber/totalData.totalSize,
 				menuSlider=$("#WEB_selectMenu_scroll .scroll_slider"),
 				sh=rate*h<=30?30:rate*h,
-				l=(webSelectScroller.width()-menuSlider.width())/2;
+				l=(webSelectScroll.width()-menuSlider.width())/2;
 			menuSlider.css({"height":sh,"top":0,"left":l});
-			var baseR=(menuSlider.outerWidth()-webSelectScroller.outerWidth())/2;
+			var baseR=(menuSlider.outerWidth()-webSelectScroll.outerWidth())/2;
 			r=baseR==0?2:(baseR<0?-baseR:baseR);
-			webSelectScroller.css({"height":h,"top":t,"right":r});
+			webSelectScroll.css({"height":h,"top":t,"right":r});
 
-			webSelectScroller.on("click",".scroll_slider",function(e){
+			webSelectScroll.on("click",".scroll_slider",function(e){
 				e.stopPropagation();
 			})
 			methods._bindScrollEvent.call(this,totalData);//绑定滚动条的滚动事件

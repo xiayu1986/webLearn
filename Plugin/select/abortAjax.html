@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="theme/bootstrap.min.css">
+<title>无标题文档</title>
+<style type="text/css">
+	.hidden{ display:none;}
+	.container{ width:1200px; margin:10px auto; }
+	.list-group{ overflow:hidden; }
+	.list{ float:left; width:20%; padding:0 10px 0 0;}
+	.list:last-child{ padding: 0; }
+</style>
+</head>
+<body>
+<div class="container">
+<div id="source" class="hidden source">
+	{"data":[{"name":"城市","code":"city"},{"name":"国家","code":"country"},{"name":"区域","code":"country"},{"name":"大区","code":"country"}],"total":4}
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<div class="btn-group">
+			<button class="btn btn-primary" id="sendBtn">发送</button><button class="btn btn-primary" id="stopBtn">中止</button>
+		</div>
+	</div>
+	<div class="panel-body">
+		<div id="result"></div>
+	</div>
+</div>
+</div>
+<script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+$(function(){
+	var ajaxStatus=null;
+	$("#sendBtn").click(function(){
+		$(this).addClass("ajaxStatus");
+		this.state=1;
+		this.ajax=$.ajax({
+			"url":"http://localhost/workspace/Plugin/select/test/code.json",
+			"timeout":3000
+		})
+
+		this.ajax.done(function(res){
+			setTimeout(function(){
+				$("#result").html("发送请求成功！");
+			},2000)
+			
+		})
+		.fail(function(){});
+	})
+
+	$("#stopBtn").click(function(){
+		ajaxStatus=$(".ajaxStatus").get(0);
+		if(ajaxStatus){
+			console.log(ajaxStatus.state);
+			$(ajaxStatus).removeClass("ajaxStatus");
+			ajaxStatus.ajax.abort();
+		}
+		$("#result").html("中止请求成功！");
+	})
+})
+</script>
+</body>
+</html>

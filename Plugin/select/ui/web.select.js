@@ -397,13 +397,16 @@
 			}
 		},
 		_createScroll:function(firstPageData,totalData){//创建滚动条并设置样式,第一个参数是当前页的数据，第二个参数是总数据
-			//if($("#WEB_selectMenu_container .WEB_selectMenu .WEB_selectMenu_list").length==0){
+			if(this.settings.isRemotePager){//仅在远程分页的时候触发该逻辑
+				if($("#WEB_selectMenu_container .WEB_selectMenu .WEB_selectMenu_list").length==0){
+					methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
+				}
+				else{
+					methods._appendPagerItem.call(this,totalData);//追加数据
+				}
+			}else{
 				methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
-			//}
-			//else{
-				///methods._appendPagerItem.call(this,totalData);//追加数据
-			//}
-				//methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
+			}
 			var webSelectScroll=$("#WEB_selectMenu_scroll"),
 				container=$("#WEB_selectMenu_container"),
 				t=0,//定义并初始化滚动条的位置
@@ -559,7 +562,8 @@
 				loadedNum=items.length,//取当前已加载的选项用于确定已经加载到第几页
 				curPage=Math.ceil(loadedNum/this.settings.baseNumber),//当前已加载的页数
 				totalPage=Math.ceil(d.totalSize/this.settings.baseNumber);//总页数
-			if(curPage==totalPage){//如果当前页数等于总页数则停止加载
+				console.log("当前加载了："+curPage+"页  一共有："+totalPage+"页")
+			if(curPage>=totalPage){//如果当前页数等于总页数则停止加载
 				return;
 			}
 			var criticalDom=items.last(),//临界DOM,当它出现在可视区时立即加载下一页数据

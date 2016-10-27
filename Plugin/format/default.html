@@ -36,8 +36,7 @@
 $(function(){
 	$(".indentBtn").click(function(){
 		var sourceData=$(this).data("sourceData")||$(".WEB_format_area").val();
-		console.log(sourceData)
-		var arrRule=/^\s*(\[.*\])|(\{.*\})\s*$/g;
+		var arrRule=/^\s*(\[+\n*(\n*.*)*\n*\]+|\{+\n*(\n*.*)*\n*\}+)\s*$/g;
 		if(sourceData===""){
 			$(".WEB_format_message").html("数据不能为空！");
 			return;

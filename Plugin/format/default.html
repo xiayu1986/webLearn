@@ -54,7 +54,7 @@ $(function(){
 		}
 		$(".WEB_format_message").html("");
 		$(this).removeData("sourceData").data("sourceData",sourceData);
-		formatData(resultData,true);
+		formatData(resultData,false);
 	})
 	$(".compressBtn").click(function(){
 		var sourceData=$(this).data("sourceData")||$(".WEB_format_area").val();
@@ -76,7 +76,7 @@ $(function(){
 		}
 		$(".WEB_format_message").html("");
 		$(this).removeData("sourceData").data("sourceData",sourceData);
-		formatData(resultData,false);
+		formatData(resultData,true);
 	})
 
 	function formatData(data,compress){

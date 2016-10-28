@@ -12,7 +12,34 @@
 			"placeholder":"请在此输入您的数据"
 		},
 		indentClass:"    ",//缩进级别
-		lineBreak:"\n"//换行符
+		lineBreak:"\n",//换行符
+		ico:{/* 树图标 */
+			//文件夹结构线
+			r0:'img18.gif',
+			r0c:'img19.gif',
+			r1:'img20.gif',
+			r1c:'img21.gif',
+			r2:'img22.gif',
+			r2c:'img23.gif',
+			//前缀图片
+			nl:'img24.gif',
+			vl:'img25.gif',
+			//文件结构线
+			f1:'img26.gif',
+			f2:'img27.gif',
+			root:'img28.gif',
+			//文件夹
+			arr:'img29.gif',
+			arrc:'img30.gif',
+			obj:'img31.gif',
+			objc:'img32.gif',
+			//文件
+			arr2:'img33.gif',
+			obj2:'img34.gif'
+		},
+		img:"",
+		root:"",
+		name:""
 	}
 	var methods={
 		init:function(options){
@@ -56,8 +83,6 @@
 			$(this).off(".format").on("click.format",".actionBtn",function () {//格式化
 				if($(this).hasClass("empty")){//清空
 					area.val("");
-				}else if($(this).hasClass("treeView")){//构建树
-
 				}else{
 					var sourceData=area.val(),
 						isCompress=$(this).hasClass("compress")?true:false,
@@ -65,7 +90,11 @@
 					if($.type(checkOut)!=="object"){
 						return;
 					}
-					methods._formatData.call(_this,checkOut.data,isCompress);
+					if($(this).hasClass("treeView")){//生成树
+						methods._createTreeView.call(_this,checkOut.data);
+					}else{
+						methods._formatData.call(_this,checkOut.data,isCompress);
+					}
 				}
 			})
 		},
@@ -134,8 +163,48 @@
 			message.html("");
 			return {"result":true,"data":resultData};
 		},
-		_createTreeView:function(){//生成树
+		_createTreeView:function(sourceData){//生成树
+			var draw=[],_this=this,ico=this.settings.ico;
+			var notify=function(prefix,lastParent,name,value,formObj){/* 构造子节点 */
+				/*prefix:前缀HTML lastParent：父是否是尾节点(确定图标是空白|结构线) name：节点名 value：节点值 formObj：父是否是对象(确定子图标)*/
 
+				var rl=prefix==''?ico.r0:lastParent?ico.r1:ico.r2;/* 配置根节点图标 */
+
+				if($.type(value)=="array"){/* 处理数组节点 */
+					draw.push('<dl><dt>',methods.draw.call(_this,prefix,rl,ico.arr,name,''),'</dt><dd>');/* 绘制文件夹 */
+					for (var i=0;i<value.length;i++){
+						notify(prefix,i==value.length-1,i,value[i]);
+						draw.push('</dd></dl>');
+					}
+				}else	if($.type(value)=='object'){/* 处理对象节点 */
+					draw.push('<dl><dt>',methods.draw.call(_this,prefix,rl,ico.obj,name,''),'</dt><dd>');/* 绘制文件夹 */
+					var len=0,i=0;
+					for(var key in value){len++};/* 获取对象成员总数 */
+					for(var key in value){
+						notify(prefix,++i==len,key,value[key],true)
+					};
+					draw.push('</dd></dl>');
+				}else{/* 处理叶节点(绘制文件) */
+					draw.push('<dl><dt>',methods.draw.call(_this,prefix,lastParent?ico.f1:ico.f2,formObj?ico.obj2:ico.arr2,name,value),'</dt></dl>');
+				}
+			};/* 不是[]或者{}不绘制 */
+			if(!$.isEmptyObject(sourceData)){
+				notify('',true,this.settings.root,sourceData);
+			}
+			$(this).find(".WEB_format_tree").html(draw.join(''));/* 显示在树窗口 */
+		},draw:function(prefix,line,ico,name,value){/* 子项HTML构造器 */
+			var cmd=false,J=this.settings.ico,imgName=false;
+			switch (line)	{//传递切换图标
+				case J.r0:imgName='r0';break;
+				case J.r1:imgName='r1';break;
+				case J.r2:imgName='r2';
+			}
+			if(imgName)cmd=' onclick="'+this.name+'.show(this,\''+imgName+'\')" ';/* 加入折叠命令 */
+			var type=typeof name=='string'?'(对象成员)':'(数组索引)';
+			return prefix+this.settings.img
+				+this.settings.img+' <a href="javascript:void(0)" onclick="'+this.settings.name+'.click(this);" '
+				+'key="'+name+'" val="'+value+'" >'
+				+name+type+(value==''?'':' = ')+value+'</a>'
 		}
 
 }

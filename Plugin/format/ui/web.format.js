@@ -51,7 +51,23 @@
 			methods._createFormatEvents.call(this);//创建容器事件
 		},
 		_createFormatEvents:function(){//绑定事件
+			var area=$(this).find(".WEB_format_area"),
+				_this=this;
+			$(this).off(".format").on("click.format",".actionBtn",function () {//格式化
+				if($(this).hasClass("empty")){//清空
+					area.val("");
+				}else if($(this).hasClass("treeView")){//构建树
 
+				}else{
+					var sourceData=area.val(),
+						isCompress=$(this).hasClass("compress")?true:false,
+						checkOut=methods._checkOutJson.call(_this,sourceData);
+					if($.type(checkOut)!=="object"){
+						return;
+					}
+					methods._formatData.call(_this,checkOut.data,isCompress);
+				}
+			})
 		},
 		_formatData:function(data,isCompress){//格式化数据,data:数据，isCompress:是否压缩>true:是，false:否
 			var draw=[],//保存解析后的数据
@@ -65,15 +81,11 @@
 				line=ind="";
 			}
 			var readData=function(name,value,isLast,indent,formObj){
-
 				nodeCount++;//递增节点
-
 				for (var i=0,tab='';i<indent;i++ ){//递增缩进
 					tab+=ind
 				}
-
 				maxDepth=++indent;//递增级别
-
 				if($.type(value)==='array'){//处理数组
 						draw.push(tab+(formObj?('"'+name+'":'):'')+'['+line);/*缩进'[' 然后换行*/
 						for (var i=0;i<value.length;i++){
@@ -91,7 +103,7 @@
 						};
 						draw.push(tab+'}'+(isLast?line:(','+line)));//缩进'}'换行,若非尾元素则添加逗号
 				}else{
-						if(typeof value=='string'){
+						if($.type(value)=='string'){
 							value='"'+value+'"'
 						};
 						draw.push(tab+(formObj?('"'+name+'":'):'')+value+(isLast?'':',')+line);
@@ -100,6 +112,27 @@
 			readData('',data,true,0,false);//调用
 			message.html('共处理节点<b>'+nodeCount+'</b>个,最大树深为<b>'+maxDepth+'</b>');
 			area.val(draw.join(''));
+		},
+		_checkOutJson:function (sourceData) {//校验数据格式是否正确
+			var message=$(this).find(".WEB_format_message"),
+				jsonRule=/^\s*(\[+\n*(\n*.*)*\n*\]+|\{+\n*(\n*.*)*\n*\}+)\s*$/g;
+			if(sourceData===""){
+				message.html("数据不能为空！");
+				return false;
+			}else if(jsonRule.test(sourceData)){
+				message.html("");
+				try{
+					var resultData=eval('('+sourceData+')');
+				}catch(e){
+					message.html("数据格式化出错！");
+					return false;
+				}
+			}else{
+				message.html("数据格式不匹配！");
+				return false;
+			}
+			message.html("");
+			return {"result":true,"data":resultData};
 		},
 		_createTreeView:function(){//生成树
 

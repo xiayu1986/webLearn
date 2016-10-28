@@ -17,6 +17,7 @@
 				<div class="WEB_format_option">
 					<div class="formatBtn indentBtn">格式化</div>
 					<div class="formatBtn compressBtn">删除空格</div>
+					<div class="formatBtn createTreeBtn">生成树</div>
 					<div class="formatBtn emptyBtn">清空</div>
 				</div>
 				<div class="WEB_format_data">
@@ -77,6 +78,11 @@ $(function(){
 		$(".WEB_format_message").html("");
 		$(this).removeData("sourceData").data("sourceData",sourceData);
 		formatData(resultData,true);
+	})
+
+	$(".emptyBtn").click(function(){
+		$(".indentBtn").removeData("sourceData");
+		$(".WEB_format_area").val("");
 	})
 
 	function formatData(data,compress){

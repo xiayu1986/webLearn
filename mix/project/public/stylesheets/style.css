@@ -1,0 +1,4 @@
+.result{}
+.wait{ width: 32px; height: 32px; background: url("../images/wait.gif") no-repeat; margin:10px auto;}
+.noResult{ text-align: center;}
+.time{ font-weight: bold;}

@@ -54,16 +54,40 @@ $(function(){
 		}
 		$(".WEB_format_message").html("");
 		$(this).removeData("sourceData").data("sourceData",sourceData);
-		formatData(resultData);
+		formatData(resultData,true);
+	})
+	$(".compressBtn").click(function(){
+		var sourceData=$(this).data("sourceData")||$(".WEB_format_area").val();
+		var arrRule=/^\s*(\[+\n*(\n*.*)*\n*\]+|\{+\n*(\n*.*)*\n*\}+)\s*$/g;
+		if(sourceData===""){
+			$(".WEB_format_message").html("数据不能为空！");
+			return;
+		}else if(arrRule.test(sourceData)){
+			$(".WEB_format_message").html("");
+			try{
+				var resultData=eval('('+sourceData+')');
+			}catch(e){
+				$(".WEB_format_message").html("数据格式化出错！");
+				return;
+			}
+		}else{
+			$(".WEB_format_message").html("数据格式不匹配！");
+			return;
+		}
+		$(".WEB_format_message").html("");
+		$(this).removeData("sourceData").data("sourceData",sourceData);
+		formatData(resultData,false);
 	})
 
-	function formatData(data){
+	function formatData(data,compress){
 		var draw=[],//保存解析后的数据
 			line='\n',//换行符
 			ind="    ",//缩进符
 			nodeCount=0,//最大节点数量
 			maxDepth=0;//最大深度
-
+			if(compress){
+				line=ind="";
+			}
 		var readData=function(name,value,isLast,indent,formObj){
 
 			nodeCount++;//递增节点

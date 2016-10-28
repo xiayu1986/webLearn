@@ -13,5 +13,5 @@ input::-ms-clear { display: none; }
 
 
 .WEB_format_option{ overflow:hidden; padding:10px 0;}
-.WEB_format_option .formatBtn{ float:left; padding:5px 10px; margin-right:10px; border:1px solid #4a84c4; cursor:pointer;}
+.WEB_format_option .actionBtn{ float:left; padding:5px 10px; margin-right:10px; border:1px solid #4a84c4; cursor:pointer;}
 .WEB_format_message{width:96%;border:#4a84c4 1px solid; margin-top:10px; padding:5px; text-align:center; color:#ff0000; min-height:24px;}

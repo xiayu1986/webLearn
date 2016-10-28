@@ -11,23 +11,7 @@
 <div class="panel panel-primary">
 <div class="panel-heading">数据格式化</div>
 	<div class="panel-body">
-		<div class="WEB_format_container">
-			<div class="WEB_format_tree"></div>
-			<div class="WEB_format_source">
-				<div class="WEB_format_option">
-					<div class="formatBtn indentBtn">格式化</div>
-					<div class="formatBtn compressBtn">删除空格</div>
-					<div class="formatBtn createTreeBtn">生成树</div>
-					<div class="formatBtn emptyBtn">清空</div>
-				</div>
-				<div class="WEB_format_data">
-					<textarea class="WEB_format_area" placeholder="请在此输入您的数据"></textarea>
-				</div>
-				<div class="WEB_format_message">
-					
-				</div>
-			</div>
-		</div>
+		<div class="jsonContainer" id="jsonContainer"></div>
 	</div>
 </div>
 </div>
@@ -35,6 +19,8 @@
 <script type="text/javascript" src="ui/web.format.js"></script>
 <script type="text/javascript">
 $(function(){
+	$("#jsonContainer").WEB_format();
+	
 	$(".indentBtn").click(function(){
 		var sourceData=$(this).data("sourceData")||$(".WEB_format_area").val();
 		var arrRule=/^\s*(\[+\n*(\n*.*)*\n*\]+|\{+\n*(\n*.*)*\n*\}+)\s*$/g;

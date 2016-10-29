@@ -109,6 +109,7 @@
 				area=$(this).find(".WEB_format_area");//数据操作区
 			if(isCompress){//如果压缩去除换行 空格
 				line=ind="";
+
 			}
 			var readData=function(name,value,isLast,indent,formObj){
 				nodeCount++;//递增节点

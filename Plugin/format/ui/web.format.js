@@ -87,6 +87,7 @@
 					var sourceData=area.val(),
 						isCompress=$(this).hasClass("compress")?true:false,
 						checkOut=methods._checkOutJson.call(_this,sourceData);
+					console.log("校验")
 					if($.type(checkOut)!=="object"){
 						return;
 					}
@@ -144,7 +145,7 @@
 		},
 		_checkOutJson:function (sourceData) {//校验数据格式是否正确
 			var message=$(this).find(".WEB_format_message"),
-				jsonRule=/^\s*(\[+\n*(\n*.*)*\n*\]+|\{+\n*(\n*.*)*\n*\}+)\s*$/g;
+				jsonRule=/^\s*(\[\n*(\n*.*)*\n*\]|\{\n*(\n*.*)*\n*\})\s*$/g;
 			if(sourceData===""){
 				message.html("数据不能为空！");
 				return false;

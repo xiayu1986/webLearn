@@ -38,7 +38,7 @@
 			obj2:'img34.gif'
 		},
 		img:"",
-		root:"",
+		root:"根节点",
 		name:""
 	}
 	var methods={
@@ -166,14 +166,17 @@
 		_createTreeView:function(sourceData){//生成树
 			var draw=[],_this=this,ico=this.settings.ico;
 			var notify=function(prefix,lastParent,name,value,formObj){/* 构造子节点 */
-				/*prefix:前缀HTML lastParent：父是否是尾节点(确定图标是空白|结构线) name：节点名 value：节点值 formObj：父是否是对象(确定子图标)*/
-
-				var rl=prefix==''?ico.r0:lastParent?ico.r1:ico.r2;/* 配置根节点图标 */
+				/*prefix:生成多少图片起到缩进的作用
+				lastParent：父是否是尾节点(确定图标是空白|结构线)
+				name：节点名
+				value：节点值
+				formObj：父是否是对象(确定子图标)*/
+				var rl=prefix==''?ico.r0:lastParent?ico.r1:ico.r2;//配置根节点图标
 
 				if($.type(value)=="array"){/* 处理数组节点 */
 					draw.push('<dl><dt>',methods.draw.call(_this,prefix,rl,ico.arr,name,''),'</dt><dd>');/* 绘制文件夹 */
 					for (var i=0;i<value.length;i++){
-						notify(prefix,i==value.length-1,i,value[i]);
+						notify(prefix+methods._createImage(lastParent?ico.nl:ico.vl),i==value.length-1,i,value[i]);
 						draw.push('</dd></dl>');
 					}
 				}else	if($.type(value)=='object'){/* 处理对象节点 */
@@ -181,17 +184,18 @@
 					var len=0,i=0;
 					for(var key in value){len++};/* 获取对象成员总数 */
 					for(var key in value){
-						notify(prefix,++i==len,key,value[key],true)
+						notify(prefix+methods._createImage(lastParent?ico.nl:ico.vl),++i==len,key,value[key],true)
 					};
 					draw.push('</dd></dl>');
 				}else{/* 处理叶节点(绘制文件) */
 					draw.push('<dl><dt>',methods.draw.call(_this,prefix,lastParent?ico.f1:ico.f2,formObj?ico.obj2:ico.arr2,name,value),'</dt></dl>');
 				}
-			};/* 不是[]或者{}不绘制 */
-			if(!$.isEmptyObject(sourceData)){
-				notify('',true,this.settings.root,sourceData);
+			};
+			if($.isEmptyObject(sourceData)){//空对象不绘制
+				return;
 			}
-			$(this).find(".WEB_format_tree").html(draw.join(''));/* 显示在树窗口 */
+			notify('',true,this.settings.root,sourceData);
+			$(this).find(".WEB_format_tree").html(draw.join(''));
 		},draw:function(prefix,line,ico,name,value){/* 子项HTML构造器 */
 			var cmd=false,J=this.settings.ico,imgName=false;
 			switch (line)	{//传递切换图标
@@ -200,11 +204,14 @@
 				case J.r2:imgName='r2';
 			}
 			if(imgName)cmd=' onclick="'+this.name+'.show(this,\''+imgName+'\')" ';/* 加入折叠命令 */
-			var type=typeof name=='string'?'(对象成员)':'(数组索引)';
-			return prefix+this.settings.img
-				+this.settings.img+' <a href="javascript:void(0)" onclick="'+this.settings.name+'.click(this);" '
+			return prefix+methods._createImage(line,cmd)
+				+this.settings.img+' <a href="javascript:void(0)">'
+				+methods._createImage(ico)+'</a> <a href="javascript:void(0)"'
 				+'key="'+name+'" val="'+value+'" >'
-				+name+type+(value==''?'':' = ')+value+'</a>'
+				+name+(value==''?'':':')+value+'</a>'
+		},
+		_createImage:function(src,attr){//创建图片
+			return '<img src="'+src+'" '+(attr||'')+'  />';
 		}
 
 }

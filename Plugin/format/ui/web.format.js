@@ -55,10 +55,14 @@
 		},
 		_createFormatEvents:function(){//绑定事件
 			var area=$(this).find(".WEB_format_area"),
+				treeView=$(this).find(".WEB_format_tree"),
+				message=$(this).find(".WEB_format_message"),
 				_this=this;
 			$(this).off(".format").on("click.format",".actionBtn",function () {//格式化
 				if($(this).hasClass("empty")){//清空
 					area.val("");
+					treeView.html('');
+					message.html('');
 				}else{
 					var sourceData=area.val(),
 						isCompress=$(this).hasClass("compress")?true:false,
@@ -72,6 +76,14 @@
 						methods._formatData.call(_this,checkOut.data,isCompress);
 					}
 				}
+			})
+			area.on("input keyup",function () {
+				var sourceData=area.val(),
+					checkOut=methods._checkOutJson.call(_this,sourceData);
+				if($.type(checkOut)!=="object"){
+					return;
+				}
+				methods._createTreeView.call(_this,checkOut.data)
 			})
 		},
 		_formatData:function(data,isCompress){//格式化数据,data:数据，isCompress:是否压缩>true:是，false:否
@@ -87,7 +99,6 @@
 				area=$(this).find(".WEB_format_area");//数据操作区
 			if(isCompress){//如果压缩去除换行 空格
 				line=ind="";
-
 			}
 			var readData=function(name,value,isLast,indent,formObj){
 				nodeCount++;//递增节点
@@ -194,11 +205,10 @@
 			}
 			notify('root',sourceData,true,0);//绘制根节点
 			$(this).find(".WEB_format_tree").html(draw.join(''));//将绘制好的结构添加到树形结构区
-			console.log("节点总数："+nodeCount+"最大树深："+maxDepth);
+			$(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大树深为<b>'+maxDepth+'</b>');
 		},
 		_createTreeIcon:function(name,value,isLastNode,indent){//创建节点图标
 			var nodeName='',result='',foldIcon='',typeIcon='',indentIcon='',lineIcon='';
-			console.log("键："+name+(isLastNode?"是":"不是")+"最后一个节点");
 			if(name==="root"){
 				nodeName="根节点"
 			}

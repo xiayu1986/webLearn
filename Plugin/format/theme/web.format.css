@@ -15,4 +15,15 @@ input::-ms-clear { display: none; }
 .WEB_format_option{ overflow:hidden; padding:10px 0;}
 .WEB_format_option .actionBtn{ float:left; padding:5px 10px; margin-right:10px; border:1px solid #4a84c4; cursor:pointer;}
 .WEB_format_message{width:96%;border:#4a84c4 1px solid; margin-top:10px; padding:5px; text-align:center; color:#ff0000; min-height:24px;}
-.treeViewIcon{ display: inline-block; width: 24px; height: 24px; vertical-align: middle;}
+.tree-icon{ display: inline-block; width: 16px; height: 16px; vertical-align: middle;}
+.tree-icon-array{ background: url("array.gif")}
+.tree-icon-object{ background: url("object.gif")}
+.tree-icon-line{ background: url("line.gif")}
+.tree-icon-end{ background: url("end.gif")}
+.tree-icon-join{ background: url("join.gif")}
+
+.tree-icon-close{ background: url("close.gif")}
+.tree-icon-open{ background: url("open.gif")}
+
+.tree-icon-number{ background: url("leaf-green.gif")}
+.tree-icon-default{ background: url("leaf-blue.gif")}

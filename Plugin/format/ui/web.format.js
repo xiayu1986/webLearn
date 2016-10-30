@@ -11,35 +11,11 @@
 			"empty":"清空",
 			"placeholder":"请在此输入您的数据"
 		},
-		indentClass:"    ",//缩进级别
+		indentClass:4,//缩进级别
 		lineBreak:"\n",//换行符
-		ico:{/* 树图标 */
-			//文件夹结构线
-			r0:'img18.gif',
-			r0c:'img19.gif',
-			r1:'img20.gif',
-			r1c:'img21.gif',
-			r2:'img22.gif',
-			r2c:'img23.gif',
-			//前缀图片
-			nl:'img24.gif',
-			vl:'img25.gif',
-			//文件结构线
-			f1:'img26.gif',
-			f2:'img27.gif',
-			root:'img28.gif',
-			//文件夹
-			arr:'img29.gif',
-			arrc:'img30.gif',
-			obj:'img31.gif',
-			objc:'img32.gif',
-			//文件
-			arr2:'img33.gif',
-			obj2:'img34.gif'
+		icoClass:{
 		},
-		img:"",
 		root:"根节点",
-		name:""
 	}
 	var methods={
 		init:function(options){
@@ -87,7 +63,6 @@
 					var sourceData=area.val(),
 						isCompress=$(this).hasClass("compress")?true:false,
 						checkOut=methods._checkOutJson.call(_this,sourceData);
-					console.log("校验")
 					if($.type(checkOut)!=="object"){
 						return;
 					}
@@ -100,9 +75,12 @@
 			})
 		},
 		_formatData:function(data,isCompress){//格式化数据,data:数据，isCompress:是否压缩>true:是，false:否
+			var ind='';
+			for(var i=0;i<this.settings.indentClass;i++){
+				ind+=" ";//缩进量
+			}
 			var draw=[],//保存解析后的数据
 				line=this.settings.lineBreak,//换行符
-				ind=this.settings.indentClass,//缩进符
 				nodeCount=0,//最大节点数量
 				maxDepth=0,//最大深度
 				message=$(this).find(".WEB_format_message"),//消息显示区
@@ -165,55 +143,101 @@
 			message.html("");
 			return {"result":true,"data":resultData};
 		},
-		_createTreeView:function(sourceData){//生成树
-			var draw=[],_this=this,ico=this.settings.ico;
-			var notify=function(prefix,lastParent,name,value,formObj){/* 构造子节点 */
-				/*prefix:生成多少图片起到缩进的作用
-				lastParent：父是否是尾节点(确定图标是空白|结构线)
-				name：节点名
-				value：节点值
-				formObj：父是否是对象(确定子图标)*/
-				var rl=prefix==''?ico.r0:lastParent?ico.r1:ico.r2;//配置根节点图标
-
-				if($.type(value)=="array"){/* 处理数组节点 */
-					draw.push('<dl><dt>',methods.draw.call(_this,prefix,rl,ico.arr,name,''),'</dt><dd>');/* 绘制文件夹 */
-					for (var i=0;i<value.length;i++){
-						notify(prefix+methods._createImage(lastParent?ico.nl:ico.vl),i==value.length-1,i,value[i]);
-						draw.push('</dd></dl>');
-					}
-				}else	if($.type(value)=='object'){/* 处理对象节点 */
-					draw.push('<dl><dt>',methods.draw.call(_this,prefix,rl,ico.obj,name,''),'</dt><dd>');/* 绘制文件夹 */
-					var len=0,i=0;
-					for(var key in value){len++};/* 获取对象成员总数 */
-					for(var key in value){
-						notify(prefix+methods._createImage(lastParent?ico.nl:ico.vl),++i==len,key,value[key],true)
-					};
-					draw.push('</dd></dl>');
-				}else{/* 处理叶节点(绘制文件) */
-					draw.push('<dl><dt>',methods.draw.call(_this,prefix,lastParent?ico.f1:ico.f2,formObj?ico.obj2:ico.arr2,name,value),'</dt></dl>');
+		_createTreeView:function(sourceData){//生成树形结构
+			var draw=[],_this=this,nodeCount=0,maxDepth=0;//draw：存储绘制的节点HTML,nodeCount:节点数量,maxDepth:最大深度
+			var notify=function(name,value,isLast,indent){//name:数据键，value:数据值，isLast是否是最后一个节点，indent:缩进量
+				nodeCount++;//统计节点总数
+				maxDepth=++indent;//统计最大树深
+				var totalLen=0;//数组或对象的长度
+				if(name==="root"){//根节点输出开始标签
+					draw.push('<ul class="root-tree"><li class="root-tree-items">','<div class="node-name">'+methods._createTreeIcon(name,value,isLast,indent)+'</div>');
 				}
-			};
+				if($.type(value)==="array"){
+					totalLen=value.length;
+				}else if($.type(value)==="object"){
+					$.each(value,function () {
+						totalLen++
+					})
+				}
+				if(typeof value==="object"){//处理数组或对象的输出
+				 	draw.push('<ul class="node-tree">');
+					var keyIndex=0,
+						isLastNode=false;//是否是最后一个节点
+					$.each(value,function (key,val) {
+						if($.type(value)==="array"){
+							isLastNode=(key===(totalLen-1))?true:false;
+						}else if($.type(value)==="object"){
+							keyIndex++;
+							isLastNode=(keyIndex===totalLen)?true:false;
+						}
+						if(typeof val==="object"){
+							draw.push('<li class="node-tree-items"><div>'+methods._createTreeIcon(key,val,isLastNode,indent)+key+'</div>');
+						}else{
+							draw.push('<li class="node-tree-items">');
+						}
+						notify(key,val,isLastNode,indent);
+						draw.push('</li>');
+					})
+				 	draw.push('</ul>');
+				 }else{//处理子节点的输出
+					if($.type(value)==="string"){
+						value='"'+value+'"';
+					}
+				 	draw.push('<div class="node-name">'+methods._createTreeIcon(name,value,isLast,indent)+'"'+name+'"：'+value+'</div>');
+				 }
+				if(name==="root"){//根节点输出结束标签
+					draw.push('</li></ul>');
+				}
+			}
 			if($.isEmptyObject(sourceData)){//空对象不绘制
 				return;
 			}
-			notify('',true,this.settings.root,sourceData);
-			$(this).find(".WEB_format_tree").html(draw.join(''));
-		},draw:function(prefix,line,ico,name,value){/* 子项HTML构造器 */
-			var cmd=false,J=this.settings.ico,imgName=false;
-			switch (line)	{//传递切换图标
-				case J.r0:imgName='r0';break;
-				case J.r1:imgName='r1';break;
-				case J.r2:imgName='r2';
-			}
-			if(imgName)cmd=' onclick="'+this.name+'.show(this,\''+imgName+'\')" ';/* 加入折叠命令 */
-			return prefix+methods._createImage(line,cmd)
-				+this.settings.img+' <a href="javascript:void(0)">'
-				+methods._createImage(ico)+'</a> <a href="javascript:void(0)"'
-				+'key="'+name+'" val="'+value+'" >'
-				+name+(value==''?'':':')+value+'</a>'
+			notify('root',sourceData,true,0);//绘制根节点
+			$(this).find(".WEB_format_tree").html(draw.join(''));//将绘制好的结构添加到树形结构区
+			console.log("节点总数："+nodeCount+"最大树深："+maxDepth);
 		},
-		_createImage:function(src,attr){//创建图片
-			return '<img src="'+src+'" '+(attr||'')+'  />';
+		_createTreeIcon:function(name,value,isLastNode,indent){//创建节点图标
+			var nodeName='',result='',foldIcon='',typeIcon='',indentIcon='',lineIcon='';
+			console.log("键："+name+(isLastNode?"是":"不是")+"最后一个节点");
+			if(name==="root"){
+				nodeName="根节点"
+			}
+
+			if($.type(value)==="array"){//确定节点类型及展开/收缩图标
+				typeIcon='<span class="tree-icon tree-icon-array"></span>';
+				foldIcon='<span class="tree-icon tree-icon-close"></span>';
+			}else if($.type(value)==="object"){
+				typeIcon='<span class="tree-icon tree-icon-object"></span>';
+				foldIcon='<span class="tree-icon tree-icon-close"></span>';
+			}else if($.type(value)==="number"||$.type(value)==="function"){
+				typeIcon='<span class="tree-icon tree-icon-number"></span>';
+			}else{
+				typeIcon='<span class="tree-icon tree-icon-default"></span>';
+			}
+
+			for(var i=0;i<indent;i++){
+				if(name!=="root"){
+					var className='tree-icon';
+					if(i>0){
+						if(isLastNode){
+							if(i===indent-1 && typeof value !=="object"){
+								className='tree-icon tree-icon-end'
+							}else{
+								className='tree-icon tree-icon-line'
+							}
+						}else{
+							if(i===indent-1 && typeof value !=="object"){
+								className='tree-icon tree-icon-join'
+							}else{
+								className='tree-icon tree-icon-line'
+							}
+						}
+					}
+					indentIcon+='<span class="'+className+'"></span>';
+				}
+			}
+			result=indentIcon+foldIcon+typeIcon+nodeName;
+			return result;
 		}
 
 }

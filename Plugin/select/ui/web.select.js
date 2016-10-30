@@ -266,7 +266,9 @@
 				//container.off("mousewheel");
 				//slider.off("mousedown");
 			}
-
+			if(key && !this.ajaxStatus){
+				return;
+			}
 			$.ajax(param)
 			.done(function(res){
 				$this.removeProp("disabled");//启用输入框
@@ -281,11 +283,13 @@
 					var msg="没有获取到数据！";
 					container.html('<div class="WEB_select_noResult">'+msg+'</div>')
 				}
+				_this.ajaxStatus=true;
 			})
 			.fail(function(xhr){
 				$this.removeProp("disabled");//启用输入框
 				var errMsg="错误码:"+xhr.status+"&nbsp;"+xhr.statusText;
-				container.html('<div class="WEB_select_error">'+errMsg+'</div>')
+				container.html('<div class="WEB_select_error">'+errMsg+'</div>');
+				_this.ajaxStatus=true;
 			})
 		},
 		_processData:function(sourceData){//处理数据
@@ -459,6 +463,10 @@
 		        })
 		        $(document).mousemove(function(e) {//鼠标拖动时的方法
 		            if (dragging) {
+		            	_this.ajaxStatus=false;
+						var curLen=menu.find(".WEB_selectMenu_list").length;
+						var totalLen=sourceData.totalSize;
+						var remainRate=curLen/totalLen;
 		            	dY2=slider.position().top;
 		                var oY = e.clientY - iY;
 		                if(oY<0){
@@ -466,7 +474,7 @@
 		                }else if(oY>maxTop){
 		                    oY=maxTop
 		                }
-		                slider.css({"top":oY });
+		                slider.css({"top":oY*remainRate});
 		                methods._dragScroll.call(_this,oY/maxTop,dY1-dY2,sourceData);
 		                return false;
 		            }
@@ -477,6 +485,7 @@
 		        })
 		        //鼠标滚动
 		        	container.off("mousewheel").on("mousewheel",function(e){
+		        		_this.ajaxStatus=false;
 						e.preventDefault();
 						var dir=e.deltaY,//滚动方向
 							rate=dir*_this.settings.scrollRate*baseH,//每次滚动时的高度

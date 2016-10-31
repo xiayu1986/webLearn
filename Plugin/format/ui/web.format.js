@@ -81,9 +81,7 @@
 				if($.type(checkOut)!=="object"){
 					return;
 				}
-				setTimeout(function(){
 					methods._createTreeView.call(_this,checkOut.data)
-				},300)
 			})
 		},
 		_formatData:function(data,isCompress){//格式化数据,data:数据，isCompress:是否压缩>true:是，false:否

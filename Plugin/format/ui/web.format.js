@@ -206,7 +206,7 @@
 			$(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大树深为<b>'+maxDepth+'</b>');
 		},
 		_createTreeIcon:function(name,value,isLastNode,indent){//创建节点图标
-			var nodeName='',result='',foldIcon='',typeIcon='',indentIcon='',lineIcon='';
+			var nodeName='',result='',foldIcon='',typeIcon='',indentIcon='';
 			if(name==="root"){
 				nodeName=this.settings.textConf.root
 			}

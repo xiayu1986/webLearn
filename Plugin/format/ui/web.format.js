@@ -81,7 +81,9 @@
 				if($.type(checkOut)!=="object"){
 					return;
 				}
-				methods._createTreeView.call(_this,checkOut.data)
+				setTimeout(function(){
+					methods._createTreeView.call(_this,checkOut.data)
+				},300)
 			})
 		},
 		_formatData:function(data,isCompress){//格式化数据,data:数据，isCompress:是否压缩>true:是，false:否
@@ -133,7 +135,7 @@
 		},
 		_checkOutJson:function (sourceData) {//校验数据格式是否正确
 			var message=$(this).find(".WEB_format_message"),
-				jsonRule=/^\s*(\[\n*(\n*.*)*\n*\]|\{\n*(\n*.*)*\n*\})\s*$/g;
+				jsonRule=/^\s*\[|\{(\n*.*)*\s*$/g;
 			if(sourceData===""){
 				message.html("数据不能为空！");
 				return false;
@@ -199,6 +201,7 @@
 				}
 			}
 			if($.isEmptyObject(sourceData)){//空对象不绘制
+				$(this).find(".WEB_format_message").html('无法绘制空对象！');
 				return;
 			}
 			notify('root',sourceData,true,0);//绘制根节点

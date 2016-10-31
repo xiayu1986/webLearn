@@ -266,9 +266,9 @@
 				//container.off("mousewheel");
 				//slider.off("mousedown");
 			}
-			if(key && !this.ajaxStatus){
+			/*if(key && !this.ajaxStatus){待处理
 				return;
-			}
+			}*/
 			$.ajax(param)
 			.done(function(res){
 				$this.removeProp("disabled");//启用输入框
@@ -283,13 +283,13 @@
 					var msg="没有获取到数据！";
 					container.html('<div class="WEB_select_noResult">'+msg+'</div>')
 				}
-				_this.ajaxStatus=true;
+				//_this.ajaxStatus=true;待处理
 			})
 			.fail(function(xhr){
 				$this.removeProp("disabled");//启用输入框
 				var errMsg="错误码:"+xhr.status+"&nbsp;"+xhr.statusText;
 				container.html('<div class="WEB_select_error">'+errMsg+'</div>');
-				_this.ajaxStatus=true;
+				//_this.ajaxStatus=true;待处理
 			})
 		},
 		_processData:function(sourceData){//处理数据
@@ -463,10 +463,10 @@
 		        })
 		        $(document).mousemove(function(e) {//鼠标拖动时的方法
 		            if (dragging) {
-		            	_this.ajaxStatus=false;
+		            	/*_this.ajaxStatus=false;待处理
 						var curLen=menu.find(".WEB_selectMenu_list").length;
 						var totalLen=sourceData.totalSize;
-						var remainRate=curLen/totalLen;
+						var remainRate=curLen/totalLen;*/
 		            	dY2=slider.position().top;
 		                var oY = e.clientY - iY;
 		                if(oY<0){
@@ -474,7 +474,7 @@
 		                }else if(oY>maxTop){
 		                    oY=maxTop
 		                }
-		                slider.css({"top":oY*remainRate});
+		                slider.css({"top":oY/**remainRate待处理*/});
 		                methods._dragScroll.call(_this,oY/maxTop,dY1-dY2,sourceData);
 		                return false;
 		            }
@@ -485,7 +485,7 @@
 		        })
 		        //鼠标滚动
 		        	container.off("mousewheel").on("mousewheel",function(e){
-		        		_this.ajaxStatus=false;
+		        		//_this.ajaxStatus=false;待处理
 						e.preventDefault();
 						var dir=e.deltaY,//滚动方向
 							rate=dir*_this.settings.scrollRate*baseH,//每次滚动时的高度
@@ -516,9 +516,9 @@
 		},
 		_dragScroll:function(rate,scrollDir,sourceData){//滚动
 			var menu=$("#WEB_selectMenu_container .WEB_selectMenu");
-			var curLen=menu.find(".WEB_selectMenu_list").length;
+			/*var curLen=menu.find(".WEB_selectMenu_list").length;待处理
 			var totalLen=sourceData.totalSize;
-			var remainRate=curLen/totalLen;
+			var remainRate=curLen/totalLen;*/
 			var scrollMaxDis=0,
 				container=$("#WEB_selectMenu_container"),
         		menu=$("#WEB_selectMenu_container .WEB_selectMenu");
@@ -527,7 +527,7 @@
 			}else{//单选
 				scrollMaxDis=menu.height()-container.height();
 			}
-			menu.css({"top":-rate*scrollMaxDis*remainRate});
+			menu.css({"top":-rate*scrollMaxDis/**remainRate待处理*/});
 			if(scrollDir<0){
 				methods._createPagination.call(this,sourceData);
 			}
@@ -571,7 +571,7 @@
 				loadedNum=items.length,//取当前已加载的选项用于确定已经加载到第几页
 				curPage=Math.ceil(loadedNum/this.settings.baseNumber),//当前已加载的页数
 				totalPage=Math.ceil(d.totalSize/this.settings.baseNumber);//总页数
-				console.log("当前加载了："+curPage+"页  一共有："+totalPage+"页")
+				console.log("当前加载了："+curPage+"页  一共有："+totalPage+"页")//待处理
 			if(curPage>=totalPage){//如果当前页数等于总页数则停止加载
 				return;
 			}

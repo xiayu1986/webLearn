@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="theme/bootstrap.min.css">
+<title>无标题文档</title>
+<style type="text/css">
+.dragClient{ border:#337ab7 1px solid; height:242px; position:relative;overflow:hidden;}
+.scroll{ z-index: 2; width: 6px; position: absolute; background:#337ab7; border-radius: 6px; height:216px; 
+	right:3px; top:12px; }
+.slider{ width: 6px; height: 20px; font-size:0; line-height: 0; overflow: hidden; position: absolute;
+ background: #cccccc; left:0px; border-radius:6px; cursor: move;}
+.menu{ width:100%; position:absolute; left:0; top: 0; padding:0; margin:0;}
+.menu-items{ height:24px; line-height:24px;padding:0 10px; background:#f2f2f2; list-style:none;}
+.menu-items:nth-child(2n+1){ background:#dddddd; }
+</style>
+</head>
+<body>
+<div class="container">
+	<div class="panel panel-primary">
+		<div class="panel-heading">测试拖拽</div>
+		<div class="panel-body">
+			<div class="dragClient">
+				<ul class="menu"></ul>
+				<div class="scroll">
+					<div class="slider"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="lib/jquery.mousewheel.js"></script>
+<script type="text/javascript">
+$(function(){
+	var list='';
+	var data=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100];
+	$(".menu").append(createList(0));
+	var dragging = false,//拖拽状态
+		page=1,
+		iY,
+		dY1=0,
+		dY2=0,
+		maxH=$(".menu").height()-$(".dragClient").height(),//滚动区可滚动的范围
+		maxTop=$(".scroll").height()-$(".slider").height();//滚动条可以滑动的最大高度
+    $(".slider").off("mousedown").on("mousedown",function(e) {//鼠标按下时的方法
+        dragging = true;
+        iY = e.clientY - $(this).position().top;
+        this.setCapture && this.setCapture();
+        dY1=$(this).position().top;
+        return false;
+    })
+
+    $(document).mousemove(function(e) {//鼠标拖动时的方法
+        if (dragging) {
+        	dY2=$(".slider").position().top;
+            var oY = e.clientY - iY;
+            if(oY<0){
+               oY=0 
+            }else if(oY>maxTop){
+                oY=maxTop
+            }
+            $(".slider").css({"top":oY});
+            $(".menu").css({"top":-(oY/maxTop)*maxH});
+            var curPage=((oY/maxTop)*maxH)/240;
+            curPage=Math.ceil(curPage);
+            console.log("当前加载到第："+(curPage+1)+"页");
+            createList(curPage+1)
+            return false;
+        }
+    })
+    $(document).mouseup(function(e) {//鼠标抬起时的方法
+        dragging = false;
+        e.cancelBubble = true;
+    })
+
+    function createList(start){
+    	var end=(start+1)*10;
+    	var sliceData=data.slice(start,end);
+    	var list='';
+    	for(var i=0;i<sliceData.length;i++){
+			list+='<li class="menu-items">'+(i+1)+'</li>';
+    	}
+    	return list;
+    }
+})
+</script>
+</body>
+</html>

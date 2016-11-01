@@ -42,7 +42,7 @@ $(function(){
 		iY,
 		dY1=0,
 		dY2=0,
-		maxH=24*data.length-$(".dragClient").height(),//滚动区可滚动的范围
+		maxH=$(".menu").height()-$(".dragClient").height(),//滚动区可滚动的范围 待处理
 		maxTop=$(".scroll").height()-$(".slider").height();//滚动条可以滑动的最大高度
     $(".slider").off("mousedown").on("mousedown",function(e) {//鼠标按下时的方法
         dragging = true;
@@ -63,16 +63,19 @@ $(function(){
             }
             $(".slider").css({"top":oY});
             $(".menu").css({"top":-(oY/maxTop)*maxH});
+
             var curPage=((oY/maxTop)*maxH)/240;
             curPage=Math.ceil(curPage);
-            console.log("当前加载到第："+(curPage+1)+"页");
-			if(curPage>9){
+			var curIndex=(curPage-1)*10+9;
+			var dom=$(".menu-items").eq(curIndex);
+			var curH=dom.position().top;
+			var viewH=$(".dragClient").height()+Math.abs(parseInt($(".menu").css("top")));
+			if(curPage>=10){
 				return;
 			}
-			var dom=$(".menu-items").eq((curPage-1)*10+9);
-			var curH=dom.position().top;
-			var viewH=parseInt($(".dragClient").height())+Math.abs(parseInt($(".menu").css("top")));
 			if(curH<=viewH){
+				console.log("当前加载到第："+(curPage+1)+"页");
+				$(".menu-items:gt("+curIndex+")").remove();
 				$(".menu").append(createList(curPage+1));
 			}
             return false;
@@ -86,7 +89,8 @@ $(function(){
     function createList(start){
     	var begin=(start-1)*10;
     	var end=(start-1)*10+9;
-    	var sliceData=data.slice(begin,end+1);
+    	var sliceData=[];
+    	 sliceData=data.slice(begin,end+1);
     	var list='';
     	for(var i=0;i<sliceData.length;i++){
 			list+='<li class="menu-items">'+sliceData[i]+'</li>';

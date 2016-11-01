@@ -43,14 +43,21 @@ $(function(){
 		maxH=$(".menu-items:first").height()*data.length-$(".dragClient").height(),//滚动区可滚动的范围 
 		maxTop=$(".scroll").height()-$(".slider").height();//滚动条可以滑动的最大高度
     $(".slider").off("mousedown").on("mousedown",function(e) {//鼠标按下时的方法
+    	reqStatus=true;
         dragging = true;
         iY = e.clientY - $(this).position().top;
         this.setCapture && this.setCapture();
         return false;
     })
 
-    $(document).mousemove(function(e) {//鼠标拖动时的方法
-        if (dragging) {
+    $(document).on("mousemove",moveScroll);
+
+    $(document).mouseup(function(e) {//鼠标抬起时的方法
+        dragging = false;
+        e.cancelBubble = true;
+    })
+    function moveScroll(e){
+    	 if (dragging) {
         	var dY2=$(".slider").position().top;
             var oY = e.clientY - iY;
             if(oY<0){
@@ -68,27 +75,27 @@ $(function(){
 			var x=dom.position();
 			if(x){
 				var curH=x.top;
-				var viewH=$(".dragClient").height()+Math.abs(parseInt($(".menu").css("top")));
-				if(curPage>=10){
-					return;
-				}
+				var viewH=Math.abs(parseInt($(".menu").css("top")));
 				if(curH<=viewH && (dY3>dY2)){
-					console.log(curPage)
+					$(document).off("mousemove");
+					load(curPage);
 				}
 			}
             return false;
         }
-    })
-    $(document).mouseup(function(e) {//鼠标抬起时的方法
-        dragging = false;
-        e.cancelBubble = true;
-    })
+    }
 
     function createList(){
     	for(var i=0;i<data.length;i++){
 			list+='<li class="menu-items">'+data[i]+'</li>';
     	}
     	return list;
+    }
+    function load(curPage){
+    	console.log("当前加载第："+(curPage+1)+"页的数据")
+    	setTimeout(function(){
+    		$(document).on("mousemove",moveScroll);
+    	},2000)
     }
 })
 </script>

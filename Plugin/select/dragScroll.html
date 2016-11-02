@@ -85,7 +85,6 @@ $(function(){
     	for(var i=0;i<sliceData.length;i++){
 			list+='<li class="menu-items">'+sliceData[i]+'</li>';
     	}
-    	console.log(sliceData)
     	return list;
     }
     function load(dY2,dY1){
@@ -112,7 +111,7 @@ $(function(){
 	    		if(curPage>10){
 	    			return;
 	    		}
-	    		$(".slider").css("top",0);
+	    		$(".slider").animate({"top":0});
 	    	},2000)
 		}
     }

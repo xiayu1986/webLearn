@@ -13,6 +13,7 @@
 .menu{ width:100%; position:absolute; left:0; top: 0; padding:0; margin:0;}
 .menu-items{ height:24px; line-height:24px;padding:0 10px; background:#f2f2f2; list-style:none;}
 .menu-items:nth-child(2n+1){ background:#dddddd; }
+.wait{width:32px; height:32px; background:url("theme/wait.gif"); position:absolute;left:537px;top:104px; z-index:2; display:none;}
 </style>
 </head>
 <body>
@@ -21,6 +22,7 @@
 		<div class="panel-heading">测试拖拽</div>
 		<div class="panel-body">
 			<div class="dragClient">
+			<div class="wait"></div>
 				<ul class="menu"></ul>
 				<div class="scroll">
 					<div class="slider"></div>
@@ -34,16 +36,16 @@
 <script type="text/javascript" src="lib/jquery.mousewheel.js"></script>
 <script type="text/javascript">
 $(function(){
-	var list='';
 	var data=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100];
-	$(".menu").html(createList(1));
+	$(".menu").append(createList(1));//加载第一页的数据
+
+
 	var dragging = false,//拖拽状态
-		page=1,
-		iY,
-		maxH=$(".menu-items:first").height()*data.length-$(".dragClient").height(),//滚动区可滚动的范围 
+		iY, 
+		maxH=$(".dragClient").height(),//滚动区可滚动的范围
 		maxTop=$(".scroll").height()-$(".slider").height();//滚动条可以滑动的最大高度
+
     $(".slider").off("mousedown").on("mousedown",function(e) {//鼠标按下时的方法
-    	reqStatus=true;
         dragging = true;
         iY = e.clientY - $(this).position().top;
         this.setCapture && this.setCapture();
@@ -52,50 +54,67 @@ $(function(){
 
     $(document).on("mousemove",moveScroll);
 
-    $(document).mouseup(function(e) {//鼠标抬起时的方法
+    $(".slider").mouseup(function(e) {//鼠标抬起时的方法
         dragging = false;
         e.cancelBubble = true;
+       load();
     })
+
     function moveScroll(e){
     	 if (dragging) {
-        	var dY2=$(".slider").position().top;
+    	 	var menuH=($(".menu").height()-maxH)===0?$(".menu").height():$(".menu").height()-maxH;
+        	dY1=$(".slider").position().top;
             var oY = e.clientY - iY;
             if(oY<0){
                oY=0 
             }else if(oY>maxTop){
                 oY=maxTop
             }
+            
             $(".slider").css({"top":oY});
-            $(".menu").css({"top":-(oY/maxTop)*maxH});
-            var dY3=$(".slider").position().top;
-            var curPage=((oY/maxTop)*maxH)/240;
-            curPage=Math.ceil(curPage);
-			var curIndex=(curPage-1)*10+9;
-			var dom=$(".menu-items").eq(curIndex).slice(0,1);
-			var x=dom.position();
-			if(x){
-				var curH=x.top;
-				var viewH=Math.abs(parseInt($(".menu").css("top")));
-				if(curH<=viewH && (dY3>dY2)){
-					$(document).off("mousemove");
-					load(curPage);
-				}
-			}
+            $(".menu").css({"top":-(oY/maxTop)*menuH});
             return false;
         }
     }
 
-    function createList(){
-    	for(var i=0;i<data.length;i++){
-			list+='<li class="menu-items">'+data[i]+'</li>';
+    function createList(start){
+    	var begin=(start-1)*10;
+    	var end=begin+10;
+    	var sliceData=data.slice(begin,end);
+    	var list='';
+    	for(var i=0;i<sliceData.length;i++){
+			list+='<li class="menu-items">'+sliceData[i]+'</li>';
     	}
+    	console.log(sliceData)
     	return list;
     }
-    function load(curPage){
-    	console.log("当前加载第："+(curPage+1)+"页的数据")
-    	setTimeout(function(){
-    		$(document).on("mousemove",moveScroll);
-    	},2000)
+    function load(dY2,dY1){
+    	/*if(dY2<=dY1){
+    		return;
+    	}*/
+    	var curPage=($(".menu-items").length)/10;
+            curPage=Math.ceil(curPage);
+            curPage++;
+		var curIndex=(curPage-1)*10+9,
+			lastDom=$(".menu-items").last(),
+			lastDomPos=lastDom.position(),
+			menuTop=Math.abs(parseInt($(".menu").css("top"))),
+			viewH=maxH+menuTop;
+		if(lastDomPos.top<=viewH && curPage<=10){
+			$(".wait").css("display","block");
+			$.ajax({
+    		url:"load"
+    		});
+	    	setTimeout(function(){
+	    		$(".menu-items:gt("+curIndex+")").remove();
+	    		$(".menu").append(createList(curPage));
+	    		$(".wait").css("display","none");
+	    		if(curPage>10){
+	    			return;
+	    		}
+	    		$(".slider").css("top",0);
+	    	},2000)
+		}
     }
 })
 </script>

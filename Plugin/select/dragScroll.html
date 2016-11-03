@@ -42,8 +42,8 @@
 var data=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100];
 
 $(function(){
-	dragScroll();//拖拽滚动
-	mouseWheelScroll();//
+	dragScroll();//拖拽滑块加载数据
+	mouseWheelScroll();//鼠标滚动加载数据
 })
 
 function dragScroll(){
@@ -68,6 +68,10 @@ function dragScroll(){
         dragging = false;//拖拽状态不可用
         dY2=$(this).position().top;//记录末端位置
         e.cancelBubble = true;//阻止默认事件
+        var curItemsLen=$(".menu-items").length;//取当前已加载的数量
+        if(curItemsLen===100){//所有数据加载完成
+			return;
+		}
        loadData(dY1,dY2);//加载数据
     })
 
@@ -95,18 +99,19 @@ function mouseWheelScroll(){//鼠标滚轮滚动
 }
 function wheelFn(e){
 		e.preventDefault();
-		var clientH=$(".dragClient").height();//可视区高度
-		var maxTop=$(".scroll").height()-$(".slider").height();//滚动条可以滑动的最大高度
-		var dir=e.deltaY,//滚动方向
+		var clientH=$(".dragClient").height(),//可视区高度
+			maxTop=$(".scroll").height()-$(".slider").height(),//滚动条可以滑动的最大高度
+			maxH=$(".menu").height(),//动态获取当前列表的高度
+			curItemsLen=$(".menu-items").length,//当前已加载的列表项
+			dir=e.deltaY,//滚动方向
 			rate=dir*5,//每次滚动时的高度
-			basePos=$(".menu").position().top,
-			scrollRate;
-		basePos+=rate;
-		 var maxH=$(".menu").height(),//动态获取当前列表的高度
-		 	curItemsLen=$(".menu-items").length;//当前已加载的列表项
+			basePos=$(".menu").position().top,//当前列表的位置
+			scrollRate;//滚动占比
+		basePos+=rate;//递增列表的位置
     	if(curItemsLen===100){//到底部的时候自动调整列表实际高度
     		maxH-=clientH;
     	}
+
 		if(dir<0){
 			if(Math.abs(basePos)>maxH){
 				basePos=-maxH;
@@ -117,72 +122,72 @@ function wheelFn(e){
 				basePos=0;
 			}
 		}
-		if(curItemsLen===100){
-			return;
-		}
+		
 		$(".menu").css({"top":basePos});
 		//联动滚动条
 		scrollRate=basePos/maxH;
 		$(".slider").css({"top":-maxTop*scrollRate});
+		if(curItemsLen===100){
+			return;
+		}
 		getData();
 }
 function getData(){//加载数据 模拟AJAX请求
-    	var maxTop=$(".scroll").height()-$(".slider").height();
-    	var curPage=($(".menu-items").length)/10;//判断当前已经加载的分页数量
-            curPage=Math.ceil(curPage);//向上取整
-           
-		var lastDom=$(".menu-items").last(),//取当前已经加载的最后一个列表项作为临界点
+    	var maxTop=$(".scroll").height()-$(".slider").height(),//滑块可滑动的最大距离
+    		curPage=Math.ceil(($(".menu-items").length)/10),//判断当前已经加载的分页数量并向上取整
+			lastDom=$(".menu-items").last(),//取当前已经加载的最后一个列表项作为临界点
 			lastDomPos=lastDom.position(),//取临界点位置
 			menuTop=Math.abs(parseInt($(".menu").css("top"))),//取当前列表滚过去的高度
 			menuScroll=Math.abs($(".menu").css("top").replace("px","")),//取当前列表滚过去的实际高度绝对值
 			viewH=$(".dragClient").height()+menuTop;//这个值用来判断临界点是否出现在可视区内
-		if(lastDomPos.top<=viewH && curPage<=9){//当临界点出现在可视区内的时候执行后面的逻辑
+		if(lastDomPos.top<=viewH){//当临界点出现在可视区内的时候执行后面的逻辑
 			 curPage++;//分页自增到当前需要加载的分页页码
-			 $(".dragClient").off("mousewheel");
+			 $(".dragClient").off("mousewheel");//解除滚动事件防止多次发送请求
 			$(".wait").css("display","block");//设置加载状态
 			$.ajax({//模拟发送AJAX请求
-    		url:"/workspace/Plugin/select/test/page3.json"
-    		});
-	    	setTimeout(function(){//模拟AJAX请求
-	    		$(".menu").append(createList(curPage));//追加HTML片断
+    		url:"/workspace/Plugin/select/test/page3.json",
+    		type:"POST",
+    		cache:false,
+    		data:{}
+    		}).done(function(res){
+    			$(".menu").append(createList(curPage));//追加HTML片断
 	    		$(".wait").css("display","none");//隐藏加载状态
-	    		$(".dragClient").on("mousewheel",wheelFn);
+	    		$(".dragClient").on("mousewheel",wheelFn);//重新绑定数据
 	    		var curMenuH=$(".menu").height();//计算当前列表的总高度
 	    		var curRate=menuTop/curMenuH;//计算当前列表滚过去的高度与列表总高度的比例
-	    		if(curPage<10){//仅在未加载到最后一页时重置滑动条位置
-	    			$(".slider").animate({"top":curRate*maxTop});//按照列表比例重置滑块的位置
-	    		}
-	    	},2000)
+    			$(".slider").animate({"top":curRate*maxTop});//按照列表比例重置滑块的位置
+    		})
 		}
     }
 
 function loadData(dY1,dY2){//加载数据 模拟AJAX请求
-    	if(arguments.length==2 && dY2<=dY1){//仅在鼠标向下滑动时执行后面的逻辑
+    	if(dY2<=dY1){//仅在鼠标向下滑动时执行后面的逻辑
     		return;
     	}
     	var maxTop=$(".scroll").height()-$(".slider").height();
     	var curPage=($(".menu-items").length)/10;//判断当前已经加载的分页数量
-            curPage=Math.ceil(curPage);//向上取整
-            curPage++;//分页自增到当前需要加载的分页页码
+            curPage=Math.ceil(curPage);//向上取整   
 		var lastDom=$(".menu-items").last(),//取当前已经加载的最后一个列表项作为临界点
 			lastDomPos=lastDom.position(),//取临界点位置
 			menuTop=Math.abs(parseInt($(".menu").css("top"))),//取当前列表滚过去的高度
 			viewH=$(".dragClient").height()+menuTop;//这个值用来判断临界点是否出现在可视区内
-		if(lastDomPos.top<=viewH && curPage<=10){//当临界点出现在可视区内的时候执行后面的逻辑
-			$(".state").css("display","none");
+		if(lastDomPos.top<=viewH){//当临界点出现在可视区内的时候执行后面的逻辑
 			$(".wait").css("display","block");//设置加载状态
+			curPage++;//分页自增到当前需要加载的分页页码
 			$.ajax({//模拟发送AJAX请求
-    		url:"/workspace/Plugin/select/test/page3.json"
-    		});
-	    	setTimeout(function(){//模拟AJAX请求
-	    		$(".menu").append(createList(curPage));//追加HTML片断
+    		url:"/workspace/Plugin/select/test/page3.json",
+    		type:"POST",
+    		cache:false,
+    		data:{}
+    		}).done(function(res){
+    			$(".menu").append(createList(curPage));//追加HTML片断
 	    		$(".state").css("display","none");//隐藏加载状态
 	    		var curMenuH=$(".menu").height();//计算当前列表的总高度
 	    		var curRate=menuTop/curMenuH;//计算当前列表滚过去的高度与列表总高度的比例
-	    		if(curPage<10){//仅在未加载到最后一页时重置滑动条位置
+	    		if(curPage<10){
 	    			$(".slider").animate({"top":curRate*maxTop});//按照列表比例重置滑块的位置
 	    		}
-	    	},2000)
+    		})
 		}
     }
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+  </head>
+  <body>
+  <div class="container">
+  <div class="panel panel-primary" id="loginArea">
+          <div class="panel-heading">用户登录</div>
+          <div class="panel-body">
+              <div class="form-group clearfix">
+                 <label class="col-sm-2 control-label">登录名：</label>
+                 <div class="col-sm-10"><input type="text" class="form-control" id="userName"/></div>
+              </div>
+              <div class="form-group clearfix">
+              <div class="col-sm-10 col-sm-offset-2">
+                  <button class="btn btn-primary" id="loginBtn">登录</button>
+              </div>
+              </div>
+          </div>
+      </div>
+
+    <div class="panel panel-primary hidden" id="chatRoom">
+        <div class="panel-heading clearfix"><div class="pull-left">即时通信</div>
+        <div class="pull-right"><button class="btn btn-default" id="logoutBtn">退出</button></div>
+        </div>
+        <div class="panel-body">
+        <div id="message"></div>
+            <table class="table table-bordered table-striped">
+
+                <tbody id="onLinePool">
+                    <tr><td></td></tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered table-striped">
+            <caption></caption>
+            <thead><tr><th>昵称</th><th>消息正文</th></tr></thead>
+                <tbody class="messageContent">
+
+                </tbody>
+            </table>
+            <div class="form-group">
+                <textarea class="form-control" id="userContent"></textarea>
+            </div>
+            <div class="form-group">
+            <button class="btn btn-primary" id="sendBtn">发送</button>
+            </div>
+        </div>
+    </div>
+  </div>
+    <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script type="text/javascript" src="/javascripts/main.js"></script>
+    <div class="modal" id="M1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+            </div>
+        </div>
+    </div>
+
+       <div class="modal" id="M2">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">系统提示</h4>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                <button type="button" class="btn btn-primary confirm">确定</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              </div>
+                </div>
+            </div>
+        </div>
+  </body>
+</html>

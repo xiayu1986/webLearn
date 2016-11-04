@@ -116,7 +116,6 @@ function wheelFn(e){
 			if(Math.abs(basePos)>maxH){
 				basePos=-maxH;
 			}
-			scrolling=true;
 		}else{
 			if(basePos>=0){
 				basePos=0;
@@ -138,7 +137,6 @@ function getData(){//加载数据 模拟AJAX请求
 			lastDom=$(".menu-items").last(),//取当前已经加载的最后一个列表项作为临界点
 			lastDomPos=lastDom.position(),//取临界点位置
 			menuTop=Math.abs(parseInt($(".menu").css("top"))),//取当前列表滚过去的高度
-			menuScroll=Math.abs($(".menu").css("top").replace("px","")),//取当前列表滚过去的实际高度绝对值
 			viewH=$(".dragClient").height()+menuTop;//这个值用来判断临界点是否出现在可视区内
 		if(lastDomPos.top<=viewH){//当临界点出现在可视区内的时候执行后面的逻辑
 			 curPage++;//分页自增到当前需要加载的分页页码
@@ -201,6 +199,14 @@ function createList(start){//动态创建分页HTML片断
 	}
 	return list;
 }
+/*var arr=[];
+for(var i=0;i<50;i++){
+	var num=(i+1);
+	var param={"name":num,"code":num};
+	arr.push(param);
+}
+var data={"data":arr,"totalSize":i}
+console.log(JSON.stringify(data))*/
 </script>
 </body>
 </html>

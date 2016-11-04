@@ -35,7 +35,7 @@
 		separator:"|",//定义多选时写入到输入框的分隔符
 		showOptions:false,//多选时是否显示操作项(全选、取消)
 		baseNumber:10,//用以确定下拉菜单的最大高度也是每页显示的数据量
-		scrollRate:1,//每次滚过的数量
+		scrollRate:10,//每次滚过的数量
 		pagerType:"local",//分页类型:remote表示远程服务器加载分页,local表示本地分页,为空表示不分页
 		formatData:function(data){//处理返回的数据格式
 		}
@@ -251,9 +251,10 @@
 			}
 		},
 		_loadRemoteData:function(key){//获取远程数据,key为关键字或者页码,key值存在且是字符串类型表示是按关键字过滤，是数字类型表示是分页，不存在表示是加载全部数据
-			var arg=arguments;
-			//$(this).prop("disabled",true);//禁用当前输入框，防止重复发送AJAX
-			var _this=this,$this=$(this),container=$("#WEB_selectMenu_container"),param=this.settings.param(key);
+			var arg=arguments,
+				_this=this,$this=$(this),
+				container=$("#WEB_selectMenu_container"),
+				param=this.settings.param(key);
 			param.url=this.settings.dataSource;
 			if(key && key.page){//分页的时候需要禁用滚动条
 				param.url=this.settings.dataSource;
@@ -262,16 +263,9 @@
 					container.append($('<div class="WEB_selectMenu_list_wait"></div>'));
 					methods._setWaitIconPosition.call(this);//设置加载状态的样式
 				}
-				//var slider=$("#WEB_selectMenu_scroller .scroller_slider");
-				//container.off("mousewheel");
-				//slider.off("mousedown");
 			}
-			/*if(key && !this.ajaxStatus){待处理
-				return;
-			}*/
 			$.ajax(param)
 			.done(function(res){
-				$this.removeProp("disabled");//启用输入框
 				if(res.data && res.data.length>0){//有数据返回
 					if(arg.length>0){
 						var totalData=_this.settings.formatData(res)||res;
@@ -283,13 +277,10 @@
 					var msg="没有获取到数据！";
 					container.html('<div class="WEB_select_noResult">'+msg+'</div>')
 				}
-				//_this.ajaxStatus=true;待处理
 			})
 			.fail(function(xhr){
-				$this.removeProp("disabled");//启用输入框
 				var errMsg="错误码:"+xhr.status+"&nbsp;"+xhr.statusText;
 				container.html('<div class="WEB_select_error">'+errMsg+'</div>');
-				//_this.ajaxStatus=true;待处理
 			})
 		},
 		_processData:function(sourceData){//处理数据
@@ -479,40 +470,53 @@
 		                return false;
 		            }
 		        })
-		        $(document).mouseup(function(e) {//鼠标抬起时的方法
+				slider.mouseup(function(e) {//鼠标抬起时的方法
 		            dragging = false;
 		            e.cancelBubble = true;
 		        })
 		        //鼠标滚动
-		        	container.off("mousewheel").on("mousewheel",function(e){
-		        		//_this.ajaxStatus=false;待处理
-						e.preventDefault();
-						var dir=e.deltaY,//滚动方向
-							rate=dir*_this.settings.scrollRate*baseH,//每次滚动时的高度
-							basePos=$("#WEB_selectMenu_container .WEB_selectMenu").position().top,
-							maxH=0,
-							scrollRate;
-						basePos+=rate;
-						if(_this.settings.isMultiple && _this.settings.showOptions){//多选
-							maxH=menu.height()-container.height()+$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight();
-						}else{//单选
-							maxH=menu.height()-container.height();
-						}
-						if(dir<0){
-							if(Math.abs(basePos)>maxH){
-								basePos=-maxH;
-							}
-						}else{
-							if(basePos>=0){
-								basePos=0;
-							}
-						}
-						menu.css({"top":basePos});
-						//联动滚动条
-						scrollRate=basePos/maxH;
-						slider.css({"top":-maxTop*scrollRate});
-						methods._createPagination.call(_this,sourceData);//如果数据总量大于每页可显示的数量调用分页方法
-					})	
+				container.off("mousewheel").on("mousewheel",{"source":sourceData,"sourceContext":_this},methods._mouseWheelScroll);
+		},
+		_mouseWheelScroll:function (e) {
+			e.preventDefault();
+			var _this=e.data.sourceContext,
+				container=$("#WEB_selectMenu_container"),//当前容器
+				menu=$("#WEB_selectMenu_container .WEB_selectMenu"),//列表
+				clientH=parseInt(container.css("maxHeight")),//可视区高度
+				slider=$("#WEB_selectMenu_scroll .scroll_slider"),//滑块
+				menuH=menu.height(),//当前列表的高度
+				curItemsLen=menu.find(".WEB_selectMenu_list").length,//当前列表已加载的数量
+				maxTop=slider.parent().height()-slider.height(),//滑块可以滑动的最大高度
+				dir=e.deltaY,//滚动方向
+				rate=dir*_this.settings.scrollRate,//每次滚动时的高度
+				basePos=menu.position().top,
+				scrollRate=0;//滚动占比
+			basePos+=rate;//递增列表的位置
+			if(curItemsLen==e.data.source.totalSize){
+				menuH-=clientH
+			}
+			/*if(_this.settings.isMultiple && _this.settings.showOptions){//多选
+				maxH=menu.height()-container.height()+$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight();
+			}else{//单选
+				maxH=menu.height()-container.height();
+			}*/
+			if(dir<0){
+				if(Math.abs(basePos)>menuH){
+					basePos=-menuH;
+				}
+			}else{
+				if(basePos>=0){
+					basePos=0;
+				}
+			}
+			menu.css({"top":basePos});
+			//联动滚动条
+			scrollRate=basePos/menuH;
+			slider.css({"top":-maxTop*scrollRate});
+			if(curItemsLen==e.data.source.totalSize){
+				return;
+			}
+			methods._createPagination.call(_this,e.data.source);//如果数据总量大于每页可显示的数量调用分页方法
 		},
 		_dragScroll:function(rate,scrollDir,sourceData){//滚动
 			var menu=$("#WEB_selectMenu_container .WEB_selectMenu");
@@ -565,24 +569,31 @@
 				}
 		},
 		_createPagination:function(d){//创建分页
-			var container=$("#WEB_selectMenu_container"),
+			var container=$("#WEB_selectMenu_container"),//当前容器
+				slider=$("#WEB_selectMenu_scroll .scroll_slider"),//滑块
+				maxTop=slider.parent().height()-slider.height(),//滑块可以滑动的最大高度
 				menu=$("#WEB_selectMenu_container .WEB_selectMenu"),
-				items=$("#WEB_selectMenu_container .WEB_selectMenu_list"),
+				menuTop=Math.abs(parseInt(menu.css("top"))),//取当前列表滚过去的高度
+				items=menu.find(".WEB_selectMenu_list"),
 				loadedNum=items.length,//取当前已加载的选项用于确定已经加载到第几页
+				criticalDom=items.last(),//临界DOM,当它出现在可视区时立即加载下一页数据
+				viewH=parseInt(container.css("maxHeight"))+menuTop,//这个值用来判断临界点是否出现在可视区内
+				curH=criticalDom.position().top,//临界DOM跟离下拉菜单顶部的高度
 				curPage=Math.ceil(loadedNum/this.settings.baseNumber),//当前已加载的页数
 				totalPage=Math.ceil(d.totalSize/this.settings.baseNumber);//总页数
-				console.log("当前加载了："+curPage+"页  一共有："+totalPage+"页")//待处理
-			if(curPage>=totalPage){//如果当前页数等于总页数则停止加载
+			/*if(curPage>=totalPage){//如果当前页数等于总页数则停止加载
 				return;
 			}
 			var criticalDom=items.last(),//临界DOM,当它出现在可视区时立即加载下一页数据
 				viewH=parseInt(container.css("maxHeight"))+Math.abs(parseInt(menu.css("top"))),//滚动过去的高度
 				curH=criticalDom.position().top;//临界DOM跟离下拉菜单顶部的高度
-				if(this.settings.showOptions){
-					viewH=viewH-$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight()
-				}
+			if(this.settings.showOptions){
+				viewH=viewH-$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight()
+			}*/
+
 			if(curH<=viewH){//临界DOM出现在可视区
-				curPage=curPage+1;//加载第二页的数据
+				curPage++;//加载第二页的数据
+				slider.off("mousewheel");
 				if(this.settings.isRemotePager){//线上分页
 					methods._loadRemoteData.call(this,{"page":curPage});
 				}else{//本地分页
@@ -590,6 +601,10 @@
 					endPoint=(curPage-1)*this.settings.baseNumber+(this.settings.baseNumber-1),
 					appendData={"data":d.data.slice(startIndex,endPoint+1)};
 					methods._appendPagerItem.call(this,appendData);
+					slider.on("mousewheel",{"source":d,"sourceContext":this},methods._mouseWheelScroll);
+					var curMenuH=menu.height(),//计算当前列表的总高度
+						curRate=menuTop/curMenuH;//计算当前列表滚过去的高度与列表总高度的比例
+					slider.animate({"top":curRate*maxTop});//按照列表比例重置滑块的位置
 				}
 			}
 		},

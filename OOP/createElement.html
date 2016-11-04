@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>批量创建html标签</title>
+</head>
+<style>
+*{ margin:0; padding:0; }
+.items{ line-height：24px; padding:0 10px; border-bottom:#cccccc 1px dashed;}
+.container{ padding:10px; }
+.box{ border:#cccccc 1px solid; }
+.wait{line-height：24px; height:24px; text-align:center;}
+</style>
+<body>
+<div class="container">
+<div id="box" class="box">
+    <div class="wait">数据加载中。。。。。。</div>
+</div>
+</div>
+<script>
+window.onload=function(){
+    var box=document.querySelector("#box");
+    if(window.Worker){
+        var webWork=new Worker("js/createElement.js");
+        var str=""
+        webWork.postMessage(str);//向子进程发送消息 
+        webWork.addEventListener("message",function(e){//监听子进程发送的数据
+           box.innerHTML=e.data.join("");
+        },false)
+    }else{
+        alert("您的浏览器不支持webwork")
+    }
+}
+</script>
+</body>
+</html>

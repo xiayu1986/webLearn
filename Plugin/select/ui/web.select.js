@@ -95,7 +95,6 @@
 				container=$('<div class="WEB_selectMenu_container" id="WEB_selectMenu_container"></div>');
 				container.appendTo($("body"));
 			}
-			//container.css({"display":"none"});
 			methods._createContainerEvent.call(this);//为容器绑定事件
 		},
 		_createContainerEvent:function(){//绑定事件

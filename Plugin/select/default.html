@@ -160,7 +160,7 @@ $(function(){
 				"dataSource":"http://localhost/workspace/Plugin/select/test/code.json"
 			})
 		}
-	});
+	}).showMenu();
 
 	$(".selectMenu").WEB_selectMenu({
 		"dataSource":"#source",
@@ -180,6 +180,9 @@ $(function(){
 		});
 	})
 })
+	$.fn.WEB_selectMenu.prototype.showMenu=function () {
+		console.log(1)
+	}
 </script>
 
 <div class="modal" id="modal">

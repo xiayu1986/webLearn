@@ -236,13 +236,16 @@
 					sourceData=$(sourceData).val()||$(sourceData).html();
 					sourceData=$.parseJSON(sourceData);
 					methods._processData.call(_this,sourceData);//处理数据
-				}
-				else if(arrRule.test(sourceData)){//数组	
+				}else if(arrRule.test(sourceData)){//数组	
 					sourceData=$.parseJSON(sourceData);
 					methods._processData.call(_this,sourceData);//处理数据
 				}else if(sourceData.indexOf("/")!=-1 || urlRule.test(sourceData)){//从服务器上取数据
 					if(!container.is(":hidden")){
-						methods._loadRemoteData.call(_this);//处理数据
+						var pageKey;
+						if(_this.settings.isRemotePager===true){//线上分页加载前N条数据
+							var pageKey={"page":1,"pageSize":_this.settings.baseNumber}
+						}
+						methods._loadRemoteData.call(_this,pageKey);//加载数据
 					}
 				}
 			}else if($.isArray(sourceData)){
@@ -251,12 +254,13 @@
 		},
 		_loadRemoteData:function(key){//获取远程数据,key为关键字或者页码,key值存在且是字符串类型表示是按关键字过滤，是数字类型表示是分页，不存在表示是加载全部数据
 			var arg=arguments,
-				_this=this,$this=$(this),
+				_this=this,
+				$this=$(this),
 				container=$("#WEB_selectMenu_container"),
+				slider=$("#WEB_selectMenu_scroll .scroll_slider"),
 				param=this.settings.param(key);
 			param.url=this.settings.dataSource;
-			if(key && key.page){//分页的时候需要禁用滚动条
-				param.url=this.settings.dataSource;
+			if(key && key.page){//分页
 				var waitDom=container.find(".WEB_selectMenu_list_wait");
 				if(waitDom.length==0){
 					container.append($('<div class="WEB_selectMenu_list_wait"></div>'));
@@ -266,26 +270,28 @@
 			$.ajax(param)
 			.done(function(res){
 				if(res.data && res.data.length>0){//有数据返回
-					if(arg.length>0){
+					if(arg.length>0){//服务器分页或关键字过滤
 						var totalData=_this.settings.formatData(res)||res;
 							methods._localDataHandle.call(_this,totalData);//本地处理数据
-					}else{
+					}else{//本地分页或关键过滤
 							methods._processData.call(_this,res);
 					}
 				}else{
 					var msg="没有获取到数据！";
-					container.html('<div class="WEB_select_noResult">'+msg+'</div>')
+					container.html('<div class="WEB_select_noResult">'+msg+'</div>');
+					slider.on("mousewheel",{"sourceContext":_this},methods._mouseWheelScroll);
 				}
 			})
 			.fail(function(xhr){
 				var errMsg="错误码:"+xhr.status+"&nbsp;"+xhr.statusText;
 				container.html('<div class="WEB_select_error">'+errMsg+'</div>');
+				slider.on("mousewheel",{"sourceContext":_this},methods._mouseWheelScroll);
 			})
 		},
 		_processData:function(sourceData){//处理数据
 			var totalData=this.settings.formatData(sourceData)||sourceData,_this=this;
 			methods._localDataHandle.call(this,totalData);//本地处理数据
-			if(!this.settings.isRemoteFilter){//如果远程接口不支持筛选,待处理
+			if(!this.settings.isRemoteFilter){//本地筛选
 				var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,""),
 					eventType=(ieVersion=="MSIE8.0"||ieVersion=="MSIE9.0")?'keyup.filter':'input.filter';//定义事件类型
 				$(this).off(".filter").on(eventType,function (e) {
@@ -297,11 +303,24 @@
 			if(!$(this).hasClass("WEB_select_current")){
 				return;
 			}
+			var container=$("#WEB_selectMenu_container");
 			if(source.totalSize>this.settings.baseNumber){//需要生成滚动条(也即需要分页)
-				var firstPageArr=source.data.slice(0,10);//截取第一页的数据
-				var doneData={"data":firstPageArr,"totalSize":source.totalSize};
-				methods._createScroll.call(this,doneData,source);
-			}else{//不需要生成滚动条 也即不需要分页，直接进入渲染状态
+				var itemLen=$("#WEB_selectMenu_container .WEB_selectMenu_list").length;
+				if(itemLen==0){
+					var incomeData=source;//远程分页时第一页数据
+					if(!this.settings.isRemotePager){//本地分页时第一页的数据
+						var firstPageArr=source.data.slice(0,10);
+						incomeData={"data":firstPageArr,"totalSize":source.totalSize};
+					}
+					methods._renderSelectMenu.call(this,incomeData);
+				}else{
+					if(this.settings.isRemotePager){
+						methods._appendPagerItem.call(this,source);
+						container.on("mousewheel",{"sourceContext":this,"source":source},methods._mouseWheelScroll);
+					}
+				}
+				methods._createScroll.call(this,source);
+			}else{//不需要生成滚动条 也即不需要分页，直接进入渲染
 				methods._renderSelectMenu.call(this,source)
 			}
             
@@ -390,35 +409,21 @@
 				})
 			}
 		},
-		_createScroll:function(firstPageData,totalData){//创建滚动条并设置样式,第一个参数是当前页的数据，第二个参数是总数据
-			if(this.settings.isRemotePager){//仅在远程分页的时候触发该逻辑
-				if($("#WEB_selectMenu_container .WEB_selectMenu .WEB_selectMenu_list").length==0){
-					methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
-				}
-				else{
-					methods._appendPagerItem.call(this,totalData);//追加数据
-				}
-			}else{
-				methods._renderSelectMenu.call(this,firstPageData);//先渲染出第一页的数据
-			}
+		_createScroll:function(totalData){//创建滚动条并设置样式,第一个参数是当前页的数据，第二个参数是总数据
 			var webSelectScroll=$("#WEB_selectMenu_scroll"),
 				container=$("#WEB_selectMenu_container"),
 				t=0,//定义并初始化滚动条的位置
 				r,
 				h=0,//定义并初始化滚动条的最大高度
 				H=parseInt(container.css("maxHeight"));//用于确定滚动条的最大高度
-			if(webSelectScroll.length==0){
-				webSelectScroll=$('<div class="WEB_selectMenu_scroll" id="WEB_selectMenu_scroll"><div class="scroll_slider"></div></div>');
-				webSelectScroll.appendTo(container);
+
+			if(webSelectScroll.length>0){
+				return;
 			}
-			if(this.settings.isMultiple && this.settings.showOptions){//针对多选设置
-				var optionsH=$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight();
-				h=(H-optionsH)*0.95;
-				t=(H-optionsH-h)/2;
-			}else{//针对单选设置 
-				h=H*0.95;
-				t=(H-h)/2;
-			}
+			webSelectScroll=$('<div class="WEB_selectMenu_scroll" id="WEB_selectMenu_scroll"><div class="scroll_slider"></div></div>');
+			webSelectScroll.appendTo(container);
+			h=H*0.95;
+			t=(H-h)/2;
 			var rate=this.settings.baseNumber/totalData.totalSize,
 				menuSlider=$("#WEB_selectMenu_scroll .scroll_slider"),
 				sh=rate*h<=30?30:rate*h,
@@ -453,10 +458,6 @@
 		        })
 		        $(document).mousemove(function(e) {//鼠标拖动时的方法
 		            if (dragging) {
-		            	/*_this.ajaxStatus=false;待处理
-						var curLen=menu.find(".WEB_selectMenu_list").length;
-						var totalLen=sourceData.totalSize;
-						var remainRate=curLen/totalLen;*/
 		            	dY2=slider.position().top;
 		                var oY = e.clientY - iY;
 		                if(oY<0){
@@ -476,7 +477,7 @@
 		        //鼠标滚动
 				container.off("mousewheel").on("mousewheel",{"source":sourceData,"sourceContext":_this},methods._mouseWheelScroll);
 		},
-		_mouseWheelScroll:function (e) {
+		_mouseWheelScroll:function (e) {//鼠标滚动事件调用方法
 			e.preventDefault();
 			var _this=e.data.sourceContext,
 				container=$("#WEB_selectMenu_container"),//当前容器
@@ -491,14 +492,9 @@
 				basePos=menu.position().top,
 				scrollRate=0;//滚动占比
 			basePos+=rate;//递增列表的位置
-			if(curItemsLen==e.data.source.totalSize){
+			if(e.data.source && curItemsLen==e.data.source.totalSize){
 				menuH-=clientH
 			}
-			/*if(_this.settings.isMultiple && _this.settings.showOptions){//多选
-				maxH=menu.height()-container.height()+$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight();
-			}else{//单选
-				maxH=menu.height()-container.height();
-			}*/
 			if(dir<0){
 				if(Math.abs(basePos)>menuH){
 					basePos=-menuH;
@@ -512,16 +508,13 @@
 			//联动滚动条
 			scrollRate=basePos/menuH;
 			slider.css({"top":-maxTop*scrollRate});
-			if(curItemsLen==e.data.source.totalSize){
+			if(e.data.source && curItemsLen==e.data.source.totalSize){
 				return;
 			}
 			methods._createPagination.call(_this,e.data.source);//如果数据总量大于每页可显示的数量调用分页方法
 		},
 		_dragScroll:function(rate,scrollDir,sourceData){//滚动
 			var menu=$("#WEB_selectMenu_container .WEB_selectMenu");
-			/*var curLen=menu.find(".WEB_selectMenu_list").length;待处理
-			var totalLen=sourceData.totalSize;
-			var remainRate=curLen/totalLen;*/
 			var scrollMaxDis=0,
 				container=$("#WEB_selectMenu_container"),
         		menu=$("#WEB_selectMenu_container .WEB_selectMenu");
@@ -580,19 +573,10 @@
 				curH=criticalDom.position().top,//临界DOM跟离下拉菜单顶部的高度
 				curPage=Math.ceil(loadedNum/this.settings.baseNumber),//当前已加载的页数
 				totalPage=Math.ceil(d.totalSize/this.settings.baseNumber);//总页数
-			/*if(curPage>=totalPage){//如果当前页数等于总页数则停止加载
-				return;
-			}
-			var criticalDom=items.last(),//临界DOM,当它出现在可视区时立即加载下一页数据
-				viewH=parseInt(container.css("maxHeight"))+Math.abs(parseInt(menu.css("top"))),//滚动过去的高度
-				curH=criticalDom.position().top;//临界DOM跟离下拉菜单顶部的高度
-			if(this.settings.showOptions){
-				viewH=viewH-$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight()
-			}*/
 
 			if(curH<=viewH){//临界DOM出现在可视区
 				curPage++;//加载第二页的数据
-				slider.off("mousewheel");
+				container.off("mousewheel");
 				if(this.settings.isRemotePager){//线上分页
 					methods._loadRemoteData.call(this,{"page":curPage});
 				}else{//本地分页
@@ -600,7 +584,7 @@
 					endPoint=(curPage-1)*this.settings.baseNumber+(this.settings.baseNumber-1),
 					appendData={"data":d.data.slice(startIndex,endPoint+1)};
 					methods._appendPagerItem.call(this,appendData);
-					slider.on("mousewheel",{"source":d,"sourceContext":this},methods._mouseWheelScroll);
+					container.on("mousewheel",{"source":d,"sourceContext":this},methods._mouseWheelScroll);
 					var curMenuH=menu.height(),//计算当前列表的总高度
 						curRate=menuTop/curMenuH;//计算当前列表滚过去的高度与列表总高度的比例
 					slider.animate({"top":curRate*maxTop});//按照列表比例重置滑块的位置
@@ -718,6 +702,37 @@
 			var d2=Date.now();
 			console.log("筛选用时："+(d2-d1)/1000+"秒");
 			return {"data":filterDataArr,"totalSize":filterDataArr.length};
+		},
+		_loadRemotePageData:function(pagerParam){//远程分页
+			var arg=arguments,
+				_this=this,
+				$this=$(this),
+				container=$("#WEB_selectMenu_container"),
+				slider=$("#WEB_selectMenu_scroll .scroll_slider"),
+				param=this.settings.param(pagerParam);
+			param.url=this.settings.dataSource;
+			var waitDom=container.find(".WEB_selectMenu_list_wait");
+			if(waitDom.length==0){
+				container.append($('<div class="WEB_selectMenu_list_wait"></div>'));
+				methods._setWaitIconPosition.call(this);//设置加载状态的样式
+			}
+			
+			$.ajax(param)
+			.done(function(res){
+				if(res.data && res.data.length>0){//有数据返回
+					methods._appendPagerItem.call(_this,res);
+					container.on("mousewheel",{"sourceContext":_this,"source":res},methods._mouseWheelScroll);
+				}else{
+					var msg="没有获取到数据！";
+					container.html('<div class="WEB_select_noResult">'+msg+'</div>');
+					container.on("mousewheel",{"sourceContext":_this},methods._mouseWheelScroll);
+				}
+			})
+			.fail(function(xhr){
+				var errMsg="错误码:"+xhr.status+"&nbsp;"+xhr.statusText;
+				container.html('<div class="WEB_select_error">'+errMsg+'</div>');
+				container.on("mousewheel",{"sourceContext":_this},methods._mouseWheelScroll);
+			})
 		}
 	}
     

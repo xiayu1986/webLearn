@@ -33,7 +33,6 @@
 		isRemotePager:false,//是否支持线上分页
 		indentX:10,//下拉菜单图标与输入框右侧的距离
 		separator:"|",//定义多选时写入到输入框的分隔符
-		showOptions:false,//多选时是否显示操作项(全选、取消)
 		baseNumber:10,//用以确定下拉菜单的最大高度也是每页显示的数据量
 		scrollRate:10,//每次滚过的数量
 		pagerType:"local",//分页类型:remote表示远程服务器加载分页,local表示本地分页,为空表示不分页
@@ -64,7 +63,7 @@
 			methods._initSelectField.call(this);//初始化输入框
 			methods._initSelectContainer.call(this);//初始化容器
 			if(this.settings.isCreateIndent){
-				methods._createSelectIdent.call(this);//创建下拉标识
+				methods._createSelectIcon.call(this);//创建下拉标识
 			}
 
 			if(this.settings.isRemoteFilter){//从远程服务器筛选数据
@@ -140,7 +139,7 @@
 				})
 			}
 		},
-		_createSelectIdent:function(){//创建下拉菜单标识
+		_createSelectIcon:function(){//创建下拉菜单标识
 			var _this=this,$this=$(this);
 			this.indent=$('<div class="WEB_selectIndent"></div>');
 			this.indent.attr("targetId",_this.uid);
@@ -148,7 +147,7 @@
 			if($(".WEB_selectIndent[targetId="+_this.uid+"]").length==0){
 				this.indent.appendTo(this.settings.container||$("body"));
 			}
-			methods._setSelectIdentPosition.call(this);//设置下拉菜单标志符的位置
+			methods.setSelectIconPosition.call(this);//设置下拉菜单标志符的位置
 
 			this.indent.off("click").on("click",function (e) {
 				if(!$this.hasClass('WEB_select_current')){
@@ -160,10 +159,10 @@
 				e.stopPropagation();
 			})
 			$(window).on("resize",function(){//视口大小改变时重置下拉菜单标志符的位置
-				methods._setSelectIdentPosition.call(_this);
+				methods.setSelectIconPosition.call(_this);
 			})	
 		},
-		_setSelectIdentPosition:function(){//设置标识的位置
+		setSelectIconPosition:function(){//设置标识的位置
 			var _this=this;
 			$(".WEB_selectIndent").each(function () {
 				var uid=$(this).attr("targetId"),selectDom=$("input[selectId="+uid+"]");
@@ -209,7 +208,7 @@
             if($.isFunction(this.settings.afterHide)){
                 this.settings.afterHide.call(this);
             }
-			//methods._setSelectIdentPosition.call(this);//重新设置下拉菜单标志符的位置
+			//methods.setSelectIconPosition.call(this);//重新设置下拉菜单标志符的位置
 		},
 		_position:function(){//设置下拉菜单的位置
 			var container=$("#WEB_selectMenu_container"),
@@ -219,7 +218,7 @@
 				W=$(this).outerWidth()-(2*parseInt(container.css("borderLeftWidth"))||0),
 				BW=parseInt($(this).css("borderTopWidth"))||parseInt($(this).css("borderBottomWidth"))||0;
 			container.css({"width":W,"left":X,"top":Y+H-BW});
-			methods._setSelectIdentPosition.call(this);//设置小三角标志的位置
+			methods.setSelectIconPosition.call(this);//设置小三角标志的位置
 		},
 		_getSelectMenuData:function(){//获取下拉菜单数据
 			var _this=this,
@@ -306,15 +305,15 @@
 			var container=$("#WEB_selectMenu_container");
 			if(source.totalSize>this.settings.baseNumber){//需要生成滚动条(也即需要分页)
 				var itemLen=$("#WEB_selectMenu_container .WEB_selectMenu_list").length;
-				if(itemLen==0){
+				if(itemLen==0){//itemLen为0表示要加载第一页的数据
 					var incomeData=source;//远程分页时第一页数据
 					if(!this.settings.isRemotePager){//本地分页时第一页的数据
 						var firstPageArr=source.data.slice(0,10);
 						incomeData={"data":firstPageArr,"totalSize":source.totalSize};
 					}
 					methods._renderSelectMenu.call(this,incomeData);
-				}else{
-					if(this.settings.isRemotePager){
+				}else{//表示已经加载完第一页
+					if(this.settings.isRemotePager){//线上分页
 						methods._appendPagerItem.call(this,source);
 						container.on("mousewheel",{"sourceContext":this,"source":source},methods._mouseWheelScroll);
 					}
@@ -332,7 +331,6 @@
             if($.isFunction(this.settings.afterShow)){
                 this.settings.afterShow.call(this);
             }
-			//methods._position.call(this);//设置下拉菜单位置
 			methods._initSelectClass.call(this,incomeData);//初始化被选中的状态
 			var baseH=container.find(".WEB_selectMenu_list:first").outerHeight(true),
 				baseNumber=this.settings.baseNumber>10?10:this.settings.baseNumber,
@@ -377,10 +375,8 @@
 			})
 
 			container.on("mouseenter",function(){
-				console.log("禁用")
 				$(window).off("scroll");
 			}).on("mouseleave",function(){
-				console.log("解除禁用")
 				$(window).on("scroll");
 			})
 		},

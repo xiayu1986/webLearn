@@ -374,15 +374,6 @@
                    $(this).addClass('WEB_selectMenu_list_active').siblings('.WEB_selectMenu_list').removeClass('WEB_selectMenu_list_active');
 				}
 				methods._setSelectedValue.call(_this,curItem);//设置输入框的value
-			}).on("click",".WEB_selectMenu_options",function(e){
-				e.stopPropagation();
-			}).on("click",".select_no_items",function(){//点击取消按钮
-				methods._closeSelectMenu.call(_this);
-				$this.val("").removeAttr("code title");
-			}).on("click",".select_all_items",function(){//点击全选按钮
-				methods._setSelectedValue.call(_this);
-			}).on("click",".select_close_items",function(){//点击关闭按钮
-				methods._closeSelectMenu.call(_this);
 			})
 		},
 		_initSelectClass:function(){//初始化选中状态

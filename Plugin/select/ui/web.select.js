@@ -375,6 +375,14 @@
 				}
 				methods._setSelectedValue.call(_this,curItem);//设置输入框的value
 			})
+
+			container.on("mouseenter",function(){
+				console.log("禁用")
+				$(window).off("scroll");
+			}).on("mouseleave",function(){
+				console.log("解除禁用")
+				$(window).on("scroll");
+			})
 		},
 		_initSelectClass:function(){//初始化选中状态
 			var intStr=$(this).val(),_this=this,
@@ -693,37 +701,6 @@
 			var d2=Date.now();
 			console.log("筛选用时："+(d2-d1)/1000+"秒");
 			return {"data":filterDataArr,"totalSize":filterDataArr.length};
-		},
-		_loadRemotePageData:function(pagerParam){//远程分页
-			var arg=arguments,
-				_this=this,
-				$this=$(this),
-				container=$("#WEB_selectMenu_container"),
-				slider=$("#WEB_selectMenu_scroll .scroll_slider"),
-				param=this.settings.param(pagerParam);
-			param.url=this.settings.dataSource;
-			var waitDom=container.find(".WEB_selectMenu_list_wait");
-			if(waitDom.length==0){
-				container.append($('<div class="WEB_selectMenu_list_wait"></div>'));
-				methods._setWaitIconPosition.call(this);//设置加载状态的样式
-			}
-			
-			$.ajax(param)
-			.done(function(res){
-				if(res.data && res.data.length>0){//有数据返回
-					methods._appendPagerItem.call(_this,res);
-					container.on("mousewheel",{"sourceContext":_this,"source":res},methods._mouseWheelScroll);
-				}else{
-					var msg="没有获取到数据！";
-					container.html('<div class="WEB_select_noResult">'+msg+'</div>');
-					container.on("mousewheel",{"sourceContext":_this},methods._mouseWheelScroll);
-				}
-			})
-			.fail(function(xhr){
-				var errMsg="错误码:"+xhr.status+"&nbsp;"+xhr.statusText;
-				container.html('<div class="WEB_select_error">'+errMsg+'</div>');
-				container.on("mousewheel",{"sourceContext":_this},methods._mouseWheelScroll);
-			})
 		}
 	}
     

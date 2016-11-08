@@ -20,6 +20,7 @@
 		formatTemplate:"1",//自定义下拉菜单风格
 		dataSource:"",//指定数据源
 		initFilter:false,///初始化时是否筛选
+		isBeginWithKeywords:false,//匹配时是否以输入的关键字开头
 		param:function(data){//请求参数
 			return {
 				type:"POST",
@@ -319,9 +320,10 @@
 						container.on("mousewheel",{"sourceContext":this,"source":source},methods._mouseWheelScroll);
 						methods._resetSliderPos.call(this);
 					}else{
-						console.log("过滤")
 						if(arguments.length>1 && arguments[1]){//表示过滤
-							methods._renderSelectMenu.call(this,source);
+							var firstPageArr=source.data.slice(0,10),
+								incomeData={"data":firstPageArr,"totalSize":source.totalSize};
+							methods._renderSelectMenu.call(this,incomeData);
 						}
 					}
 				}
@@ -692,12 +694,17 @@
 			wait.css({"left":l,"top":t});
 		},
 		_matchKeywords:function (targetStr,data) {//匹配要搜索的关键字
-			var filterDataArr=[];
+			var filterDataArr=[],_this=this;
 			$.each(data.data,function(i,D){
 				var Name=""+D.name;
 				Name=Name.toLowerCase();
 				targetStr=$.trim(targetStr.toLowerCase());
-				var testRule=new RegExp('^'+targetStr,'gi');
+				if(_this.settings.isBeginWithKeywords){
+					var testRule=new RegExp('^'+targetStr,'gi');
+				}
+				else{
+					var testRule=new RegExp(targetStr,'gi');
+				}
 				if(testRule.test(Name)){
 					filterDataArr.push(D);
 				}

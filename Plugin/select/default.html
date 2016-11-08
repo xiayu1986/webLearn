@@ -9,12 +9,7 @@
 	.list{ width: 1200px; margin:10px auto; font-size: 0; overflow: hidden;}
 	.list tr td{ padding:0 5px; }
 	.hidden{ display:none;}
-	.group{ width: 290px; font-size: 14px; height: 38px; line-height: 38px; text-align: center; padding: 0 5px; float: left; cursor: pointer;}
 	.form-control{ border-radius:0; }
-	.row{margin:0;}
-	.col-sm-2{  width:20%; }
-	.col-sm-10{ width: 70%; }
-	.col-sm-2,.col-sm-10{ }
 </style>
 </head>
 <body>
@@ -74,7 +69,6 @@
 	{"data":[{"name":"城市","code":"city"},{"name":"国家","code":"country"},{"name":"区域","code":"country"},{"name":"大区","code":"country"}],"total":4}
 </div>
 </div>
-<div style="height: 2000px;"></div>
 <script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="lib/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="lib/bootstrap.min.js"></script>
@@ -99,7 +93,7 @@ $(function(){
 		separator:"|",//定义多选时写入到输入框的分隔符
 		showOptions:false,//多选时是否显示操作项(全选、取消)：该参数目前暂时无效
 		baseNumber:10,//用以确定下拉菜单的最大高度也是每页显示的数据量
-		scrollRate:1,//每次滚过的数量
+		scrollRate:10,//每次滚过的数量
 		pagerType:"local",//分页类型:remote表示远程服务器加载分页(暂不支持),local表示本地分页,为空表示不分页
 		param:function(p){//从服务器加载数据时传递的参数
 			var req={};

@@ -269,11 +269,11 @@
 			$.ajax(param)
 			.done(function(res){
 				if(res.data && res.data.length>0){//有数据返回
-					if(arg.length>0){//服务器分页或关键字过滤
+					if(!_this.settings.isRemotePager||!_this.settings.isRemoteFilter){//本地分页或关键过滤
+						methods._processData.call(_this,res);
+					}else{//服务器分页或关键字过滤
 						var totalData=_this.settings.formatData(res)||res;
-							methods._localDataHandle.call(_this,totalData);//本地处理数据
-					}else{//本地分页或关键过滤
-							methods._processData.call(_this,res);
+						methods._localDataHandle.call(_this,totalData);//本地处理数据
 					}
 				}else{
 					var msg="没有获取到数据！";
@@ -298,7 +298,7 @@
 				})
 			}
 		},
-		_localDataHandle:function(source){//过滤下拉菜单数据 source为所有数据集合
+		_localDataHandle:function(source,isFilter){//过滤下拉菜单数据 source为所有数据集合
 			if(!$(this).hasClass("WEB_select_current")){
 				return;
 			}
@@ -313,9 +313,16 @@
 					}
 					methods._renderSelectMenu.call(this,incomeData);
 				}else{//表示已经加载完第一页
+					
 					if(this.settings.isRemotePager){//线上分页
 						methods._appendPagerItem.call(this,source);
 						container.on("mousewheel",{"sourceContext":this,"source":source},methods._mouseWheelScroll);
+						methods._resetSliderPos.call(this);
+					}else{
+						console.log("过滤")
+						if(arguments.length>1 && arguments[1]){//表示过滤
+							methods._renderSelectMenu.call(this,source);
+						}
 					}
 				}
 				methods._createScroll.call(this,source);
@@ -375,9 +382,9 @@
 			})
 
 			container.on("mouseenter",function(){
-				$(window).off("scroll");
+
 			}).on("mouseleave",function(){
-				$(window).on("scroll");
+				
 			})
 		},
 		_initSelectClass:function(){//初始化选中状态
@@ -436,13 +443,13 @@
 		_bindScrollEvent:function(sourceData){//绑定滚动事件
 			var _this=this,
 				container=$("#WEB_selectMenu_container"),
+				clientH=parseInt(container.css("maxHeight")),
         		menu=$("#WEB_selectMenu_container .WEB_selectMenu"),
 				baseH=$("#WEB_selectMenu_container .WEB_selectMenu_list:first").outerHeight(true),
-				slider=$("#WEB_selectMenu_scroll .scroll_slider"),//拖拽滚动条
+				slider=$("#WEB_selectMenu_scroll .scroll_slider"),//滑块
 				dragging = false,//拖拽状态
 				iY,
-				dY1=0,
-				dY2=0,
+				dY1=dY2=0,
 				maxTop=slider.parent().height()-slider.height();//滚动条可以滑动的最大高度
 		        slider.off("mousedown").on("mousedown",function(e) {//鼠标按下时的方法
 		            dragging = true;
@@ -453,21 +460,31 @@
 		        })
 		        $(document).mousemove(function(e) {//鼠标拖动时的方法
 		            if (dragging) {
-		            	dY2=slider.position().top;
 		                var oY = e.clientY - iY;
 		                if(oY<0){
 		                   oY=0 
 		                }else if(oY>maxTop){
 		                    oY=maxTop
 		                }
-		                slider.css({"top":oY/**remainRate待处理*/});
-		                methods._dragScroll.call(_this,oY/maxTop,dY1-dY2,sourceData);
+		                slider.css({"top":oY});
+		                var menuH=menu.height(),
+		                	loadedItems=menu.find(".WEB_selectMenu_list");
+	                	if(loadedItems.length===sourceData.totalSize){
+	                		menuH-=clientH;
+	                	}
+	                	menu.css({"top":-(oY/maxTop)*menuH});
 		                return false;
 		            }
 		        })
 				slider.mouseup(function(e) {//鼠标抬起时的方法
 		            dragging = false;
 		            e.cancelBubble = true;
+		            dY2=slider.position().top;
+		            var loadedItems=menu.find(".WEB_selectMenu_list").length;//取当前已加载的数量
+				    if(loadedItems===sourceData.totalSize || dY2<=dY1){//所有数据加载完成
+						return;
+					}
+					methods._createPagination.call(_this,sourceData);
 		        })
 		        //鼠标滚动
 				container.off("mousewheel").on("mousewheel",{"source":sourceData,"sourceContext":_this},methods._mouseWheelScroll);
@@ -508,28 +525,13 @@
 			}
 			methods._createPagination.call(_this,e.data.source);//如果数据总量大于每页可显示的数量调用分页方法
 		},
-		_dragScroll:function(rate,scrollDir,sourceData){//滚动
-			var menu=$("#WEB_selectMenu_container .WEB_selectMenu");
-			var scrollMaxDis=0,
-				container=$("#WEB_selectMenu_container"),
-        		menu=$("#WEB_selectMenu_container .WEB_selectMenu");
-			if(this.settings.isMultiple && this.settings.showOptions){//多选
-				scrollMaxDis=menu.height()-container.height()+$("#WEB_selectMenu_container .WEB_selectMenu_options").outerHeight();
-			}else{//单选
-				scrollMaxDis=menu.height()-container.height();
-			}
-			menu.css({"top":-rate*scrollMaxDis/**remainRate待处理*/});
-			if(scrollDir<0){
-				methods._createPagination.call(this,sourceData);
-			}
-		},
 		_localFilterKeywords:function(sourceData){//关键字过滤,sourceData指总数据
 			var _this=this,filterData={},//定义搜索后的结果集
 				inStr=$(this).val();//获取当前输入框内的关键字
 				var fP={"keywords":inStr}
 				this.settings.param(fP);
 			if(inStr=="" || (inStr!="" && inStr.indexOf(this.settings.separator)>-1)){
-				methods._localDataHandle.call(_this,sourceData);
+				methods._localDataHandle.call(_this,sourceData,true);
 			}else{
 				$("#WEB_selectMenu_container").off("mousewheel");
 				var filterData=methods._matchKeywords.call(this,inStr,sourceData);
@@ -537,7 +539,7 @@
 					$("#WEB_selectMenu_container").html('<div class="WEB_select_noResult">没有搜索到数据！</div>')
 					//methods._localDataHandle.call(_this,sourceData);
 				}else{
-					methods._localDataHandle.call(_this,filterData);
+					methods._localDataHandle.call(_this,filterData,true);
 				}
 				
 			}
@@ -580,11 +582,18 @@
 					appendData={"data":d.data.slice(startIndex,endPoint+1)};
 					methods._appendPagerItem.call(this,appendData);
 					container.on("mousewheel",{"source":d,"sourceContext":this},methods._mouseWheelScroll);
-					var curMenuH=menu.height(),//计算当前列表的总高度
-						curRate=menuTop/curMenuH;//计算当前列表滚过去的高度与列表总高度的比例
-					slider.animate({"top":curRate*maxTop});//按照列表比例重置滑块的位置
+					methods._resetSliderPos.call(this);
 				}
 			}
+		},
+		_resetSliderPos:function(){//重置滑块的位置
+			var	slider=$("#WEB_selectMenu_scroll .scroll_slider"),//滑块
+				maxTop=slider.parent().height()-slider.height(),//滑块可以滑动的最大高度
+				menu=$("#WEB_selectMenu_container .WEB_selectMenu"),
+				menuTop=Math.abs(parseInt(menu.css("top"))),//取当前列表滚过去的高度
+				curMenuH=menu.height(),//计算当前列表的总高度
+				curRate=menuTop/curMenuH;//计算当前列表滚过去的高度与列表总高度的比例
+			slider.animate({"top":curRate*maxTop});//按照列表比例重置滑块的位置
 		},
 		_appendPagerItem:function(data){
 			var container=$("#WEB_selectMenu_container"),
@@ -684,7 +693,6 @@
 		},
 		_matchKeywords:function (targetStr,data) {//匹配要搜索的关键字
 			var filterDataArr=[];
-			var d1=Date.now();
 			$.each(data.data,function(i,D){
 				var Name=""+D.name;
 				Name=Name.toLowerCase();
@@ -694,8 +702,6 @@
 					filterDataArr.push(D);
 				}
 			})
-			var d2=Date.now();
-			console.log("筛选用时："+(d2-d1)/1000+"秒");
 			return {"data":filterDataArr,"totalSize":filterDataArr.length};
 		}
 	}

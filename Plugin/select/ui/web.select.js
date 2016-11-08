@@ -2,6 +2,7 @@
  * Created by Administrator on 2015/8/9.
  */
 ;(function($,window,document,undefined){
+	$.support.cors = true;
 	var defaults={//默认配置
 		trigger:"click",//触发事件：click
 		isEdit:true,//是否可输入
@@ -291,6 +292,7 @@
 				var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,""),
 					eventType=(ieVersion=="MSIE8.0"||ieVersion=="MSIE9.0")?'keyup.filter':'input.filter';//定义事件类型
 				$(this).off(".filter").on(eventType,function (e) {
+					e.preventDefault();
 					methods._localFilterKeywords.call(_this,totalData);//关键字过滤
 				})
 			}

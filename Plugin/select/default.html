@@ -170,6 +170,7 @@ $(function(){
 		$(".modalSelect").WEB_selectMenu({
 		trigger:"click",//触发事件：目前仅支持click
 		isEdit:true,//是否可输入
+		isCreateIndent:false,
 		disabledScrollDom:$("#modal"),
 		beforeShow:function(){},//打开菜单前执行的方法
 		afterShow:function(){},//打开菜单后执行的方法
@@ -200,7 +201,7 @@ $(function(){
 				req={
 					"keywords":"",
 					"page":1,
-					"pageSize":100
+					"pageSize":10
 				}
 			}
 			return {

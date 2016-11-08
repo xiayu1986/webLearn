@@ -6,6 +6,7 @@
 		trigger:"click",//触发事件：click
 		isEdit:true,//是否可输入
 		container:$("body"),
+		disabledScrollDom:$(window),
 		isScrollClose:false,
 		isCreateIndent:true,//是否创建下拉菜单标识
 		beforeShow:function(){},//打开菜单前执行的方法 
@@ -130,10 +131,6 @@
 			$(document).click(function(e){//点击任意空白处收起
 				methods._closeSelectMenu.call(_this);
 			})
-			var containerDOM=this.settings.container;
-			if(this.settings.container.is("body")){
-				containerDOM=$(window)
-			}
 			if(this.settings.isScrollClose){//滚动容器时收起下拉菜单
 				containerDOM.on("scroll",function(){
 					methods._closeSelectMenu.call(_this);
@@ -161,7 +158,7 @@
 			})
 			$(window).on("resize",function(){//视口大小改变时重置下拉菜单标志符的位置
 				methods.setSelectIconPosition.call(_this);
-			})	
+			})
 		},
 		setSelectIconPosition:function(){//设置标识的位置
 			var _this=this;
@@ -209,7 +206,6 @@
             if($.isFunction(this.settings.afterHide)){
                 this.settings.afterHide.call(this);
             }
-			//methods.setSelectIconPosition.call(this);//重新设置下拉菜单标志符的位置
 		},
 		_position:function(){//设置下拉菜单的位置
 			var container=$("#WEB_selectMenu_container"),
@@ -384,9 +380,9 @@
 			})
 
 			container.on("mouseenter",function(){
-
+				methods._lockScroll(_this.settings.disabledScrollDom[0]);
 			}).on("mouseleave",function(){
-				
+				methods._unLockScroll(_this.settings.disabledScrollDom[0]);
 			})
 		},
 		_initSelectClass:function(){//初始化选中状态
@@ -538,8 +534,7 @@
 				$("#WEB_selectMenu_container").off("mousewheel");
 				var filterData=methods._matchKeywords.call(this,inStr,sourceData);
 				if(filterData.data.length==0){
-					$("#WEB_selectMenu_container").html('<div class="WEB_select_noResult">没有搜索到数据！</div>')
-					//methods._localDataHandle.call(_this,sourceData);
+					$("#WEB_selectMenu_container").html('<div class="WEB_select_noResult">没有搜索到数据！</div>');
 				}else{
 					methods._localDataHandle.call(_this,filterData,true);
 				}
@@ -710,6 +705,25 @@
 				}
 			})
 			return {"data":filterDataArr,"totalSize":filterDataArr.length};
+		},
+		_lockScroll:function(targetDom){//锁定滚动条
+			 if (targetDom.addEventListener) {
+  				targetDom.addEventListener('DOMMouseScroll', methods._preventDefault,false);
+			  }
+			  targetDom.onmousewheel = document.onmousewheel = methods._preventDefault;
+		},
+		_unLockScroll:function(targetDom){//解除滚动条锁定
+			 if (targetDom.removeEventListener) {
+  				targetDom.removeEventListener('DOMMouseScroll', methods._preventDefault,false);
+			  }
+			  targetDom.onmousewheel = document.onmousewheel =null;
+		},
+		_preventDefault:function(e){//阻止默认事件
+			  e = e || window.event;
+			  if (e.preventDefault){
+			      e.preventDefault();
+			  }
+			  e.returnValue = false;  
 		}
 	}
     

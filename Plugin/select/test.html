@@ -44,12 +44,12 @@ $(function(){
 		initFilter:false,///初始化时是否执行筛选
 		formatTemplate:"2",//自定义下拉菜单风格：目前仅支持1,2两种
 		isRemoteFilter:true,//远程接口是否支持filter：该参数目前仅支持false
-		isRemotePager:false,//线上分页
+		isRemotePager:true,//线上分页
 		indentX:10,//下拉菜单图标与输入框右侧的距离
 		separator:"|",//定义多选时写入到输入框的分隔符
 		showOptions:false,//多选时是否显示操作项(全选、取消)：该参数目前暂时无效
 		baseNumber:10,//用以确定下拉菜单的最大高度也是每页显示的数据量
-		scrollRate:1,//每次滚过的数量
+		scrollRate:10,//每次滚过的数量
 		pagerType:"local",//分页类型:remote表示远程服务器加载分页(暂不支持),local表示本地分页,为空表示不分页
 		param:function(p){//从服务器加载数据时传递的参数
 			var req={};

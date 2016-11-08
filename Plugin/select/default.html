@@ -168,11 +168,59 @@ $(function(){
 	
 	$("#modal").on("shown.bs.modal",function(){
 		$(".modalSelect").WEB_selectMenu({
-			"dataSource":"http://localhost/workspace/Plugin/select/test/code.json",
-			isMultiple:false,
-			isCreateIndent:true,
-			container:$("#modal")
-		});
+		trigger:"click",//触发事件：目前仅支持click
+		isEdit:true,//是否可输入
+		disabledScrollDom:$("#modal"),
+		beforeShow:function(){},//打开菜单前执行的方法
+		afterShow:function(){},//打开菜单后执行的方法
+		beforeHide:function(){},//关闭菜单前执行的方法
+		afterHide:function(){},//关闭菜单后执行的方法
+		onSelect:function(a){},//选择后触发的方法,参数为所有选中的项
+		isMultiple:true,//是否可多选
+		isValueSort:true,//选择结果是否支持排序
+		initFilter:false,///初始化时是否执行筛选
+		formatTemplate:"2",//自定义下拉菜单风格：目前仅支持1,2两种
+		isRemoteFilter:true,//远程接口是否支持filter：该参数目前仅支持false
+		isRemotePager:true,//线上分页
+		indentX:10,//下拉菜单图标与输入框右侧的距离
+		separator:"|",//定义多选时写入到输入框的分隔符
+		showOptions:false,//多选时是否显示操作项(全选、取消)：该参数目前暂时无效
+		baseNumber:10,//用以确定下拉菜单的最大高度也是每页显示的数据量
+		scrollRate:10,//每次滚过的数量
+		pagerType:"local",//分页类型:remote表示远程服务器加载分页(暂不支持),local表示本地分页,为空表示不分页
+		param:function(p){//从服务器加载数据时传递的参数
+			var req={};
+			if($.type(p)==="object"){
+				req={
+					"keywords":p.keywords?p.keywords:undefined,
+					"page":p.page?p.page:undefined,
+					"pageSize":p.page?this.baseNumber:undefined
+				}
+			}else{
+				req={
+					"keywords":"",
+					"page":1,
+					"pageSize":100
+				}
+			}
+			return {
+				type:"POST",
+				timeout:40000,
+				data:req
+			}
+		},
+		"dataSource":"http://localhost:8090/listData",//指定数据源
+		"formatData":function(res){//处理返回的数据格式
+			var formatArr=[];
+			$.each(res.data,function(i,d){
+				var param={"name":d.text,"code":d.id}
+				formatArr.push(param);
+			})
+			return {"data":formatArr,"totalSize":res.totalSize};
+		},
+		onSelect:function(a,b){
+		}
+	});
 	})
 })
 </script>

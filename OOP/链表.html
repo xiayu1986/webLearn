@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>链表</title>
+</head>
+<body>
+<script>
+function Node(element){
+    this.element=element;
+    this.next=null;
+}
+function Link() {
+    this.head=new Node("head")
+}
+Link.prototype={
+    constructor:Link,
+    find:function (item) {
+        var node=this.head;
+        while(node.element!=item){
+            node=node.next
+        }
+        return node;
+    },
+    insert:function (newElement,item) {
+        var newNode=new Node(newElement),
+            curNode=this.find(item);
+        newNode.next=curNode.next;
+        curNode.next=newNode;
+    },
+    display:function () {
+        var node=this.head;
+        while(node.next!==null){
+            console.log(node.next.element)
+            node=node.next;
+        }
+    }
+}
+var L1=new Link();
+L1.insert("BJS","head");
+L1.insert("SHA","BJS");
+L1.insert("SEL","SHA");
+L1.display()
+</script>
+</body>
+</html>

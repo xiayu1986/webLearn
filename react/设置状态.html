@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<title>设置状态</title>
+</head>
+
+<body>
+	<div class="container">
+	
+	</div>
+	<script src="script/react.js"></script>
+	<script src="script/react-dom.js"></script>
+	<script src="script/browser.min.js"></script>
+	<script type="text/babel">
+	/*状态设置*/
+	var Count=React.createClass({
+		getInitialState:function(){
+			return {count:0}
+		},
+		countHandle:function(e){
+			this.setState(function(state){
+				return {count:state.count+1}
+			})
+		},
+		render:function(){
+			return (<div>
+			<button onClick={this.countHandle} className="btn btn-primary">
+			点击次数为：{this.state.count}
+			</button>
+			</div>)
+		}
+	});
+	ReactDOM.render(<Count/>,document.querySelector(".container"));
+	</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<title>选项卡</title>
+</head>
+
+<body>
+	<div class="container">
+	
+	</div>
+	<script src="script/react.js"></script>
+	<script src="script/react-dom.js"></script>
+	<script src="script/browser.min.js"></script>
+	<script type="text/babel">
+	var data=[{"name":"腾讯","value":"T"},{"name":"百度","value":"B"},{"name":"新浪","value":"S"}]
+	var Tab=React.createClass({
+		getInitialState:function(){
+			return {selected:this.props.selected}
+		},
+		handleOnClick:function(e){
+			this.setState({"selected":e.target.getAttribute("data-value")})
+		},
+		render:function(){
+			var tabs=this.props.data.map(function(item,i){
+				var selected=item.value==this.state.selected?"selected":"";
+				return (<button className="btn btn-primary" key={i} data-value={item.value} onClick={this.handleOnClick}>
+					{item.name}
+				</button>)
+			},this);
+
+			return (<div className="tab-selector">
+				<ul>{tabs}</ul>
+			</div>)
+		}
+	});
+	var Panel=React.createClass({
+		render:function(){
+			return (
+				<div className="panel panel-primary">
+					<div className="panel-heading">选项卡</div>
+					<div className="panel-body">
+						<Tab data={this.props.data} selected={this.props.selected} />
+					</div>
+				</div>
+			)
+		}
+	})
+	ReactDOM.render(<Panel data={data} selected="1" />,document.querySelector(".container"))
+	</script>
+</body>
+</html>

@@ -14,7 +14,25 @@
 	<script src="script/react-dom.js"></script>
 	<script src="script/browser.min.js"></script>
 	<script type="text/babel">
-	
+	var OutPut=React.createClass({/*定义*/
+		render:function(){
+			return (<div>
+					<Name name={this.props.name} />
+					<Link link={this.props.link} />
+					</div>)
+		}
+	}),
+	Name=React.createClass({
+		render:function(){
+			return (<div>{this.props.name}</div>)
+		}
+	}),
+	Link=React.createClass({
+		render:function(){
+			return (<p><a href={this.props.link}>{this.props.link}</a></p>)
+		}
+	});
+	ReactDOM.render(<OutPut name="复合组件" link="http://localhost" />,document.querySelector(".container"))
 	</script>
 </body>
 </html>

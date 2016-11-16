@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+<style type="text/css">
+*{ margin:0; padding:0;}
+body{ font:12px/14px "微软雅黑"; color:#000;}
+a{ text-decoration:none; color:#000;}
+img{ border:none;}
+li{ list-style:none;}
+</style>
+<body>
+<script type="text/javascript">
+    function list(){
+        this.size=0;
+        this.curpos=0;
+        this.data=[];
+    }
+    list.prototype={
+        constructor:list,
+        append:function(elem){
+            this.data[this.size++]=elem;
+        },
+        find:function(elem){
+            for(var i=0;i<this.data.length;i++){
+                if(this.data[i]==elem){
+                    return i;
+                }
+            }
+            return -1;
+        },
+        remove:function(elem){
+            var findAt=this.find(elem);
+            if(findAt>-1){
+                this.data.splice(findAt,1);
+                this.size--;
+                return true;
+            }
+            return false;
+        },
+        insert:function(elem,after){
+            var insertPos=this.find(after);
+            if(insertPos>-1){
+                this.data.splice(insertPos+1,0,elem);
+                this.size++;
+                return true;
+            }
+            return false;
+        },
+        clear:function(){
+            delete this.data;
+            this.data=[];
+            this.size=this.curpos=0;
+        },
+        front:function(){
+            this.curpos=0;
+        },
+        end:function(){
+            this.curpos=this.size-1
+        },
+        prev:function(){
+            if(this.curpos>0){
+                this.curpos--;
+            }
+        },
+        next:function(){
+            if(this.curpos<this.size-1){
+                this.curpos++;
+            }
+        },
+        moveTo:function(pos){
+            this.curpos=pos;
+        },
+        getElem:function(){
+            return this.data[this.curpos];
+        },
+        curPosition:function(){
+            return this.curpos;
+        },
+        length:function(){
+            return this.size;
+        }
+    }
+    var l=new list();
+    l.append("first");
+    l.append("a");
+    l.append("b");
+    l.append("ac");
+    l.insert("elements","a");
+    l.moveTo(3);
+</script>
+</body>
+</html>

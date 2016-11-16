@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+<style type="text/css">
+*{ margin:0; padding:0;}
+body{ font:12px/14px "微软雅黑"; color:#000;}
+a{ text-decoration:none; color:#000;}
+img{ border:none;}
+li{ list-style:none;}
+</style>
+<body>
+<script type="text/javascript">
+    function stack(){
+        this.data=[];
+        this.top=0;
+    }
+    stack.prototype={
+        constructor:stack,
+        push:function(elem){
+            this.data[this.top++]=elem;
+        },
+        pop:function(){
+            return this.data[--this.top];
+        },
+        peek:function(){
+            return this.data[this.top-1]
+        },
+        size:function(){
+            return this.top
+        },
+        clear:function(){
+            this.top=0;
+        }
+    }
+    var s=new stack();
+//数制转换
+    function numTrans(num,base){
+        var s=new stack();//创建对象
+        do{
+            s.push(num%base);//取模运算
+            num=Math.floor(num/=base);//将余数赋给当前值
+        }while(num>0)//直到当前值为0
+        var covert="";
+        while(s.size()>0){
+            covert+= s.pop();
+        }
+        return covert;
+
+    }
+    console.log(numTrans(32,8));
+    //回文判断
+    function isLoop(str){
+        var s=new stack();
+        for(var i=0;i<str.length;i++){
+            s.push(str[i])
+        }
+        var rstr="";
+        while(s.size()>0){
+            rstr+= s.pop();
+        }
+        if(str==rstr){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    console.log(isLoop("dda"));
+</script>
+</body>
+</html>

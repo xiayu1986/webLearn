@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+<style type="text/css">
+*{ margin:0; padding:0;}
+body{ font:12px/14px "微软雅黑"; color:#000;}
+a{ text-decoration:none; color:#000;}
+img{ border:none;}
+li{ list-style:none;}
+.model{ width: 100px; height: 100px; background: #360; margin: 10px auto; padding: 10px;}
+.inner{ width: 100px; height: 100px; background: #370;}
+</style>
+<body>
+<div class="model" id="model">
+	<div class="inner" id="inner"></div>
+</div>
+<div class="model" id="getBook"></div>
+<div class="model" id="pushBook"></div>
+<script type="text/javascript">
+function bindEvent(obj,events,fn){
+	 obj.linsteners=obj.linsteners||{};
+  	 obj.linsteners[events]=obj.linsteners[events]||[];
+  	 obj.linsteners[events].push(fn);
+  if(obj.addEventListener){
+     obj.addEventListener(events,function(e){
+     	if(undefined==fn.call(obj)){
+     		e.cancelBubble=true;//阻止冒泡
+     		e.preventDefault();//阻止默认事件
+     	}
+     },false)
+  }else{
+  	obj.attachEvent("on"+events,function(){
+  		if(undefined==fn.call(obj)){
+  			event.cancelBubble=true;
+  			return false;
+  		}
+  	})
+  }
+}
+function triggerEvent(obj,events){
+	for(var i=0;i<obj.linsteners[events].length;i++){
+		obj.linsteners[events][i].call(obj);
+	}
+}
+
+window.onload=function(){
+	var model=document.getElementById("model"),
+	inner=document.getElementById("inner"),
+	getBook=document.getElementById("getBook"),
+	pushBook=document.getElementById("pushBook");
+	bindEvent(model,"click",function(){
+		alert(this.className);
+	});
+	bindEvent(inner,"click",function(){
+		alert(this.className);
+	});
+	bindEvent(getBook,"getBook",function(){
+		alert(this.id);
+	});
+	bindEvent(pushBook,"pushBook",function(){
+		alert(this.id);
+	});
+	triggerEvent(getBook,"getBook");
+	triggerEvent(pushBook,"pushBook");
+}
+</script>
+</body>
+</html>

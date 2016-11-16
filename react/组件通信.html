@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<title>组件通信</title>
+</head>
+
+<body>
+	<div class="container">
+	
+	</div>
+	<script src="script/react.js"></script>
+	<script src="script/react-dom.js"></script>
+	<script src="script/browser.min.js"></script>
+	<script type="text/babel">
+	var ChildComponent=React.createClass({
+		render:function(){
+			return (
+				<div className="panel panel-primary">
+					<div className="panel-heading">组件通信</div>
+					<div className='panel-body'>
+						<button className="btn btn-primary" onClick={this.props.handle}>修改</button>
+						<div className="form-group">{this.props.content}</div>
+					</div>
+				</div>
+			)
+		}
+	}),
+	ParentComponent=React.createClass({
+		getInitialState:function(){
+			return {data:"父组件"}
+		},
+		handleChange:function(e){
+		console.log(e.clientX)
+			this.setState({data:"组件通信"})
+		},
+		render:function(){
+			return (
+				<div>
+					<ChildComponent handle={this.handleChange} content={this.state.data} />
+				</div>
+			)
+		}
+	});
+	ReactDOM.render(<ParentComponent />,document.querySelector(".container"));
+	</script>
+</body>
+</html>

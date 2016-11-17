@@ -3,18 +3,23 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<style>
+		.tabContent{ border: #ddd 1px solid; border-radius: 5px; padding: 15px;}
+	</style>
 	<title>选项卡</title>
 </head>
 
 <body>
 	<div class="container">
-	
+
 	</div>
 	<script src="script/react.js"></script>
 	<script src="script/react-dom.js"></script>
 	<script src="script/browser.min.js"></script>
 	<script type="text/babel">
-	var data=[{"name":"腾讯","value":"T"},{"name":"百度","value":"B"},{"name":"新浪","value":"S"}]
+	var data=[{"name":"腾讯","value":"T","content":<div>腾讯</div>},
+		{"name":"百度","value":"B","content":<div>百度</div>},
+		{"name":"新浪","value":"S","content":<div>新浪</div>}]
 	var Tab=React.createClass({
 		getInitialState:function(){
 			return {selected:this.props.selected}
@@ -24,14 +29,21 @@
 		},
 		render:function(){
 			var tabs=this.props.data.map(function(item,i){
-				var selected=item.value==this.state.selected?"selected":"";
-				return (<button className="btn btn-primary" key={i} data-value={item.value} onClick={this.handleOnClick}>
+				var selected=item.value==this.state.selected?"btn btn-primary active":"btn btn-primary";
+				return (<button className={selected} key={i} data-value={item.value} onClick={this.handleOnClick}>
 					{item.name}
 				</button>)
 			},this);
+			var tabsContent=this.props.data.map(function(item,i){
+				var selected=item.value==this.state.selected?"content":"content hidden";
+				return (<div className={selected} key={i}>
+					{item.content}
+				</div>)
+			},this);
 
 			return (<div className="tab-selector">
-				<ul>{tabs}</ul>
+				<div className="btn-group">{tabs}</div>
+				<div className="tabContent">{tabsContent}</div>
 			</div>)
 		}
 	});
@@ -47,7 +59,7 @@
 			)
 		}
 	})
-	ReactDOM.render(<Panel data={data} selected="1" />,document.querySelector(".container"))
+	ReactDOM.render(<Panel data={data} selected="B" />,document.querySelector(".container"))
 	</script>
 </body>
 </html>

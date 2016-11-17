@@ -295,7 +295,6 @@
 			$(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
 		},
 		_createTreeIcon:function(name,value,isLastNode,indent){//创建节点图标
-			console.log(indent)
 			//console.log("键："+name+(isLastNode?"是":"不是")+"最后一个节点")
 			var nodeName='',result='',foldIcon='',typeIcon='',indentIcon='';
 			if(name==="root"){
@@ -319,14 +318,15 @@
 					var className='tree-icon';
 					if(i>0){
 						className='tree-icon tree-icon-line';
-						if(isLastNode){
-							if(i===indent-1 && typeof value !=="object"){
+						if(i===indent-1 && typeof value !=="object"){
+							if(isLastNode){
 								className='tree-icon tree-icon-end'
-							}
-						}else{
-							if(i===indent-1 && typeof value !=="object"){
+							}else{
 								className='tree-icon tree-icon-join'
 							}
+								
+						}else if(i===indent-2 && !isLastNode){
+							className='tree-icon';
 						}
 					}
 					indentIcon+='<span class="'+className+'"></span>';

@@ -93,6 +93,7 @@
 				line=this.settings.lineBreak,//换行符
 				nodeCount=0,//最大节点数量
 				maxDepth=0,//最大深度
+				depArr=[],
 				message=$(this).find(".WEB_format_message"),//消息显示区
 				area=$(this).find(".WEB_format_area");//数据操作区
 			if(isCompress){//如果压缩去除换行 空格
@@ -104,6 +105,7 @@
 					tab+=ind
 				}
 				maxDepth=++indent;//递增级别
+				depArr.push(maxDepth);
 				if($.type(value)==='array'){//处理数组
 						draw.push(tab+(formObj?('"'+name+'":'):'')+'['+line);/*缩进'[' 然后换行*/
 						for (var i=0;i<value.length;i++){
@@ -128,7 +130,8 @@
 				}
 			}
 			readData('',data,true,0,false);//调用
-			message.html('共处理节点<b>'+nodeCount+'</b>个,最大树深为<b>'+maxDepth+'</b>');
+			maxDepth=Math.max.apply(null,depArr);
+			message.html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
 			area.val(draw.join(''));
 		},
 		_checkOutJson:function (sourceData) {//校验数据格式是否正确
@@ -152,11 +155,12 @@
 			message.html("");
 			return {"result":true,"data":resultData};
 		},
-		_createTreeView:function(sourceData){//生成树形结构
-			var draw=[],_this=this,nodeCount=0,maxDepth=0;//draw：存储绘制的节点HTML,nodeCount:节点数量,maxDepth:最大深度
+		_createTreeViewBak:function(sourceData){//生成树形结构
+			var draw=[],_this=this,nodeCount=0,maxDepth=0,depArr=[];//draw：存储绘制的节点HTML,nodeCount:节点数量,maxDepth:最大深度
 			var notify=function(name,value,isLast,indent){//name:数据键，value:数据值，isLast是否是最后一个节点，indent:缩进量
 				nodeCount++;//统计节点总数
 				maxDepth=++indent;//统计最大树深
+				depArr.push(maxDepth);
 				var totalLen=0;//数组或对象的长度
 				if(name==="root"){//根节点输出开始标签
 					draw.push('<ul class="root-tree"><li class="root-tree-items">','<div class="node-name">'+methods._createTreeIcon.call(_this,name,value,isLast,indent)+'</div>');
@@ -204,9 +208,95 @@
 			}
 			notify('root',sourceData,true,0);//绘制根节点
 			$(this).find(".WEB_format_tree").html(draw.join(''));//将绘制好的结构添加到树形结构区
-			$(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大树深为<b>'+maxDepth+'</b>');
+			maxDepth=Math.max.apply(null,depArr);
+			$(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
+		},
+		_createTreeView:function(sourceData){//生成树形结构
+			var draw=[],_this=this,nodeCount=0,maxDepth=0,depArr=[];//draw：存储绘制的节点HTML,nodeCount:节点数量,maxDepth:最大深度
+			var notify=function(name,value,isLast,indent){//name:数据键，value:数据值，isLast是否是最后一个节点，indent:缩进量
+				nodeCount++;//统计节点总数
+				maxDepth=++indent;//统计最大树深
+				depArr.push(maxDepth);
+				var totalLen=0;//数组或对象的长度
+				if(name==="root"){//根节点输出开始标签
+					draw.push('<ul class="root-tree"><li class="root-tree-items">','<div class="node-name">',methods._createTreeIcon.call(_this,name,value,isLast,indent),'</div>');
+				}
+				if($.type(value)==="array"){
+					totalLen=value.length;
+				}else if($.type(value)==="object"){
+					$.each(value,function () {
+						totalLen++
+					})
+				}
+
+				/*draw.push('<ul class="node-tree">');
+					var keyIndex=0,isLastNode=false;//是否是最后一个节点
+					$.each(value,function (key,val) {
+						if($.type(value)==="array"){
+							isLastNode=(key===(totalLen-1))?true:false;
+						}else if($.type(value)==="object"){
+							keyIndex++;
+							isLastNode=(keyIndex===totalLen)?true:false;
+						}
+
+						if(typeof val==="object"){
+							draw.push('<li class="node-tree-items"><div>',methods._createTreeIcon.call(_this,key,val,isLast,indent)+key,'</div>');
+							//console.log("键："+key+(isLastNode?"是":"不是")+"最后一个节点")
+						}else{
+							draw.push('<li class="node-tree-items">');
+						}
+						notify(key,val,isLastNode,indent);
+						draw.push('</li>');
+					})
+				 	draw.push('</ul>');*/
+
+				if($.type(value)==="array"){//处理数组
+					draw.push('<ul class="node-tree">');
+					for(var i=0;i<value.length;i++){
+						if(typeof value[i]==="object"){
+							draw.push('<li class="node-tree-items"><div>',methods._createTreeIcon.call(_this,i,value[i],isLast,indent)+i,'</div>');
+						}else{
+							draw.push('<li class="node-tree-items">');
+						}
+						notify(i,value[i],i===value.length-1,indent);
+					}
+				 	draw.push('</ul>');
+				 }else if($.type(value)==="object"){//处理对象
+				 	draw.push('<ul class="node-tree">');
+				 	var i=0,len=0;
+				 	for(var key in value){len++};
+					for(var key in value){
+						if(typeof value[key]==="object"){
+							draw.push('<li class="node-tree-items"><div>',methods._createTreeIcon.call(_this,key,value[key],isLast,indent)+key,'</div>');
+						}else{
+							draw.push('<li class="node-tree-items">');
+						}
+						notify(key,value[key],++i===len,indent);
+					}
+				 	draw.push('</ul>');
+				 }else{//处理子节点的输出
+					if($.type(value)==="string"){
+						value='"'+value+'"';
+					}
+				 	draw.push('<div class="node-name">',methods._createTreeIcon.call(_this,name,value,isLast,indent),'"'+name+'"：'+value+'</div>');
+				 }
+
+				if(name==="root"){//根节点输出结束标签
+					draw.push('</li></ul>');
+				}
+			}
+			if($.isEmptyObject(sourceData)){//空对象不绘制
+				$(this).find(".WEB_format_message").html('无法绘制空对象！');
+				return;
+			}
+			notify('root',sourceData,true,0);//绘制根节点
+			$(this).find(".WEB_format_tree").html(draw.join(''));//将绘制好的结构添加到树形结构区
+			maxDepth=Math.max.apply(null,depArr);
+			$(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
 		},
 		_createTreeIcon:function(name,value,isLastNode,indent){//创建节点图标
+			console.log(indent)
+			//console.log("键："+name+(isLastNode?"是":"不是")+"最后一个节点")
 			var nodeName='',result='',foldIcon='',typeIcon='',indentIcon='';
 			if(name==="root"){
 				nodeName=this.settings.textConf.root
@@ -228,17 +318,14 @@
 				if(name!=="root"){
 					var className='tree-icon';
 					if(i>0){
+						className='tree-icon tree-icon-line';
 						if(isLastNode){
 							if(i===indent-1 && typeof value !=="object"){
 								className='tree-icon tree-icon-end'
-							}else{
-								className='tree-icon tree-icon-line'
 							}
 						}else{
 							if(i===indent-1 && typeof value !=="object"){
 								className='tree-icon tree-icon-join'
-							}else{
-								className='tree-icon tree-icon-line'
 							}
 						}
 					}

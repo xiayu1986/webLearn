@@ -2,33 +2,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>链表</title>
+    <title>单向链表</title>
 </head>
 <body>
 <script>
-function Node(element){
-    this.element=element;
-    this.next=null;
+function Node(element){//创建节点
+    this.element=element;//保存节点数据
+    this.next=null;//指向下一个节点引用,初始为NULL
 }
-function Link() {
+
+function Link() {//创建链表
     this.head=new Node("head")
 }
-Link.prototype={
+
+var a={"name":"上海","code":"SHA"}
+
+Link.prototype={//链表原型
     constructor:Link,
-    find:function (item) {
+    find:function (item) {//查找指定节点
         var node=this.head;
         while(node.element!=item){
             node=node.next
         }
         return node;
     },
-    insert:function (newElement,item) {
+    insert:function (newElement,item) {//在指定节点后插入新节点
         var newNode=new Node(newElement),
             curNode=this.find(item);
         newNode.next=curNode.next;
         curNode.next=newNode;
     },
-    display:function () {
+    display:function () {//显示所有节点
         var node=this.head;
         while(node.next!==null){
             console.log(node.next.element)
@@ -36,10 +40,22 @@ Link.prototype={
         }
     }
 }
+
+/*测试*/
 var L1=new Link();
+
+var elem={"parentNode":"object","nodeClass":1,"nodeName":"key","nodeValue":"value"};
+
+var obj={"name":"上海","code":"SHA"};
+var obj2={"name":"北京","code":"BJS"};
+var obj3={"name":"武汉","code":"WHU"}
 L1.insert("BJS","head");
-L1.insert("SHA","BJS");
-L1.insert("SEL","SHA");
+L1.insert(obj,"BJS");
+L1.insert("SEL",obj);
+var arr=["NHK"]
+L1.insert(arr,"SEL");
+L1.insert(obj2,arr);
+L1.insert(obj3,obj);
 L1.display()
 </script>
 </body>

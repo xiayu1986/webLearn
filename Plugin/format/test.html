@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="theme/bootstrap.min.css">
+<style type="text/css" media="screen">
+	#container{ min-height:200px; }
+</style>
+<title>数据遍历</title>
+</head>
+<body>
+<div class="container">
+<div class="panel panel-primary">
+<div class="panel-heading">数据遍历</div>
+	<div class="panel-body">
+		<pre id="container"></pre>
+	</div>
+</div>
+</div>
+<script type="text/javascript" src="lib/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+$(function(){
+	var json={"name":{"key":"上海","value":"SHA"},"keywords":{"key":"北京","value":"BJS","list":["WHU","HKG","SEL",{"name":"首尔","code":"SEL","list":["WHU","HKG","SEL"]}]},"cities":["WHU","HKG","SEL"]}
+	function formatJson(data){
+			var ind='';
+			for(var i=0;i<2;i++){
+				ind+=" ";//缩进量
+			}
+			var draw=[],//保存解析后的数据
+				line="\n",//换行符
+				nodeCount=0,//最大节点数量
+				maxDepth=0,
+				maxTreeDepth=0,
+				maxDepthArr=[],//最大深度
+				readData=function(name,value,isLast,indent,fromObj){
+					/*
+					name：键
+					value：值
+					isLast：是否是最后一个节点
+					indent：层次
+					fromObj：父节点是否是对象
+					 */
+					nodeCount++;//递增节点
+					for (var i=0,tab='';i<indent;i++ ){//递增缩进空格
+						tab+=ind
+					}
+					maxDepth=++indent;//递增结构层次
+					maxDepthArr.push(maxDepth);
+					if($.type(value)==='array'){//处理数组
+							draw.push(tab+(fromObj?('"'+name+'":'):'')+'['+line);/*缩进'[' 然后换行*/
+							for (var i=0;i<value.length;i++){
+								readData(i,value[i],i==value.length-1,indent,false);
+							};
+							draw.push(tab+']'+(isLast?line:(','+line)));/*缩进']'换行,若非尾元素则添加逗号*/
+					}else if($.type(value)==='object'){//处理对象
+							draw.push(tab+(fromObj?('"'+name+'":'):'')+'{'+line);//缩进'{' 然后换行
+							var len=0,i=0;
+							for(var key in value){
+								len++
+							};
+							for(var key in value){
+								readData(key,value[key],++i==len,indent,true)
+							};
+							draw.push(tab+'}'+(isLast?line:(','+line)));//缩进'}'换行,若非尾元素则添加逗号
+					}else{
+							if($.type(value)=='string'){
+								value='"'+value+'"'
+							};
+							//draw.push(tab+(fromObj?('"'+name+'":'):'')+value+(isLast?'':',')+line);
+							draw.push(tab+(fromObj?('"'+name+'":'):'')+value+(isLast?'':',')+line);
+					}
+			}
+			readData('',data,true,1,false);//调用
+			maxDepth=Math.max.apply(Object,maxDepthArr)
+			console.log('共处理节点'+nodeCount+'个,最大节点深度为'+maxDepth);
+			$("#container").html(draw.join(""))
+
+	}
+	formatJson(json)
+})
+</script>
+</body>
+</html>

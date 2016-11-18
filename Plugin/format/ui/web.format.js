@@ -248,7 +248,7 @@
 									isLastNode=(keyIndex===totalLen)?true:false;
 								}
 								if(typeof val==="object"){
-									draw.push('<li class="node-tree-items"><div>',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(val),key,''),'</div>');
+									draw.push('<li class="node-tree-items"><div>',methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line")+methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(val),key,''),'</div>');
 								}
 								notify(prefix+methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
 								draw.push('</li>');
@@ -316,6 +316,7 @@
 			// $(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
 		},
 		_createTreeIcon:function(prefix,line,ico,name,value){//创建节点图标
+			console.log("键："+name+"==前缀："+prefix)
 			if(value && $.type(value)==="string"){
 				value='"'+value+'"';
 			}

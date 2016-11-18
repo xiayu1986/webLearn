@@ -248,7 +248,7 @@
 									isLastNode=(keyIndex===totalLen)?true:false;
 								}
 								if(typeof val==="object"){
-									draw.push('<li class="node-tree-items"><div>',methods._createPrefixIcon('tree-icon')+methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(val),key,''),'</div>');
+									draw.push('<li class="node-tree-items"><div>',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(val),key,''),'</div>');
 								}
 								notify(prefix+methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
 								draw.push('</li>');

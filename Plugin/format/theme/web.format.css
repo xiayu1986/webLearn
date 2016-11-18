@@ -20,6 +20,7 @@ input::-ms-clear { display: none; }
 .tree-icon-object{ background: url("object.gif")}
 .tree-icon-line{ background: url("line.gif")}
 .tree-icon-end{ background: url("end.gif")}
+.tree-icon-root{ background: url("root.gif")}
 .tree-icon-join{ background: url("join.gif")}
 
 .tree-icon-close{ background: url("close.gif")}
@@ -27,3 +28,5 @@ input::-ms-clear { display: none; }
 
 .tree-icon-number{ background: url("leaf-green.gif")}
 .tree-icon-default{ background: url("leaf-blue.gif")}
+
+dl{ margin-bottom: 0;}

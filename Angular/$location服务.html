@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>$location服务</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+     <link rel="stylesheet" type="text/css" href="css/theme.css">
+</head>
+<body>
+<div class="container">
+<div class="panel panel-primary" ng-controller="localCtrl">
+	<div class="panel-heading">
+		<div class="panel-title">location服务</div>
+	</div>
+	<div class="panel-body">
+		<div ng-bind-html="text"></div>
+	</div>
+</div>
+</div>
+<script type="text/javascript" src="js/angular.js"></script>
+<script type="text/javascript" src="js/angular-sanitize.min.js"></script>
+<script>
+var app=angular.module("app",['ngSanitize']);
+app.controller("localCtrl",['$scope','$location',function ($scope,$location) {
+	$location.path("location");//设置路径
+	$location.search({"keywords":"手机"});//设置路径
+	var str='',localArr=[],
+		absUrl='<li class="list-group-item">'+$location.absUrl()+'</li>',
+		path='<li class="list-group-item">'+$location.path()+'</li>',
+		hash='<li class="list-group-item">'+$location.hash()+'</li>',
+		url='<li class="list-group-item">'+$location.url()+'</li>',
+		host='<li class="list-group-item">'+$location.host()+'</li>',
+		protocol='<li class="list-group-item">'+$location.protocol()+'</li>',
+		search='<li class="list-group-item">'+$location.search()+'</li>',
+		port='<li class="list-group-item">'+$location.port()+'</li>';
+	localArr.push('<ul class="list-group">',absUrl,path,hash,url,host,protocol,search,port,'</ul>');
+	str=localArr.join("");
+	$scope.text=str;
+}])
+</script>
+</body>
+</html>

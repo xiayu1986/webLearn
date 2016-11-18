@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<title>遍历子节点</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="panel panel-primary">
+			<div class="panel-heading">遍历子节点</div>
+			<div class="panel-body" id="childContainer">
+
+			</div>
+		</div>
+	</div>
+	<script src="script/react.js"></script>
+	<script src="script/react-dom.js"></script>
+	<script src="script/browser.min.js"></script>
+	<script type="text/babel">
+	var List=React.createClass({
+		render:function(){
+			return (
+				<ul className="list-group">
+				{
+						React.Children.map(this.props.children,function(child){
+							return (<li className="list-group-item">{child}</li>)
+						})
+				}
+				</ul>
+			)
+		}
+	})
+	ReactDOM.render(<List><div>国内</div><div>国外</div></List>,document.querySelector("#childContainer"));
+	</script>
+</body>
+</html>

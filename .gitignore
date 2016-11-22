@@ -3,3 +3,5 @@
 *.php
 *.xml
 *.iml
+/.node_modules
+*.md

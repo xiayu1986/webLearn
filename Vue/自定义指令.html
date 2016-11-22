@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>自定义指令</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">元素获得焦点</div>
+      <div class="panel-body">
+        <div class="form-group" id="app">
+          <input type="text" class="form-control" v-focus>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">输出指令属性</div>
+      <div class="panel-body" id="directive">
+        <div class="form-group" v-demo:dir.a.b="attr">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript">
+//元素获得焦点
+var focus=Vue.directive("focus",{
+  inserted:function(element){
+    element.focus()
+  }
+})
+var vm=new Vue({
+  el:"#app"
+})
+
+//输出指令属性
+Vue.directive("demo",{
+  bind:function(el,binding,vnode){
+    var s=JSON.stringify;
+    el.innerHTML=
+                "name："+s(binding.name)+"<br>"+
+                "value："+s(binding.value)+"<br>"+
+                "oldValue："+s(binding.oldValue)+"<br>"+
+                "expression："+s(binding.expression)+"<br>"+
+                "arg："+s(binding.arg)+"<br>"+
+                "modifiers："+s(binding.modifiers);
+
+  }
+})
+var vm=new Vue({
+  el:"#directive",
+  data:{
+    attr:{
+      color:"red",
+      message:"你好"
+    }
+    
+  }
+})
+</script>
+  </body>
+</html>

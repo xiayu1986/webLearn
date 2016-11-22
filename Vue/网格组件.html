@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>表格组件</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+    <style>
+  .active .arrow {opacity: 1;}
+  .arrow {display: inline-block;vertical-align: middle;
+    width: 0;height: 0;margin-left: 5px;opacity: 0.5;}
+  .arrow.asc {border-left: 4px solid transparent;border-right: 4px solid transparent;border-bottom: 4px solid #222222;}
+  .arrow.dsc {border-left: 4px solid transparent;border-right: 4px solid transparent;border-top: 4px solid #222222;}
+    </style>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">表格组件</div>
+      <div class="panel-body">
+      <div id="demo">
+        <div class="form-group">
+         <input class="form-control" v-model="searchQuery"> 
+        </div>
+        <demo-grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
+        </demo-grid>
+      </div>
+      </div>
+    </div>
+  </div>
+<script type="text/x-template" id="grid-template">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th v-for="key in columns" 
+          @click="sortBy(key)" 
+          :class="{active:sortKey===key}">
+          {{key | formatWords}}
+          <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="entry in filteredData">
+        <td v-for="key in columns">
+             {{entry[key]}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+
+<script type="text/javascript">
+  Vue.component('demo-grid', {//定义组件
+  template: '#grid-template',
+  replace: true,//替换挂载元素
+  props: {
+    data: Array,
+    columns: Array,
+    filterKey: String
+  },
+  data: function () {
+    var sortOrders = {};
+    this.columns.forEach(function (key) {
+      sortOrders[key] = 1;
+    })
+    return {
+      sortKey: '1100000',
+      sortOrders: sortOrders
+    }
+  },
+  computed: {//实时计算数据变化
+    filteredData: function () {
+      var sortKey = this.sortKey,//当前排序的key
+        filterKey = this.filterKey && this.filterKey.toLowerCase(),//要过滤的关键字
+        order = this.sortOrders[sortKey] || 1,//排序状态 asc desc
+        data = this.data;//props传递的gridData
+      if (filterKey) {//仅在关键字不为空时查找
+        data = data.filter(function (row,index,array) {//遍历数组的方法，row:数组子元素,index:索引，array:原始数组
+          //Object.keys(row)用于返回数组子元素中可以枚举的属性
+          return Object.keys(row).some(function (key) {//遍历子元素的属性以得到对应的value
+            return String(row[key]).toLowerCase().indexOf(filterKey) > -1;//将得到的value转换为string并判断是否包含要查找的目标关键字
+          })
+        })
+      }
+      if (sortKey) {//排序字段不为空时进行排序
+        data = data.slice().sort(function (a, b) {//使用slice将data转换为数组并进行排序
+          a = a[sortKey];
+          b = b[sortKey];
+          return (a === b ? 0 : a > b ? 1 : -1) * order;//返回比较结果
+        })
+      }
+      return data
+    }
+  },
+  filters: {//定义过滤器
+    formatWords: function (str) {//首字母大写
+      return str.charAt(0).toUpperCase() + str.slice(1)
+    }
+  },
+  methods: {//定义方法
+    sortBy: function (key) {//排序
+      this.sortKey = key;
+      this.sortOrders[key] = this.sortOrders[key] * -1;
+    }
+  }
+})
+
+var demo = new Vue({
+  el: '#demo',
+  data: {
+    searchQuery: '',
+    gridColumns: ['city', 'time'],
+    gridData: [
+      { city: '北京', time:"2h30m" },
+      { city: '上海', time:"1h3m" },
+      { city: '重庆', time:"2h10m" },
+      { city: '南京', time:"2h40m" }
+    ]
+  }
+})
+</script>
+  </body>
+</html>

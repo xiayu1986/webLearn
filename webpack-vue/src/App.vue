@@ -1,18 +1,19 @@
 <template>
-<div class="panel panel-primary">
-  <div class="panel-heading">数据表格</div>
-  <div class="panel-body">
-    <div class="form-group"><input type="text" v-model="searchQuery" class="form-control" /></div>
-    <Grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery" :sort-order="sortOrder">
-    </Grid>
-  </div>
-</div>
+    <div>
+        <div class="form-group text-right">
+            <div class="form-inline">
+                <input type="text" v-model="searchQuery" class="form-control" placeholder="请输入关键字" />
+            </div>
+        </div>
+            <Grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
+            </Grid>
+    </div>
 </template>
 
 <script>
   import Grid from './components/grid.vue'
   export default {
-    data() {
+    data(){
       return {
         searchQuery: '',
         sortOrder: {

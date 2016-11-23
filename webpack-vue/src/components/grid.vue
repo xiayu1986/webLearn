@@ -71,7 +71,6 @@
   }
 </script>
 <style>
-  .arrow {display: inline-block;vertical-align: middle; width: 0;height: 0;margin-left: 5px;}
-  .arrow.asc {border-left: 4px solid transparent;border-right: 4px solid transparent;border-bottom: 4px solid #222222;}
-  .arrow.desc {border-left: 4px solid transparent;border-right: 4px solid transparent;border-top: 4px solid #222222;}
+  @import '/src/assets/css/bootstrap.min.css';
+  @import '/src/assets/css/theme.css';
 </style>

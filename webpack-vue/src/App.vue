@@ -1,60 +1,34 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+<div class="panel panel-primary">
+  <div class="panel-heading">数据表格</div>
+  <div class="panel-body">
+    <div class="form-group"><input type="text" v-model="searchQuery" class="form-control" /></div>
+    <Grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery" :sort-order="sortOrder">
+    </Grid>
   </div>
+</div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
+  import Grid from './components/grid.vue'
+  export default {
+    data() {
+      return {
+        searchQuery: '',
+        sortOrder: {
+          column: 'name',
+          order: 1
+        },
+        gridColumns: [{"name":"出发城市","key":"city"},{"name":"飞行时长","key":"time"}],
+        gridData: [
+        { city: '北京', time:"2h30m" },
+        { city: '上海', time:"1h3m" },
+        { city: '重庆', time:"2h10m" },
+        { city: '南京', time:"2h40m" }
+        ]
+      }
+    }, components: {
+      Grid
     }
   }
-}
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
-</style>

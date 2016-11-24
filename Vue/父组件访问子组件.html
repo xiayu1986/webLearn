@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>父组件访问子组件</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">父组件访问子组件</div>
+      <div class="panel-body" id="app">
+        <parent-component></parent-component>
+      </div>
+    </div>
+  </div>
+  <template id="parentComponentTemplate">
+    <div>
+      <child-component1 ref="child1"></child-component1>
+      <child-component2 ref="child2"></child-component2>
+      <button class="btn btn-primary btn-sm" @click="showData">显示子组件数据</button>
+    </div>
+  </template>
+  <template id="childComponentTemplate1">
+    <div class="form-group">子组件1</div>
+  </template>
+  <template id="childComponentTemplate2">
+    <div class="form-group">子组件2</div>
+  </template>
+<script type="text/javascript">
+Vue.component("parent-component",{
+  template:"#parentComponentTemplate",
+  components:{
+    "child-component1":{
+      template:"#childComponentTemplate1",
+      data:function(){
+        return {
+          message:"子组件1信息"
+        }
+      }
+    },
+     "child-component2":{
+      template:"#childComponentTemplate2",
+      data:function(){
+        return {
+          message:"子组件2信息"
+        }
+      }
+    }
+  },
+  methods:{
+    showData:function(){
+      this.$children.forEach(function(key){
+        console.log(key.message)
+      })
+      console.log(this.$refs.child1.message)
+      console.log(this.$refs.child2.message)
+    }
+  }
+})
+var vm=new Vue({
+  el:"#app"
+})
+</script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>非具名内容分发</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">非具名内容分发</div>
+      <div class="panel-body" id="app">
+        <slot-component>
+        <h1>模板内容</h1>
+        </slot-component>
+        <slot-component></slot-component>
+      </div>
+    </div>
+  </div>
+  <template id="slotHtml">
+    <div class="form-group">
+      <p>这是非具名内容分发</p>
+      <slot>这是个内容插槽,当父模板中没有内容时显示这里的文本</slot>
+      <p>其他内容</p>
+    </div>
+  </template>
+<script type="text/javascript">
+var vm=new Vue({
+  el:"#app",
+  components:{
+    "slot-component":{
+      template:"#slotHtml"
+    }
+  }
+})
+</script>
+  </body>
+</html>

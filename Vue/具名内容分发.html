@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>具名内容分发</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">具名内容分发</div>
+      <div class="panel-body" id="app">
+        <slot-content>
+          <div class="form-group" slot="header">
+            <h1>头部内容</h1>
+          </div>  
+           <div class="form-group" slot="body">
+            <h1>主体内容</h1>
+          </div> 
+           <div class="form-group" slot="footer">
+            <h1>尾部内容</h1>
+          </div> 
+        </slot-content>
+      </div>
+    </div>
+  </div>
+  <template id="slotHtml">
+  <div class="slotContainer">
+   <slot name="header"></slot>
+   <slot name="body"></slot>
+   <slot name="footer"></slot>
+   </div>
+  </template>
+<script type="text/javascript">
+var vm=new Vue({
+  el:"#app",
+  components:{
+    "slot-content":{
+      template:"#slotHtml"
+    }
+  }
+})
+</script>
+  </body>
+</html>

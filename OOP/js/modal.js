@@ -49,6 +49,7 @@
   }
 
   Modal.prototype.show = function (_relatedTarget) {
+    console.log(_relatedTarget)
     var that = this
     var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
 

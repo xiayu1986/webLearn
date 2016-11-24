@@ -9,26 +9,40 @@
     }
     Theme.VERSION="1.0.0";
     Theme.DEFAULTS={
-        "backgroundColor":"#ffffff"
+        "backgroundColor":"#ffffff",
+        init: true
     }
+
     Theme.prototype={
-        setTheme:function () {
-            this.css(this.options)
+        set:function (_relatedTarget) {
+            this.$element.css(_relatedTarget||this.options)
+        },
+        init:function(_relatedTarget){
+            this.set(_relatedTarget)
         }
     }
-    function Plugin(option) {
+
+    function Plugin(option,_relatedTarget) {
         return this.each(function () {
             var $this   = $(this),
                 data    = $this.data('bs.theme'),
-                options = typeof option == 'object' && option
+                options = $.extend({}, Theme.DEFAULTS, $this.data(), typeof option == 'object' && option);
             if (!data) {
                 $this.data('bs.theme', (data = new Theme(this, options)))
             }
+            if ($.type(option) === 'string'){
+                data[option](_relatedTarget)
+            } else if(options.init){//执行初始化方法
+                data.init(_relatedTarget)
+            }         
         })
     }
+    var old=$.fn.theme;
+
     $.fn.theme             = Plugin;
     $.fn.theme.Constructor = Theme;
     $.fn.theme.noConflict = function () {
+        $.fn.theme=old;
         return this
     }
 }(jQuery)

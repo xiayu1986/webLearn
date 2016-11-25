@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import Grid from './components/grid.vue'
+  import Grid from './components/grid.vue';
   export default {
     data(){
       return {
@@ -32,4 +32,27 @@
       Grid
     }
   }
+  class People{
+    constructor(name){
+        this.name=name;
+    }
+    getName(){
+     console.log(this.name);
+    }
+  }
+
+  class Student extends People{
+    constructor(name,grade){
+        super(name);
+        this.grade=grade;
+    }
+    getGrade(){
+        console.log(this.grade)
+    }
+  }
+  var p= new People("小明");
+  p.getName();
+  var s=new Student("小张","三年级");
+  s.getName();
+  s.getGrade();
 </script>

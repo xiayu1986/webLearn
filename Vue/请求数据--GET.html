@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>请求数据--GET</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+    <script type="text/javascript" src="js/vue-resource.js"></script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">请求数据--GET</div>
+      <div class="panel-body" id="app">
+        <div class="form-group">
+          <button class="btn btn-primary btn-sm" @click="getRemoteData" :disabled="loadStatus">重新加载</button>
+        </div>
+        <div class="table-response">
+          <div class="empty" v-show="emptyStatus">暂无数据！</div>
+          <div class="wait" v-show="waitStatus"></div>
+          <data-table :data-list="list" :head-list="header"></data-table>
+        </div>
+      </div>
+    </div>
+  </div>
+<template id="dataTableHtml">
+<table class="table table-bordered table-striped">
+  <thead>
+  <tr>
+    <th v-for="head in headList">{{head}}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr v-for="D in dataList">
+    <td>{{D.name}}</td>
+    <td>{{D.userId}}</td>
+    <td>{{D.project}}</td>
+    <td>{{D.class}}</td>
+  </tr>
+  </tbody>
+</table>
+</template>
+<script type="text/javascript">
+Vue.component("dataTable",{
+  template:"#dataTableHtml",
+  props:["dataList","headList"]
+})
+
+var vm=new Vue({
+  el:"#app",
+  data:function () {
+    return {
+        "header":[],
+        "list":[],
+      waitStatus:false,
+      emptyStatus:true,
+      loadStatus:false,
+      "remoteUrl":"./data/user.json"
+    }
+  },
+  mounted:function () {
+    this.getRemoteData()
+  },
+  methods:{
+    getRemoteData:function () {
+      this.waitStatus=true;
+      this.emptyStatus=false;
+      this.loadStatus=true;
+      this.$http.get(this.remoteUrl)
+              .then(function (res) {
+                this.header=res.data.header;
+                this.list=res.data.list;
+                this.waitStatus=false;
+                this.loadStatus=false;
+              },function (res) {
+                this.loadStatus=false;
+              })
+              .catch(function (response) {
+                console.log(response)
+              })
+    }
+  }
+})
+</script>
+  </body>
+</html>

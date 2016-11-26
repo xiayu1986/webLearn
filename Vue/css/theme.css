@@ -1,1 +1,12 @@
 .wait{ width:32px; height:32px; background:url("../image/wait.gif") no-repeat; margin:auto;}
+.dialog-mask{ position:fixed; width:100%; height:100%; background:rgba(0,0,0,0.5); left:0; top:0;transition: opacity .3s ease; text-align: center;}
+.dialog-mask::after{vertical-align:middle; content: ""; display: inline-block; height: 100%; }
+.dialog{ width:100%; border-radius:5px; background:#ffffff; position:relative;box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease; display: inline-block; max-width: 90%; box-sizing: border-box; text-align: left; vertical-align: middle;}
+.dialog-header{ padding:15px; border-bottom:#dddddd 1px solid;}
+.dialog-body{ padding:15px; }
+.dialog-footer{ padding:15px; border-top:#dddddd 1px solid; text-align: right;}
+.dialog-enter { opacity: 0;}
+.dialog-leave-active {opacity: 0;}
+.dialog-enter .dialog,
+.dialog-leave-active .dialog {-webkit-transform: scale(1.1);transform: scale(1.1);}

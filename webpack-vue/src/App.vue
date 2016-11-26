@@ -1,17 +1,29 @@
 <template>
-    <div>
-        <div class="form-group text-right">
-            <div class="form-inline">
-                <input type="text" v-model="searchQuery" class="form-control" placeholder="请输入关键字" />
+<div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">数据表格</div>
+        <div class="panel-body">
+            <div class="form-group text-right">
+                <div class="form-inline">
+                    <input type="text" v-model="searchQuery" class="form-control" placeholder="请输入关键字" />
+                </div>
             </div>
+                <grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
+                </grid>
         </div>
-            <Grid :data="gridData" :columns="gridColumns" :filter-key="searchQuery">
-            </Grid>
     </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">加载数据</div>
+        <div class="panel-body">
+            <data-table :head-list="headList" :user-list="userList"></data-table>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>
-  import Grid from './components/grid.vue';
+  import Grid from './components/grid.vue';//加载数据表格
+  import dataTable from './components/dataTable.vue';//加载用户列表
   export default {
     data(){
       return {
@@ -29,9 +41,12 @@
         ]
       }
     }, components: {
-      Grid
+      grid:Grid,
+      dataTable:dataTable
     }
   }
+
+  /*----------------------测试ES6----------------------*/
   class People{
     constructor(name){
         this.name=name;

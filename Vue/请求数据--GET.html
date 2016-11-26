@@ -42,11 +42,10 @@
 </table>
 </template>
 <script type="text/javascript">
-Vue.component("dataTable",{
+Vue.component("dataTable",{//定义组件
   template:"#dataTableHtml",
   props:["dataList","headList"]
 })
-
 var vm=new Vue({
   el:"#app",
   data:function () {
@@ -79,9 +78,17 @@ var vm=new Vue({
               .catch(function (response) {
                 console.log(response)
               })
+        //this.$http.jsonp(this.remoteUrl).then(); jsonp形式
     }
   }
 })
+
+  Vue.http.interceptors.push(function (res,next) {//添加拦截器
+    alert("请求发送前");
+    next(function (res) {
+      alert(res.data)
+    })
+  })
 </script>
   </body>
 </html>

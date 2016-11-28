@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>路由</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="js/vue-router.js"></script>
+  </head>
+  <body>
+  <div class="container" id="app">
+    <div class="col-xs-2">
+      <div class="list-group">
+        <router-link to="/home" class="list-group-item">首页</router-link>
+        <router-link to="/detail" class="list-group-item">详情</router-link>
+      </div>
+    </div>
+    <div class="col-xs-10">
+      <div class="panel panel-primary">
+        <div class="panel-heading">内容</div>
+        <div class="panel-body">
+          <router-view></router-view>
+        </div>
+      </div>
+    </div>
+
+  </div>
+<script type="text/javascript">
+  //Vue.use(VueRouter);
+  const Home={template:'<div>首页</div>'};
+  const Detail={template:'<div>详情页</div>'};
+  const routes=[{path:"/",component:Home},{path:"/home",component:Home},{path:"/detail",component:Detail}];
+  const router=new VueRouter({routes:routes});
+  new Vue({router:router}).$mount('#app')
+</script>
+  </body>
+</html>

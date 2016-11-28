@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <script type="text/javascript" src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+  </head>
+  <body>
+  <div id="app">
+    <p><label>enter:</label> <input v-on:keyup.enter="eventFn('按了回车键')"/></p>
+    <p><label>tab:</label> <input v-on:keyup.tab="eventFn('按了Tab键')"/></p>
+    <p><label>delete:</label> <input v-on:keyup.delete="eventFn('按了Delete键')"/></p>
+    <p><label>esc:</label> <input v-on:keyup.esc="eventFn('Esc')"/></p>
+    <p><label>space:</label> <input v-on:keyup.space="eventFn('Space')"/></p>
+    <p><label>up:</label> <input v-on:keyup.up="eventFn('Up')"/></p>
+    <p><label>down:</label> <input v-on:keyup.down="eventFn('Down')"/></p>
+    <p><label>left:</label> <input v-on:keyup.left="eventFn('Left')"/></p>
+    <p><label>right:</label> <input v-on:keyup.right="eventFn('Right')"/></p>
+  </div>
+<script type="text/javascript">
+new Vue({
+  el:"#app",
+  methods:{
+    eventFn:function(msg){
+      console.log(msg)
+    }
+  }
+})
+</script>
+  </body>
+</html>

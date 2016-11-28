@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">标题</div>
+      <div class="panel-body" id="app">
+        <message v-show="display"></message>
+      </div>
+    </div>
+  </div>
+  <template id="componentHtml">
+    <div class="form-group">
+      {{message}}
+    </div>
+  </template>
+<script type="text/javascript">
+var vm=new Vue({
+  el:"#app",
+  data:function(){
+    return {
+      display:true
+    }
+  },
+  components:{
+    "message":{
+      template:"#componentHtml",
+      data:function(){
+        return {
+          message:"自定义组件",
+          display:false
+        }
+      },
+    }
+  }
+})
+</script>
+  </body>
+</html>

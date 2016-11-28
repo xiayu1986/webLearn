@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <script type="text/javascript" src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+  </head>
+  <body>
+  <div id="events-example">
+    <p>消息：{{message | json}}</p>
+    <child></child>
+  </div>
+  <template id="child-template">
+    <input type="text" v-model="msg"><button type="button" @click="notify">分发事件</button>
+  </template>
+<script type="text/javascript">
+//注册子组件
+Vue.component("child",{
+  template:"#child-template",
+  data:function(){
+    return {msg:"自定义事件"}
+  },
+  methods:{
+    notify:function(){
+      if(this.msg.trim()){
+        this.$dispatch('child-msg', this.msg)
+        this.msg = ''
+      }
+    }
+  }
+})
+
+//初始化父组件
+var parent=new Vue({
+  el:"#events-example",
+  data:{
+    message:[]
+  },
+  events:{
+    "child-msg":function(msg){
+      this.message.push(msg)
+    }
+  }
+})
+</script>
+  </body>
+</html>

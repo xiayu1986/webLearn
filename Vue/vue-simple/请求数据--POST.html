@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>请求数据--POST</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+    <script type="text/javascript" src="js/vue-resource.js"></script>
+  </head>
+  <body>
+  <div class="container" id="app">
+    <div class="panel panel-primary">
+      <div class="panel-heading">请求数据--POST</div>
+      <div class="panel-body">
+        <div class="form-group">
+          <button class="btn btn-primary btn-sm" @click="showModal">新增</button>
+        </div>
+        <data-table :data-list="userData.userList" :head-list="userData.classList"></data-table>
+        <modal v-show="show" @drop="closeModal">
+          <div slot="dialogHeader">
+              <h5>新增数据</h5>
+          </div>
+          <div slot="dialogContent">
+              <div class="form-group clearfix"><label class="col-sm-4">姓名：</label><div class="col-sm-8"><input v-model="userName" type="text" class="form-control"></div></div>
+              <div class="form-group clearfix"><label class="col-sm-4">用户ID：</label><div class="col-sm-8"><input v-model="userId" type="text" class="form-control"></div></div>
+              <div class="form-group clearfix"><label class="col-sm-4">科目：</label><div class="col-sm-8"><input v-model="project" type="text" class="form-control"></div></div>
+              <div class="form-group clearfix"><label class="col-sm-4">级别：</label><div class="col-sm-8"><input v-model="className" type="text" class="form-control"></div></div>
+          </div>
+          <div slot="dialogFooter">
+            <button class="btn btn-primary btn-sm" @click="sendCreateReq">确定</button>
+          </div>
+        </modal>
+      </div>
+    </div>
+  </div>
+  <template id="dataTableHtml">
+    <table class="table table-bordered table-striped">
+      <thead>
+      <tr>
+        <th v-for="head in headList">{{head}}</th>
+      </tr>
+      <tbody>
+      <tr v-for="list in dataList">
+        <td>{{list.name}}</td>
+        <td>{{list.userId}}</td>
+        <td>{{list.project}}</td>
+        <td>{{list.class}}</td>
+      </tr>
+      </tbody>
+      </thead>
+    </table>
+  </template>
+  <template id="modalContent">
+      <transition name="dialog">
+        <div class="dialog-mask" @click.self="close">
+          <div class="dialog">
+            <div class="dialog-content">
+              <div class="dialog-header"><slot name="dialogHeader">模态框</slot></div>
+              <div class="dialog-body"><slot name="dialogContent"></slot></div>
+              <div class="dialog-footer"><slot name="dialogFooter"><button class="btn btn-primary btn-sm" @click="close">关闭</button></div></slot></div>
+          </div>
+        </div>
+  </transition>
+  </template>
+
+<script type="text/javascript">
+  Vue.component("modal",{
+    template:"#modalContent",
+    data:function(){
+      return {
+        msg:""
+      }
+    },
+    methods:{
+      close:function(){
+        this.$emit("drop");
+      }
+    }
+  })
+Vue.component("dataTable",{//定义组件
+  template:"#dataTableHtml",
+  props:["dataList","headList"]
+})
+  var vm=new Vue({
+    el:"#app",
+    data:function(){
+      return {
+        show:false,//是否显示模态框
+        userName:"",
+        userId:"",
+        project:"",
+        className:"",
+        userData:{
+          userList:[],//用户列表
+          classList:["姓名","用户ID","科目","级别"]//用户分类
+        },
+        remote:"./data/createResult.json"
+      }
+    },
+    methods:{
+      showModal:function(){
+        this.show=true;
+      },
+      closeModal:function(){
+        this.show=false;
+      },
+      sendCreateReq:function () {//发送添加用户请求
+        var _this=this;
+        _this.$http.post(_this.remote,_this.createReqParam()).then(function (res) {
+          if(res.data.status){//请求成功后创建用户
+           _this.createItem()
+          }
+        },function (res) {
+          
+        }).catch(function (err) {
+          
+        })
+      },
+      createItem:function () {//添加用户信息
+        this.userData.userList.push(this.createReqParam());
+        this.show=false;
+      },
+      createReqParam:function () {
+        return {
+          "name":this.userName,
+          "userId":this.userId,
+          "project":this.project,
+          "class":this.className
+        }
+      }
+    },
+    mounted:function(){
+    }
+  })
+</script>
+  </body>
+</html>

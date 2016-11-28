@@ -1,0 +1,11 @@
+{"header":["姓名","用户ID","科目","类别"],
+  "list":[{"name":"张小明","userId":"1000000","project":"C语言高级程序设计","class":"编程"},
+    {"name":"李明明","userId":"1000001","project":"C语言高级程序设计","class":"编程"},
+    {"name":"钱三强","userId":"1000002","project":"C语言高级程序设计","class":"编程"},
+    {"name":"张国涛","userId":"1000003","project":"C语言高级程序设计","class":"编程"},
+    {"name":"孙大圣","userId":"1000004","project":"C语言高级程序设计","class":"编程"},
+    {"name":"施耐庵","userId":"1000005","project":"C语言高级程序设计","class":"编程"},
+    {"name":"严复","userId":"1000006","project":"C语言高级程序设计","class":"编程"},
+    {"name":"孙文","userId":"1000007","project":"C语言高级程序设计","class":"编程"}
+  ]
+}

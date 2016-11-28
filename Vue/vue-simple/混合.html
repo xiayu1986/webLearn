@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>混合</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="js/vue-2.1.0.js"></script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">混合</div>
+      <div class="panel-body"></div>
+    </div>
+  </div>
+<script type="text/javascript">
+// 定义一个混合对象
+var myMixin = {
+  created: function () {
+    this.hello()
+  },
+  methods: {
+    hello: function () {
+      alert("混合对象")
+    }
+  }
+}
+// 定义一个使用混合对象的组件
+var Component = Vue.extend({
+  created:function(){
+    alert("混合对象组件")
+  },
+  mixins: [myMixin]
+})
+var component = new Component() // -> "hello from mixin!"
+</script>
+  </body>
+</html>

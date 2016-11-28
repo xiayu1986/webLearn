@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>render函数</title>
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+  </head>
+  <body>
+  <div id="app">
+     <anchored-heading :level="1">hello</anchored-heading>
+  </div>
+<script type="text/javascript">
+Vue.component('anchored-heading',{
+  render:function(createElement){
+    return createElement("h"+this.level,{class:"name",style:{"color":"#ff0000"}},[createElement("span","你好")])
+  },
+  props:{
+    level:{
+      type:Number,
+      required:true
+    }
+  }
+})
+new Vue({
+  el:"#app"
+})
+</script>
+  </body>
+</html>

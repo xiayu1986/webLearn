@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+  </head>
+  <body>
+ <div class="container-fluid">
+   <div class="panel panel-primary">
+     <div class="panel-heading">销售政策查询</div>
+     <div class="panel-body">
+       <form role="form" class="form-horizontal">
+         <div class="form-group">
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">行程类型：</label>
+             <div class="col-xs-6">
+               <select autocomplete="off" class="form-control" id="<tripType></tripType>">
+                  <option value="" selected>全部</option>
+                  <option value="OW">单程</option>
+                  <option value="RT">往返</option>
+                  <option value="OT">其他</option>
+               </select>
+             </div>
+           </div>
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">文件号：</label>
+             <div class="col-xs-6"><input type="text" class="form-control"></div>
+           </div>
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">航空公司：</label>
+             <div class="col-xs-6">
+               <select class="form-control">
+                <option value="all">全部</option>
+                 <option value="0">东方航空</option>
+                 <option value="1">南方航空</option>
+               </select>
+             </div>
+           </div>
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">旅行开始：</label>
+             <div class="col-xs-6">
+               <input type="text" class="form-control">
+             </div>
+           </div>
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">出发区域：</label>
+             <div class="col-xs-6">
+               <select autocomplete="off" class="form-control" id="<tripType></tripType>">
+                  <option value="" selected>全部</option>
+                  <option value="0">城市</option>
+                  <option value="1">国家</option>
+               </select>
+             </div>
+           </div>
+          
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">到达区域：</label>
+             <div class="col-xs-6">
+               <select class="form-control">
+               <option value="" selected>全部</option>
+                  <option value="0">城市</option>
+                  <option value="1">国家</option>
+               </select>
+             </div>
+           </div>
+            <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">政策ID：</label>
+             <div class="col-xs-6"><input type="text" class="form-control"></div>
+           </div>
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">旅行结束：</label>
+             <div class="col-xs-6">
+               <input type="text" class="form-control">
+             </div>
+           </div>
+
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">舱位等级：</label>
+             <div class="col-xs-6">
+               <select autocomplete="off" class="form-control" id="<tripType></tripType>">
+                  <option value="" selected>全部</option>
+                  <option value="0">城市</option>
+                  <option value="1">国家</option>
+               </select>
+             </div>
+           </div>
+          
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">票台：</label>
+             <div class="col-xs-6">
+               <select class="form-control">
+               <option value="" selected>全部</option>
+                  <option value="0">城市</option>
+                  <option value="1">国家</option>
+               </select>
+             </div>
+           </div>
+            <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">销售开始：</label>
+             <div class="col-xs-6"><input type="text" class="form-control"></div>
+           </div>
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">销售结束：</label>
+             <div class="col-xs-6">
+               <input type="text" class="form-control">
+             </div>
+           </div>
+         </div>
+       </form>
+     </div>
+     <div class="panel-footer clearfix">
+       <div class="btn-group pull-left">
+         <button class="btn btn-primary">新增</button><button class="btn btn-primary">修改</button><button class="btn btn-primary">停用</button><button class="btn btn-primary">导入</button><button class="btn btn-primary">导出</button>
+       </div>
+       <button class="btn btn-primary pull-right" type="button">查询</button>
+     </div>
+   </div>
+   <div class="panel panel-primary">
+     <div class="panel-heading">
+       查询结果
+     </div>
+     <div class="panel-body"></div>
+   </div>
+ </div>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>无标题文档</title>
+    <script type="text/javascript" src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+  </head>
+  <body>
+  <div id="app">
+      <input type="text" v-model="newItem" v-on:keyup.enter="addItem">
+      <p v-for="item in items">
+        <span>{{item.name}}</span><a href="javascript:" @click="deleteItem($index)">删除</a>
+      </p>
+  </div>
+<script type="text/javascript">
+new Vue({
+  el:"#app",
+  data:{
+    newItem:"",
+    items:[{"name":"明天工作计划"}]
+  },
+  methods:{
+    addItem:function function_name (argument) {
+       var text=this.newItem.trim();
+       if(text){
+        this.items.push({"name":text});
+        this.newItem="";
+       }
+    },
+    deleteItem:function(index){
+      this.items.splice(index,1)
+    }
+  }
+})
+</script>
+  </body>
+</html>

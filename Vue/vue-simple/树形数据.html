@@ -20,11 +20,11 @@
       </div>
     </div>
   </div>
-<script type="text/x-template">
+<script type="text/x-template" id="treeTemplate">
 <li>
   <div @click="toggle" @dblclick="changeType">
     {{model.name}}
-    <span class="glyphicon" :class="{{glyphicon-plus:!open,glyphicon-minus:open}}" v-if="isFolder"></span>
+    <span class="glyphicon" :class="{'glyphicon-plus':!open,'glyphicon-minus':open}" v-if="isFolder"></span>
   </div>
   <ul v-show="open" v-if="isFolder">
     <item class="item" v-for="model in model.children" :model="model"></item>
@@ -32,7 +32,7 @@
   </ul>
 </li>
 </script>
-<script type="text/javascript" id="treeTemplate">
+<script type="text/javascript">
   var data = {
   name: 'My Tree',
   children: [

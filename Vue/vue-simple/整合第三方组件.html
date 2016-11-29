@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>整合第三方组件</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/select2.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/select2.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://cdn.bootcss.com/vue/2.0.7/vue.js"></script>
+  </head>
+  <body>
+  <div class="container">
+    <div class="panel panel-primary">
+      <div class="panel-heading">整合select组件</div>
+      <div id="el">
+
+      </div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">整合modal、popover组件</div>
+      <div class="panel-body" id="modalBoot">
+        <button class="btn btn-primary" @click="showModal">弹出</button>
+        <Modal>
+          <span slot="modal-title">modal组件</span>
+          <div slot="modal-body">modal组件内容</div>
+        </Modal>
+        <popover></popover>
+      </div>
+    </div>
+  </div>
+  <script type="text/x-template" id="demo-template">
+  <div class="panel-body">
+    <p>{{ selected }}</p>
+    <select2 :options="options" v-model="selected">
+      <option disabled value="0">分组0</option>
+    </select2>
+  </div>
+</script>
+
+<script type="text/x-template" id="select2-template">
+  <select style="width: 100%">
+    <slot></slot>
+  </select>
+</script>
+<script type="text/x-template" id="modal-template">
+  <div class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <slot name="modal-title">弹出框</slot>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <slot name="modal-body">弹出框内容</slot>
+      </div>
+      <div class="modal-footer">
+        
+      </div>
+    </div>
+  </div>
+  </div>
+</script>
+<script type="text/x-template" id="popover-template">
+  <button class="btn btn-primary" data-placement="auto" data-trigger="hover" data-content="测试气泡组件">弹出提示</button>
+</script>
+<script>
+  Vue.component('select2', {
+  props: ['options', 'value'],
+  template: '#select2-template',
+  mounted: function () {
+    var vm = this
+    $(this.$el)
+      .select2({ data: this.options,val: this.value}).off("change")
+      .on('change', function () {
+        vm.$emit('input', this.value)
+      })
+  },
+  watch: {
+    value: function (value) {
+      $(this.$el).select2('val', value);
+    },
+    options: function (options) {
+      $(this.$el).select2({ data: options });
+    }
+  },
+  destroyed: function () {
+    $(this.$el).off().select2('destroy')
+  }
+})
+
+var vm = new Vue({
+  el: '#el',
+  template: '#demo-template',
+  data: {
+    selected: 0,
+    options: [
+      { id: 1, text: '分组1' },
+      { id: 3, text: '分组3' },
+      { id: 2, text: '分组2' }
+    ]
+  }
+})
+
+
+
+var modal=new Vue({
+  el:"#modalBoot",
+  replace:true,
+  components:{
+    "Modal":{
+      template:"#modal-template"
+    },
+    "popover":{
+      template:"#popover-template",
+      mounted:function(){
+        $(this.$el).popover();
+      }
+    }
+  },
+  mounted:function(){
+
+  },
+  methods:{
+    showModal:function(){
+      var modalNode=$(this.$children[0].$el)
+      modalNode.modal()
+    },
+    showPop:function(){
+      console.log(this.$children.length)
+    }
+  }
+})
+</script>
+  </body>
+</html>

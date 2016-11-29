@@ -220,6 +220,7 @@
 				value:值
 				fromObj:父节点是否是对象
 				*/
+			console.log(lastParent)
 				var _this=this,
 					totalLen=0,//数组或对象的长度
 				rootIconClassName=(prefix===''||lastParent)?'tree-icon tree-icon-root':'tree-icon tree-icon-close';/* 配置根节点图标 */
@@ -250,7 +251,7 @@
 								if(typeof val==="object"){
 									draw.push('<li class="node-tree-items"><div>',methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line")+methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(val),key,''),'</div>');
 								}
-								notify(prefix+methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
+								notify(prefix+methods._createPrefixIcon((lastParent && prefix)?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
 								draw.push('</li>');
 							});
 					draw.push('</ul>');//输出对象的根节点
@@ -316,7 +317,6 @@
 			// $(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
 		},
 		_createTreeIcon:function(prefix,line,ico,name,value){//创建节点图标
-			console.log("键："+name+"==前缀："+prefix)
 			if(value && $.type(value)==="string"){
 				value='"'+value+'"';
 			}

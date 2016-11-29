@@ -12,10 +12,7 @@
       <div class="panel-heading">树形数据</div>
       <div class="panel-body">
         <ul id="app" class="list-group">
-          <item
-            class="list-group-item"
-            :model="treeData">
-          </item>
+          <item class="list-group-item" :model="treeData"></item>
         </ul>
       </div>
     </div>
@@ -27,34 +24,34 @@
     <span class="glyphicon" :class="{'glyphicon-plus':!open,'glyphicon-minus':open}" v-if="isFolder"></span>
   </div>
   <ul v-show="open" v-if="isFolder">
-    <item class="item" v-for="model in model.children" :model="model"></item>
+    <item class="list-group-item" v-for="model in model.children" :model="model"></item>
     <li class="glyphicon glyphicon-plus" @click="addChild"></li>
   </ul>
 </li>
 </script>
 <script type="text/javascript">
   var data = {
-  name: 'My Tree',
+  name: '根节点',
   children: [
-    { name: 'hello' },
-    { name: 'wat' },
+    { name: '子节点1' },
+    { name: '子节点2' },
     {
-      name: 'child folder',
+      name: '子节点3',
       children: [
         {
-          name: 'child folder',
+          name: '子节点3-1',
           children: [
-            { name: 'hello' },
-            { name: 'wat' }
+            { name: '子节点3-1-1' },
+            { name: '子节点3-1-2' }
           ]
         },
-        { name: 'hello' },
-        { name: 'wat' },
+        { name: '子节点3-2' },
+        { name: '子节点3-3' },
         {
-          name: 'child folder',
+          name: '子节点3-4',
           children: [
-            { name: 'hello' },
-            { name: 'wat' }
+            { name: '子节点3-4-1' },
+            { name: '子节点3-4-2' }
           ]
         }
       ]
@@ -62,46 +59,42 @@
   ]
 }
 
-// define the item component
+// 定义item组件
 Vue.component('item', {
   template: '#treeTemplate',
   props: {
-    model: Object
+    model: {}//组件数据
   },
   data: function () {
     return {
-      open: false
+      open: false//是否是展开状态
     }
   },
   computed: {
-    isFolder: function () {
-      return this.model.children &&
-        this.model.children.length
+    isFolder: function () {//是否包含子节点
+      return this.model.children && this.model.children.length
     }
   },
   methods: {
-    toggle: function () {
-      if (this.isFolder) {
+    toggle: function () {//展开或收起
         this.open = !this.open
-      }
     },
-    changeType: function () {
+    changeType: function () {//双击叶子节点切换为包含子节点的元素
       if (!this.isFolder) {
-        Vue.set(this.model, 'children', [])
-        this.addChild()
-        this.open = true
+          Vue.set(this.model, 'children', []);
+          this.addChild();
+          this.open = true;
       }
     },
     addChild: function () {
-      this.model.children.push({
-        name: 'new stuff'
+      this.model.children.push({//添加子节点
+        name: '新建节点'
       })
     }
   }
 })
 
-// boot up the demo
-var demo = new Vue({
+var app = new Vue({
   el: '#app',
   data: {
     treeData: data

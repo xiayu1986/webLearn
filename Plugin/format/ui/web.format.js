@@ -220,7 +220,6 @@
 				value:值
 				fromObj:父节点是否是对象
 				*/
-			console.log(lastParent)
 				var _this=this,
 					totalLen=0,//数组或对象的长度
 				rootIconClassName=(prefix===''||lastParent)?'tree-icon tree-icon-root':'tree-icon tree-icon-close';/* 配置根节点图标 */
@@ -249,59 +248,15 @@
 									isLastNode=(keyIndex===totalLen)?true:false;
 								}
 								if(typeof val==="object"){
-									draw.push('<li class="node-tree-items"><div>',methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line")+methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(val),key,''),'</div>');
+									draw.push('<li class="node-tree-items"><div>',methods._createPrefixIcon("tree-icon")+methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(val),key,''),'</div>');
 								}
-								notify(prefix+methods._createPrefixIcon((lastParent && prefix)?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
+								notify(prefix+methods._createPrefixIcon(prefix===""?"tree-icon":lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
 								draw.push('</li>');
 							});
 					draw.push('</ul>');//输出对象的根节点
 				}else{//输出叶子节点
 					draw.push('<div class="node-name">',methods._createTreeIcon.call(_this,prefix,lastParent?"tree-icon tree-icon-end":"tree-icon tree-icon-join",fromObj?"tree-icon tree-icon-default":"tree-icon tree-icon-number",name,value),'</div>');
 				}
-				// if($.type(value)==="array"){//处理数组
-				// 	// draw.push('<dl><dt>',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-array',name,''),'</dt><dd>');/* 绘制文件夹 */
-				// 	// for (var i=0;i<value.length;i++){
-				// 	// 	notify(prefix+methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line"),i===value.length-1,i,value[i]);
-				// 	// 	draw.push('</dd></dl>');
-				// 	// }
-				// 		draw.push('<ul class="node-tree">');
-				// 		for(var i=0;i<value.length;i++){
-				// 			if(typeof value[i]==="object"){
-				// 				draw.push('<li class="node-tree-items"><div>',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(value[i]),name,''),'</div>');
-				// 			}else{
-				// 				draw.push('<li class="node-tree-items">');
-				// 			}
-				// 			notify(prefix+methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line"),i===(value.length-1),i,value[i],false);
-				// 		}
-				// 		draw.push('</ul>');
-				//  }else if($.type(value)==="object"){//处理对象
-				// 	//  draw.push('<dl><dt>',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-object',name,''),'</dt><dd>');/* 绘制文件夹 */
-				// 	//  var len=0,j=0;
-				// 	//  for(var n in value){
-				// 	// 	 len++;
-				// 	//  }
-				// 	//  for(var key in value){
-				// 	// 	 notify(prefix+methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line"),++j==len,key,value[key],true);
-				// 	//  }
-				// 	//  draw.push('</dd></dl>');
-				// 			draw.push('<ul class="node-tree">');
-				// 			var j=0,len=0;
-				// 			for(var key in value){
-				// 				len++;
-				// 			}
-				// 			for(var k in value){
-				// 				if(typeof value[k]==="object"){
-				// 					draw.push('<li class="node-tree-items"><div>',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(value[k]),name,''),'</div>');
-				// 				}else{
-				// 					draw.push('<li class="node-tree-items">');
-				// 				}
-				// 				notify(prefix+methods._createPrefixIcon(lastParent?"tree-icon":"tree-icon tree-icon-line"),++j==len,k,value[k],true);
-				// 			}
-				// 			draw.push('</ul>');
-				//  }else{//处理子节点的输出
-				// 	 //draw.push('<dl><dt>',methods._createTreeIcon.call(_this,prefix,lastParent?"tree-icon tree-icon-end":"tree-icon tree-icon-join",fromObj?"tree-icon tree-icon-default":"tree-icon tree-icon-number",name,value),'</dt></dl>');
-				// 		draw.push('<div class="node-name">',methods._createTreeIcon.call(_this,prefix,lastParent?"tree-icon tree-icon-end":"tree-icon tree-icon-join",fromObj?"tree-icon tree-icon-default":"tree-icon tree-icon-number",name,value),'</div>');
-				//  }
 				 if(name==="root"){//根节点输出结束标签
 				 	draw.push('</li></ul>');
 				 }

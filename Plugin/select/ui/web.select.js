@@ -198,6 +198,7 @@
                 return;
             }
             $(this).removeProp("disabled");//启用输入框
+            methods._unLockScroll(this.settings.disabledScrollDom[0]);
             if($.isFunction(this.settings.beforeHide)){
                 this.settings.beforeHide.call(this);
             }
@@ -250,9 +251,7 @@
 			}
 		},
 		_loadRemoteData:function(key){//获取远程数据,key为关键字或者页码,key值存在且是字符串类型表示是按关键字过滤，是数字类型表示是分页，不存在表示是加载全部数据
-			var arg=arguments,
-				_this=this,
-				$this=$(this),
+			var _this=this,
 				container=$("#WEB_selectMenu_container"),
 				slider=$("#WEB_selectMenu_scroll .scroll_slider"),
 				param=this.settings.param(key);
@@ -368,7 +367,7 @@
 			return resultHtml;
 		},
 		_bindSelectListEvent:function(){//为下拉菜单中的选项绑定点击事件
-			var container=$("#WEB_selectMenu_container"),$this=$(this),_this=this;
+			var container=$("#WEB_selectMenu_container"),_this=this;
 			container.off("click").on("click",".WEB_selectMenu_list",function(e){
 				var curItem=$(this);
 				if(_this.settings.isMultiple){//如果是多选
@@ -445,7 +444,6 @@
 				container=$("#WEB_selectMenu_container"),
 				clientH=parseInt(container.css("maxHeight")),
         		menu=$("#WEB_selectMenu_container .WEB_selectMenu"),
-				baseH=$("#WEB_selectMenu_container .WEB_selectMenu_list:first").outerHeight(true),
 				slider=$("#WEB_selectMenu_scroll .scroll_slider"),//滑块
 				dragging = false,//拖拽状态
 				iY,
@@ -558,8 +556,6 @@
 		},
 		_createPagination:function(d){//创建分页
 			var container=$("#WEB_selectMenu_container"),//当前容器
-				slider=$("#WEB_selectMenu_scroll .scroll_slider"),//滑块
-				maxTop=slider.parent().height()-slider.height(),//滑块可以滑动的最大高度
 				menu=$("#WEB_selectMenu_container .WEB_selectMenu"),
 				menuTop=Math.abs(parseInt(menu.css("top"))),//取当前列表滚过去的高度
 				items=menu.find(".WEB_selectMenu_list"),
@@ -567,8 +563,7 @@
 				criticalDom=items.last(),//临界DOM,当它出现在可视区时立即加载下一页数据
 				viewH=parseInt(container.css("maxHeight"))+menuTop,//这个值用来判断临界点是否出现在可视区内
 				curH=criticalDom.position().top,//临界DOM跟离下拉菜单顶部的高度
-				curPage=Math.ceil(loadedNum/this.settings.baseNumber),//当前已加载的页数
-				totalPage=Math.ceil(d.totalSize/this.settings.baseNumber);//总页数
+				curPage=Math.ceil(loadedNum/this.settings.baseNumber);//当前已加载的页数
 
 			if(curH<=viewH){//临界DOM出现在可视区
 				curPage++;//加载第二页的数据

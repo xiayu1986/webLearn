@@ -223,8 +223,7 @@
 		_createPrefixIcon:function(className){
 			return '<span class="'+className+'"></span>';
 		}
-};
-
+	};
     $.fn.WEB_format=function(){
 		var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,"");
 		if(ieVersion=="MSIE7.0" || ieVersion=="MSIE6.0"|| ieVersion=="MSIE5.0"){

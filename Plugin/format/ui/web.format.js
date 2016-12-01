@@ -236,8 +236,9 @@
 				if(name==="root"){//根节点输出开始标签
 					draw.push('<ul class="root-tree">');
 				}
-				draw.push('<li class="root-tree-items"><div class="node-name">',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(value),name,''),'</div>');
+				draw.push('<li class="root-tree-items">');
 				if(typeof value==="object"){//遍历对象
+					draw.push('<div class="node-name">',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(value),name,''),'</div>');
 					draw.push('<ul class="node-tree">');//输出对象的根节点
 						var keyIndex=0,isLastNode=false/*是否是最后一个节点*/,isObj=false/*是否是对象*/;
 							$.each(value,function(key,val){//递归对象或数组

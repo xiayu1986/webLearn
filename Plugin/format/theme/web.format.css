@@ -5,7 +5,7 @@ img{ border:none;}
 li{ list-style:none;}
 input::-ms-clear { display: none; }
 .WEB_format_container{ overflow:hidden; position:relative; border:#4a84c4 1px solid;}
-.WEB_format_tree{height:400px; overflow: auto; width:30%; float:left; border-right:1px solid #4a84c4;}
+.WEB_format_tree{height:400px; overflow: auto; width:30%; float:left; border-right:1px solid #4a84c4; white-space: nowrap;}
 .WEB_format_source{ float:right; width:68%; height:400px;}
 
 .WEB_format_data{width:96%; padding:5px; height:70%; border:1px solid #cccccc; border-radius:3px;}

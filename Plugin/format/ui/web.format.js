@@ -184,15 +184,15 @@
 			return {"result":true,"data":sourceData};
 		},
 		_createTreeView:function(sourceData){//生成树形结构
-			var draw=[],_this=this;//draw：存储绘制的节点HTML
-			var notify=function(prefix,lastParent,name,value,fromObj){
+			var draw=[],_this=this,nodeCount=0,maxDepth=0,depthNo=0,depthArr=[];//draw：存储绘制的节点HTML
+			var notify=function(prefix,lastParent,name,value,fromObj,indent){
 				/*prefix:前缀图标
 				lastParent:父节点是否是最后一级
 				name:键
 				value:值
 				fromObj:父节点是否是对象
+				indent:递归深度
 				*/
-
 				var totalLen=0,//数组或对象的长度
 					rootIconClassName=_this.settings.expandAll?'tree-icon tree-icon-close':'tree-icon tree-icon-open';/* 配置根节点图标 */
 				if($.type(value)==="array"){
@@ -202,9 +202,10 @@
 						totalLen++;
 					});
 				}
-				//nodeCount++;//统计节点总数
-				//maxDepth=++indent;//统计最大树深
-				//depArr.push(maxDepth);
+				nodeCount++;//统计节点总数
+				depthNo=++indent;//统计最大树深
+				depthArr.push(depthNo);
+				console.log("键："+name+"的递归深度为："+indent)
 				if(name==="root"){//根节点输出开始标签
 					draw.push('<ul class="node-tree">');
 				}
@@ -222,7 +223,7 @@
 									isObj=true;
 									isLastNode=(keyIndex===totalLen)?true:false;
 								}
-								notify(prefix+methods._createPrefixIcon.call(_this,prefix===""?"tree-icon":lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
+								notify(prefix+methods._createPrefixIcon.call(_this,prefix===""?"tree-icon":lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj,indent);
 							});
 					draw.push('</ul>');//输出对象的根节点
 				}else{//输出叶子节点
@@ -237,11 +238,11 @@
 				$(this).find(".WEB_format_message").html('无法绘制空对象！');
 				return;
 			}
-			notify('',true,this.settings.textConf.root,sourceData,false);//绘制根节点
+			notify('',true,this.settings.textConf.root,sourceData,false,0);//绘制根节点
 
 			$(this).find(".WEB_format_tree").html(draw.join(''));//将绘制好的结构添加到树形结构区
-			// maxDepth=Math.max.apply(null,depArr);
-			// $(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
+			 maxDepth=Math.max.apply(null,depthArr);
+			 $(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
 		},
 		_createTreeIcon:function(prefix,line,ico,name,value){//创建节点图标
 			if(value && $.type(value)==="string"){

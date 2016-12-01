@@ -14,7 +14,20 @@
 		},
 		indentClass:4,//缩进级别
 		lineBreak:"\n",//换行符
-		expandAll:false//是否展开所有节点
+		expandAll:false,//是否展开所有节点
+		menu:[
+			{"text":"展开所有","method":function(a){
+				methods.openAllNode(a);
+			}},
+			{"text":"收起所有","method":function(a){
+				methods.closeAllNode(a);
+			}},
+			{"text":"新增","method":function(){}},
+			{"text":"删除","method":function(){}},
+			{"text":"复制","method":function(){}},
+			{"text":"编辑","method":function(){}}
+		],
+		offsetY:10
 	};
 	var methods={
 		init:function(options){//初始化
@@ -86,18 +99,18 @@
 			});
 
 			treeView.on("click",".node-name",function(){//点击nodeName节点时展开 或 收起元素
-				var node=$(this).siblings("ul"),iconNode=$(this).find(".tree-icon"),typeNode=iconNode.eq(iconNode.length-2);
+				var node=$(this).siblings("ul"),
+				    isOpen=node.hasClass('node-tree-close');
 				if(node.length===0){
 					return;
 				}
-				if(node.hasClass('node-tree-close')){
-					node.removeClass("node-tree-close").addClass('node-tree');
-					typeNode.removeClass('tree-icon-open').addClass('tree-icon-close');
-				}else{
-					node.removeClass("node-tree").addClass('node-tree-close');
-					typeNode.removeClass('tree-icon-close').addClass('tree-icon-open');
-				}
-			});
+				isOpen?methods.openNode.call(_this,$(this)):methods.closeNode.call(_this,$(this));
+			}).on("contextmenu",".node-name",function(e){
+				methods._createContextMenu.call(_this,e);
+			})
+			$(document).click(function(){
+				$("#WEB_format_contextMenu").remove();
+			})
 		},
 		_formatData:function(data,isCompress){//格式化数据,data:数据，isCompress:是否压缩>true:是，false:否
 			var ind='';
@@ -234,21 +247,71 @@
 			if(value && $.type(value)==="string"){
 				value='"'+value+'"';
 			}
-			return prefix+methods._createPrefixIcon(line)+methods._createPrefixIcon(ico)+name+(value===''?'':":")+value;
+			return prefix+methods._createPrefixIcon(line)+methods._createPrefixIcon(ico)+'<span class="leaf-item">'+name+(value===''?'':":")+value+'</span>';
 		},
 		_createPrefixIcon:function(className){
 			return '<span class="'+className+'"></span>';
 		},
-		openAllNode:function(){//展开所有节点
-
+		openAllNode:function(a){//展开所有节点
+			var closeTree=$(a).find(".node-tree-close");
+			if(closeTree.length===0){
+				return;
+			}
+			closeTree.each(function(){
+				var curNode=$(this).siblings('.node-name');
+				methods.openNode.call(a,curNode);
+			})
 		},
-		closeAllNode:function(){//收起所有节点
-
+		closeAllNode:function(a){//收起所有节点
+			var closeTree=$(a).find("ul.node-tree");
+			if(closeTree.length===0){
+				return;
+			}
+			closeTree.each(function(){
+				var curNode=$(this).siblings('.node-name');
+				methods.closeNode.call(a,curNode);
+			})
+		},
+		openNode:function(curNode){//展开当前节点
+			var treeNode=curNode.siblings("ul"),
+				iconNode=curNode.find(".tree-icon"),
+				typeNode=iconNode.eq(iconNode.length-2);
+			treeNode.removeClass("node-tree-close").addClass('node-tree');
+			typeNode.removeClass('tree-icon-open').addClass('tree-icon-close');
+		},
+		closeNode:function(curNode){//收起当前节点
+			var treeNode=curNode.siblings("ul"),
+				iconNode=curNode.find(".tree-icon"),
+				typeNode=iconNode.eq(iconNode.length-2);
+			treeNode.removeClass("node-tree").addClass('node-tree-close');
+			typeNode.removeClass('tree-icon-close').addClass('tree-icon-open');
+		},
+		_createContextMenu:function(e){//生成右键菜单
+			e.preventDefault();//阻止默认事件
+			var selectDom=$(e.currentTarget);
+			var _this=this;
+			$(".WEB_format_selected").removeClass("WEB_format_selected");
+			selectDom.addClass("WEB_format_selected");
+			if($.type(this.settings.menu)!=="array" || $.isEmptyObject(this.settings.menu)){
+				return;
+			}
+			var contextContainer=$("#WEB_format_contextMenu");
+			contextContainer.remove();
+			contextContainer=$('<ul id="WEB_format_contextMenu" class="WEB_format_contextMenu"></ul>');
+			var menuData=this.settings.menu;
+			$.each(menuData,function(key,data){
+				var eachItem=$('<li class="WEB_format_contextMenu_item">'+(data.text||'请配置节点名称')+'</li>');
+				eachItem.click(function(e){
+					data.method(_this);
+				})
+				contextContainer.append(eachItem);
+			});
+			contextContainer.appendTo($("body")).css({"left":e.clientX,"top":e.clientY+this.settings.offsetY});
 		}
 	};
     $.fn.WEB_format=function(){
 		var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,"");
-		if(ieVersion=="MSIE7.0" || ieVersion=="MSIE6.0"|| ieVersion=="MSIE5.0"){
+		if(ieVersion=="MSIE8.0" ||ieVersion=="MSIE7.0" || ieVersion=="MSIE6.0"|| ieVersion=="MSIE5.0"){
 			alert("您的浏览器版本过低，本插件无法提供支持，请升级！");
 			return;
 		}

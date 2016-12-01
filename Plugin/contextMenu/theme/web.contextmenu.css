@@ -31,8 +31,6 @@ input::-ms-clear { display: none; }
 .tree-icon-default{ background: url("leaf-blue.gif") no-repeat;}
 
 .node-tree-close{ display:none; }
-.node-name:hover,.WEB_format_selected{ background:#337ab7; cursor:pointer; color:#ffffff;}
+.node-name:hover{ background:#337ab7; cursor:pointer; color:#ffffff;}
 .leaf-item{display:inline-block; line-height:16px;}
-.WEB_format_contextMenu{ position:absolute; border:#337ab7 1px solid; z-index:9999999; left:100px; top:50px; background:#ffffff; margin:0;box-shadow:2px 2px 2px #cccccc;}
-.WEB_format_contextMenu_item{ padding:5px; cursor:pointer;}
-.WEB_format_contextMenu_item:hover{background:#337ab7;color:#ffffff;}
+

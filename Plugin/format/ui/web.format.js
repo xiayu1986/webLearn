@@ -13,7 +13,8 @@
 			"placeholder":"请在此输入您的数据"
 		},
 		indentClass:4,//缩进级别
-		lineBreak:"\n"//换行符
+		lineBreak:"\n",//换行符
+		expandAll:false//是否展开所有节点
 	};
 	var methods={
 		init:function(options){//初始化
@@ -82,6 +83,20 @@
 					return;
 				}
 					methods._createTreeView.call(_this,checkOut.data);
+			});
+
+			treeView.on("click",".node-name",function(){//点击nodeName节点时展开 或 收起元素
+				var node=$(this).siblings("ul"),iconNode=$(this).find(".tree-icon"),typeNode=iconNode.eq(iconNode.length-2);
+				if(node.length===0){
+					return;
+				}
+				if(node.hasClass('node-tree-close')){
+					node.removeClass("node-tree-close").addClass('node-tree');
+					typeNode.removeClass('tree-icon-open').addClass('tree-icon-close');
+				}else{
+					node.removeClass("node-tree").addClass('node-tree-close');
+					typeNode.removeClass('tree-icon-close').addClass('tree-icon-open');
+				}
 			});
 		},
 		_formatData:function(data,isCompress){//格式化数据,data:数据，isCompress:是否压缩>true:是，false:否
@@ -156,7 +171,7 @@
 			return {"result":true,"data":sourceData};
 		},
 		_createTreeView:function(sourceData){//生成树形结构
-			var draw=[],_this=this,nodeCount=0,maxDepth=0,depArr=[];//draw：存储绘制的节点HTML,nodeCount:节点数量,maxDepth:最大深度
+			var draw=[],_this=this;//draw：存储绘制的节点HTML
 			var notify=function(prefix,lastParent,name,value,fromObj){
 				/*prefix:前缀图标
 				lastParent:父节点是否是最后一级
@@ -164,9 +179,9 @@
 				value:值
 				fromObj:父节点是否是对象
 				*/
-				var _this=this,
-					totalLen=0,//数组或对象的长度
-				rootIconClassName=(prefix===''||lastParent)?'tree-icon tree-icon-root':'tree-icon tree-icon-close';/* 配置根节点图标 */
+
+				var totalLen=0,//数组或对象的长度
+					rootIconClassName=_this.settings.expandAll?'tree-icon tree-icon-close':'tree-icon tree-icon-open';/* 配置根节点图标 */
 				if($.type(value)==="array"){
 					totalLen=value.length;
 				}else if($.type(value)==="object"){
@@ -178,12 +193,13 @@
 				//maxDepth=++indent;//统计最大树深
 				//depArr.push(maxDepth);
 				if(name==="root"){//根节点输出开始标签
-					draw.push('<ul class="root-tree">');
+					draw.push('<ul class="node-tree">');
 				}
-				draw.push('<li class="root-tree-items">');
-				if(typeof value==="object"){//遍历对象
+				draw.push('<li class="node-tree-item">');
+				if( $.type(value)==="array" || $.type(value)==="object"){//遍历数组或对象
 					draw.push('<div class="node-name">',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(value),name,''),'</div>');
-					draw.push('<ul class="node-tree">');//输出对象的根节点
+					var nodeTreeClassName=_this.settings.expandAll?"node-tree":"node-tree-close";
+					draw.push('<ul class="'+nodeTreeClassName+'">');//输出对象的根节点
 						var keyIndex=0,isLastNode=false/*是否是最后一个节点*/,isObj=false/*是否是对象*/;
 							$.each(value,function(key,val){//递归对象或数组
 								if($.type(value)==="array"){
@@ -193,11 +209,11 @@
 									isObj=true;
 									isLastNode=(keyIndex===totalLen)?true:false;
 								}
-								notify(prefix+methods._createPrefixIcon(prefix===""?"tree-icon":lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
+								notify(prefix+methods._createPrefixIcon.call(_this,prefix===""?"tree-icon":lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
 							});
 					draw.push('</ul>');//输出对象的根节点
 				}else{//输出叶子节点
-					draw.push('<div class="node-name">',methods._createTreeIcon.call(_this,prefix,lastParent?"tree-icon tree-icon-end":"tree-icon tree-icon-join",fromObj?"tree-icon tree-icon-default":"tree-icon tree-icon-number",name,value),'</div>');
+					draw.push('<div class="node-leaf">',methods._createTreeIcon.call(_this,prefix,lastParent?"tree-icon tree-icon-end":"tree-icon tree-icon-join",fromObj?"tree-icon tree-icon-default":"tree-icon tree-icon-number",name,value),'</div>');
 				}
 				draw.push('</li>');
 				if(name==="root"){//根节点输出结束标签
@@ -208,7 +224,7 @@
 				$(this).find(".WEB_format_message").html('无法绘制空对象！');
 				return;
 			}
-			notify('',true,'root',sourceData,false);//绘制根节点
+			notify('',true,this.settings.textConf.root,sourceData,false);//绘制根节点
 
 			$(this).find(".WEB_format_tree").html(draw.join(''));//将绘制好的结构添加到树形结构区
 			// maxDepth=Math.max.apply(null,depArr);
@@ -222,6 +238,12 @@
 		},
 		_createPrefixIcon:function(className){
 			return '<span class="'+className+'"></span>';
+		},
+		openAllNode:function(){//展开所有节点
+
+		},
+		closeAllNode:function(){//收起所有节点
+
 		}
 	};
     $.fn.WEB_format=function(){

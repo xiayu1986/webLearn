@@ -234,8 +234,9 @@
 				//maxDepth=++indent;//统计最大树深
 				//depArr.push(maxDepth);
 				if(name==="root"){//根节点输出开始标签
-					draw.push('<ul class="root-tree"><li class="root-tree-items"><div class="node-name">',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(value),name,''),'</div>');
+					draw.push('<ul class="root-tree">');
 				}
+				draw.push('<li class="root-tree-items"><div class="node-name">',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(value),name,''),'</div>');
 				if(typeof value==="object"){//遍历对象
 					draw.push('<ul class="node-tree">');//输出对象的根节点
 						var keyIndex=0,isLastNode=false/*是否是最后一个节点*/,isObj=false/*是否是对象*/;
@@ -247,19 +248,16 @@
 									isObj=true;
 									isLastNode=(keyIndex===totalLen)?true:false;
 								}
-								if(typeof val==="object"){
-									draw.push('<li class="node-tree-items"><div>',methods._createPrefixIcon("tree-icon")+methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(val),key,''),'</div>');
-								}
 								notify(prefix+methods._createPrefixIcon(prefix===""?"tree-icon":lastParent?"tree-icon":"tree-icon tree-icon-line"),isLastNode,key,val,isObj);
-								draw.push('</li>');
 							});
 					draw.push('</ul>');//输出对象的根节点
 				}else{//输出叶子节点
 					draw.push('<div class="node-name">',methods._createTreeIcon.call(_this,prefix,lastParent?"tree-icon tree-icon-end":"tree-icon tree-icon-join",fromObj?"tree-icon tree-icon-default":"tree-icon tree-icon-number",name,value),'</div>');
 				}
-				 if(name==="root"){//根节点输出结束标签
-				 	draw.push('</li></ul>');
-				 }
+				draw.push('</li>');
+				if(name==="root"){//根节点输出结束标签
+				 	draw.push('</ul>');
+				}
 			};
 			if($.isEmptyObject(sourceData)){//空对象不绘制
 				$(this).find(".WEB_format_message").html('无法绘制空对象！');

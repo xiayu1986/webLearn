@@ -9,14 +9,14 @@
 			"compress":"压缩",
 			"treeView":"生成树",
 			"empty":"清空",
-			root:"根节点",
+			"root":"根节点",
 			"placeholder":"请在此输入您的数据"
 		},
 		indentClass:4,//缩进级别
 		lineBreak:"\n"//换行符
 	};
 	var methods={
-		init:function(options){
+		init:function(options){//初始化
 			return this.each(function(){
 				var settings=$(this).data("WEB_format_settings");//用户配置
 				if(settings){
@@ -155,62 +155,6 @@
 			message.html("");
 			return {"result":true,"data":sourceData};
 		},
-		_createTreeViewBak:function(sourceData){//生成树形结构
-			var draw=[],_this=this,nodeCount=0,maxDepth=0,depArr=[];//draw：存储绘制的节点HTML,nodeCount:节点数量,maxDepth:最大深度
-			var notify=function(name,value,isLast,indent){//name:数据键，value:数据值，isLast是否是最后一个节点，indent:缩进量
-				nodeCount++;//统计节点总数
-				maxDepth=++indent;//统计最大树深
-				depArr.push(maxDepth);
-				var totalLen=0;//数组或对象的长度
-				if(name==="root"){//根节点输出开始标签
-					draw.push('<ul class="root-tree"><li class="root-tree-items">','<div class="node-name">'+methods._createTreeIcon.call(_this,name,value,isLast,indent)+'</div>');
-				}
-				if($.type(value)==="array"){
-					totalLen=value.length;
-				}else if($.type(value)==="object"){
-					$.each(value,function () {
-						totalLen++;
-					});
-				}
-				if(typeof value==="object"){//处理数组或对象的输出
-				 	draw.push('<ul class="node-tree">');
-					var keyIndex=0,
-						isLastNode=false;//是否是最后一个节点
-					$.each(value,function (key,val) {
-						if($.type(value)==="array"){
-							isLastNode=(key===(totalLen-1))?true:false;
-						}else if($.type(value)==="object"){
-							keyIndex++;
-							isLastNode=(keyIndex===totalLen)?true:false;
-						}
-						if(typeof val==="object"){
-							draw.push('<li class="node-tree-items"><div>'+methods._createTreeIcon.call(_this,key,val,isLastNode,indent)+key+'</div>');
-						}else{
-							draw.push('<li class="node-tree-items">');
-						}
-						notify(key,val,isLastNode,indent);
-						draw.push('</li>');
-					});
-				 	draw.push('</ul>');
-				 }else{//处理子节点的输出
-					if($.type(value)==="string"){
-						value='"'+value+'"';
-					}
-				 	draw.push('<div class="node-name">'+methods._createTreeIcon.call(_this,name,value,isLast,indent)+'"'+name+'"：'+value+'</div>');
-				 }
-				if(name==="root"){//根节点输出结束标签
-					draw.push('</li></ul>');
-				}
-			};
-			if($.isEmptyObject(sourceData)){//空对象不绘制
-				$(this).find(".WEB_format_message").html('无法绘制空对象！');
-				return;
-			}
-			notify('root',sourceData,true,0);//绘制根节点
-			$(this).find(".WEB_format_tree").html(draw.join(''));//将绘制好的结构添加到树形结构区
-			maxDepth=Math.max.apply(null,depArr);
-			$(this).find(".WEB_format_message").html('共处理节点<b>'+nodeCount+'</b>个,最大节点深度为<b>'+maxDepth+'</b>');
-		},
 		_createTreeView:function(sourceData){//生成树形结构
 			var draw=[],_this=this,nodeCount=0,maxDepth=0,depArr=[];//draw：存储绘制的节点HTML,nodeCount:节点数量,maxDepth:最大深度
 			var notify=function(prefix,lastParent,name,value,fromObj){
@@ -278,49 +222,7 @@
 		},
 		_createPrefixIcon:function(className){
 			return '<span class="'+className+'"></span>';
-		},
-		_createTreeIconBak:function(name,value,isLastNode,indent){//创建节点图标
-			//console.log("键："+name+(isLastNode?"是":"不是")+"最后一个节点")
-			var nodeName='',result='',foldIcon='',typeIcon='',indentIcon='';
-			if(name==="root"){
-				nodeName=this.settings.textConf.root;
-			}
-
-			if($.type(value)==="array"){//确定节点类型及展开/收缩图标
-				typeIcon='<span class="tree-icon tree-icon-array"></span>';
-				foldIcon='<span class="tree-icon tree-icon-close"></span>';
-			}else if($.type(value)==="object"){
-				typeIcon='<span class="tree-icon tree-icon-object"></span>';
-				foldIcon='<span class="tree-icon tree-icon-close"></span>';
-			}else if($.type(value)==="number"||$.type(value)==="function"){
-				typeIcon='<span class="tree-icon tree-icon-number"></span>';
-			}else{
-				typeIcon='<span class="tree-icon tree-icon-default"></span>';
-			}
-
-			for(var i=0;i<indent;i++){
-				if(name!=="root"){
-					var className='tree-icon';
-					if(i>0){
-						className='tree-icon tree-icon-line';
-						if(i===indent-1 && typeof value !=="object"){
-							if(isLastNode){
-								className='tree-icon tree-icon-end';
-							}else{
-								className='tree-icon tree-icon-join';
-							}
-
-						}else if(i===indent-2 && !isLastNode){
-							//className='tree-icon';
-						}
-					}
-					indentIcon+='<span class="'+className+'"></span>';
-				}
-			}
-			result=indentIcon+foldIcon+typeIcon+nodeName;
-			return result;
 		}
-
 };
 
     $.fn.WEB_format=function(){

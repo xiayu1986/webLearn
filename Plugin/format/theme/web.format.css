@@ -16,10 +16,10 @@ input::-ms-clear { display: none; }
 .WEB_format_option .actionBtn{ float:left; padding:5px 10px; margin-right:10px; border:1px solid #4a84c4; cursor:pointer;}
 .WEB_format_message{width:96%;border:#4a84c4 1px solid; margin-top:10px; padding:5px; text-align:center; color:#ff0000; min-height:24px;}
 .node-tree-item{}
-.tree-icon{ display: inline-block; width: 16px; height: 16px; vertical-align: middle;}
+.tree-icon{ display: inline-block; width: 16px; height: 18px; vertical-align: middle;}
 .tree-icon-array{ background: url("array.gif") no-repeat;}
 .tree-icon-object{ background: url("object.gif") no-repeat;}
-.tree-icon-line{ background: url("line.gif") 0 0 repeat-y;}
+.tree-icon-line{ background: url("line.gif") repeat-y;}
 .tree-icon-end{ background: url("end.gif") no-repeat;}
 .tree-icon-root{ background: url("root.gif") no-repeat;}
 .tree-icon-join{ background: url("join.gif") no-repeat;}

@@ -205,6 +205,9 @@
 				nodeCount++;//统计节点总数
 				depthNo=++indent;//统计最大树深
 				depthArr.push(depthNo);
+				if(!_this.settings.expandAll && indent>1 && nodeCount>1){
+					return;
+				}
 				if(prefix===""){//根节点输出开始标签
 					draw.push('<ul class="node-tree">');
 				}

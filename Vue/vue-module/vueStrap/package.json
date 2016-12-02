@@ -1,5 +1,5 @@
 {
-  "name": "strap",
+  "name": "vuestrap",
   "description": "A Vue.js project",
   "version": "1.0.0",
   "author": "",
@@ -12,7 +12,7 @@
     "css-loader": "^0.25.0",
     "style-loader": "^0.13.1",
     "vue": "^2.1.0",
-    "vue-strap": "^1.1.32"
+    "vue-strap": "^1.1.33"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",

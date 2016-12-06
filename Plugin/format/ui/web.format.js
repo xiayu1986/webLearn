@@ -334,9 +334,14 @@
 				if(indent==coordinateArr[0] && nodeCount==coordinateArr[1]){
 					if(type==="array"){
 						parentData.splice(ind,1);
+						
 					}else if(type==="object"){
 
+						var curKey=curNode.text();
+						console.log(parentData[curKey])
+						delete parentData[curKey];
 					}
+					curNode.parent().remove();
 					$(a).find(".WEB_format_area").val(JSON.stringify($(a).data("source")));
 					return;
 				}

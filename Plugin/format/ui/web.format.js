@@ -327,21 +327,26 @@
 				nodeCount=0,
 				curItem=curNode.parent(),
 				curNodeTree=curNode.siblings('.node-tree'),
-			forEachNode=function(data,indent){//遍历节点
+				ind=curNode.index(),
+			forEachNode=function(data,indent,type,parentData){//遍历节点
 				nodeCount++;
 				++indent;
 				if(indent==coordinateArr[0] && nodeCount==coordinateArr[1]){
-					delete data;
-					$(this).find(".WEB_format_area").val(JSON.stringify(data));
+					if(type==="array"){
+						parentData.splice(ind,1);
+					}else if(type==="object"){
+
+					}
+					$(a).find(".WEB_format_area").val(JSON.stringify($(a).data("source")));
 					return;
 				}
 				if($.type(data)==="array"||$.type(data)==="object"){
 					$.each(data,function(i,D){
-						forEachNode(D,indent);
+						forEachNode(D,indent,$.type(data),data);
 					})
 				}
 			}
-			forEachNode(data,0);
+			forEachNode(data,0,$.type(data),data);
 		},
 		_createContextMenu:function(e){//生成右键菜单
 			e.preventDefault();//阻止默认事件

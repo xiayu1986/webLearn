@@ -22,8 +22,12 @@
 			{"text":"收起所有","method":function(a){
 				methods.closeAllNode(a);
 			}},
-			{"text":"新增","method":function(){}},
-			{"text":"删除","method":function(){}},
+			{"text":"新增","method":function(a){
+				methods.appendNode(a);
+			}},
+			{"text":"删除","method":function(a){
+				methods.deleteNode(a)
+			}},
 			{"text":"复制","method":function(){}},
 			{"text":"编辑","method":function(){}}
 		],
@@ -181,6 +185,7 @@
 				return false;
 			}
 			message.html("");
+			$(this).removeData("source").data("source",sourceData);//缓存数据
 			return {"result":true,"data":sourceData};
 		},
 		_createTreeView:function(sourceData){//生成树形结构
@@ -289,6 +294,54 @@
 				typeNode=iconNode.eq(iconNode.length-2);
 			treeNode.removeClass("node-tree").addClass('node-tree-close');
 			typeNode.removeClass('tree-icon-close').addClass('tree-icon-open');
+			curNode.removeClass('WEB_format_selected');
+		},
+		appendNode:function(a){//新增节点
+			var curNode=$(a).find(".WEB_format_selected"),
+				coordinate=curNode.attr("coordinate"),
+				coordinateArr=coordinate.split("-"),
+				data=$(a).data("source"),
+				nodeCount=0,
+				curItem=curNode.parent(),
+				curNodeTree=curNode.siblings('.node-tree'),
+			forEachNode=function(data,indent){//遍历节点
+				nodeCount++;
+				++indent;
+				if(indent==coordinateArr[0] && nodeCount==coordinateArr[1]){
+					var cloneItem=curItem.find(".node-tree > .node-tree-item").last().clone(true);
+					return;
+				}
+				if($.type(data)==="array"||$.type(data)==="object"){
+					$.each(data,function(i,D){
+						forEachNode(D,indent);
+					})
+				}
+			}
+			forEachNode(data,0);
+		},
+		deleteNode:function(a){//删除节点
+			var curNode=$(a).find(".WEB_format_selected"),
+				coordinate=curNode.attr("coordinate"),
+				coordinateArr=coordinate.split("-"),
+				data=$(a).data("source"),
+				nodeCount=0,
+				curItem=curNode.parent(),
+				curNodeTree=curNode.siblings('.node-tree'),
+			forEachNode=function(data,indent){//遍历节点
+				nodeCount++;
+				++indent;
+				if(indent==coordinateArr[0] && nodeCount==coordinateArr[1]){
+					delete data;
+					$(this).find(".WEB_format_area").val(JSON.stringify(data));
+					return;
+				}
+				if($.type(data)==="array"||$.type(data)==="object"){
+					$.each(data,function(i,D){
+						forEachNode(D,indent);
+					})
+				}
+			}
+			forEachNode(data,0);
 		},
 		_createContextMenu:function(e){//生成右键菜单
 			e.preventDefault();//阻止默认事件
@@ -305,12 +358,15 @@
 			var menuData=this.settings.menu;
 			$.each(menuData,function(key,data){
 				var eachItem=$('<li class="WEB_format_contextMenu_item">'+(data.text||'请配置节点名称')+'</li>');
-				eachItem.click(function(e){
+				eachItem.off("click").on("click",function(e){
 					data.method(_this);
 				})
 				contextContainer.append(eachItem);
 			});
 			contextContainer.appendTo($("body")).css({"left":e.clientX,"top":e.clientY+this.settings.offsetY});
+		},
+		_forEachNode:function(coordinate){//遍历节点
+
 		}
 	};
     $.fn.WEB_format=function(){

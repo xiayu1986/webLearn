@@ -205,16 +205,13 @@
 				nodeCount++;//统计节点总数
 				depthNo=++indent;//统计最大树深
 				depthArr.push(depthNo);
-				if(!_this.settings.expandAll && indent>1 && nodeCount>1){
+				/*if(!_this.settings.expandAll && indent>1 && nodeCount>1){
 					return;
-				}
+				}*/
 				if(prefix===""){//根节点输出开始标签
 					draw.push('<ul class="node-tree">');
 				}
 				draw.push('<li class="node-tree-item">');
-				/*if(indent===16 && nodeCount===25){
-					alert("键："+name+"值："+value)
-				}*/
 				var coordinate=indent+"-"+nodeCount;//存储节点坐标：层级-节点序数
 				if( $.type(value)==="array" || $.type(value)==="object"){//遍历数组或对象
 					draw.push('<div class="node-name" coordinate="'+coordinate+'">',methods._createTreeIcon.call(_this,prefix,rootIconClassName,'tree-icon tree-icon-'+$.type(value),name,''),'</div>');

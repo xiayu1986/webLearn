@@ -265,7 +265,7 @@
 			}
 			$.ajax(param)
 			.done(function(res){
-				if(res.data && res.data.length>0){//有数据返回
+				if(res.data && !$.isEmptyObject(res.data)){//有数据返回
 					if(!_this.settings.isRemotePager||!_this.settings.isRemoteFilter){//本地分页或关键过滤
 						methods._processData.call(_this,res);
 					}else{//服务器分页或关键字过滤

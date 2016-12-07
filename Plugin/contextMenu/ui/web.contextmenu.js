@@ -3,7 +3,8 @@
  */
 ;(function($,window,document,undefined){
 	var defaults={//默认配置
-		
+		offsetY:10,
+		menu:[{"text":"删除","method":function(){}},{"text":"新增","method":function(){}},{"text":"复制","method":function(){}}]
 	};
 	var methods={
 		init:function(options){//初始化
@@ -20,8 +21,24 @@
 		},
 		_createMenu:function(){
 			$(this).off("contextmenu").on("contextmenu",function(e){
-				e.preventDefault();
-				console.log("禁用右键菜单")
+				e.preventDefault();//阻止默认事件
+				var selectDom=$(e.currentTarget);
+				var _this=this;
+				if($.type(this.settings.menu)!=="array" || $.isEmptyObject(this.settings.menu)){
+					return;
+				}
+				var contextContainer=$("#WEB_contextMenu");
+				contextContainer.remove();
+				contextContainer=$('<ul id="WEB_contextMenu" class="WEB_contextMenu"></ul>');
+				var menuData=this.settings.menu;
+				$.each(menuData,function(key,data){
+					var eachItem=$('<li class="WEB_contextMenu_item">'+(data.text||'请配置节点名称')+'</li>');
+					eachItem.off("click").on("click",function(e){
+						data.method(_this);
+					})
+					contextContainer.append(eachItem);
+				});
+				contextContainer.appendTo($("body")).css({"left":e.clientX,"top":e.clientY+this.settings.offsetY});
 			})
 		}
 	};

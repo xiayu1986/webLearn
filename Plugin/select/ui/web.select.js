@@ -274,13 +274,17 @@
 					}
 				}else{
 					var msg="没有获取到数据！";
-					container.html('<div class="WEB_select_noResult">'+msg+'</div>');
+					if(container.html()===""){//仅在当前列表中无任何内容时加载数据
+						container.html('<div class="WEB_select_noResult">'+msg+'</div>');
+					}
 					slider.on("mousewheel",{"sourceContext":_this},methods._mouseWheelScroll);
 				}
 			})
 			.fail(function(xhr){
 				var errMsg="错误码:"+xhr.status+"&nbsp;"+xhr.statusText;
-				container.html('<div class="WEB_select_error">'+errMsg+'</div>');
+				if(container.html()===""){//仅在当前列表中无任何内容时加载数据
+					container.html('<div class="WEB_select_error">'+errMsg+'</div>');
+				}
 				slider.on("mousewheel",{"sourceContext":_this},methods._mouseWheelScroll);
 			})
 		},

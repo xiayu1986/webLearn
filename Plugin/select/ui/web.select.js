@@ -9,6 +9,7 @@
 		container:$("body"),
 		disabledScrollDom:$(window),
 		isScrollClose:false,
+		isMatchSelect:false,//筛选后是否直接选中，针对多选
 		isCreateIndent:true,//是否创建下拉菜单标识
 		beforeShow:function(){},//打开菜单前执行的方法 
 		afterShow:function(){},//打开菜单后执行的方法

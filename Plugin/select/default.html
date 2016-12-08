@@ -79,6 +79,7 @@ $(function(){
 	$("#inputEmail3").WEB_selectMenu({
 		trigger:"click",//触发事件：目前仅支持click
 		isEdit:true,//是否可输入
+		isMultiple:true,
 		beforeShow:function(){},//打开菜单前执行的方法
 		afterShow:function(){},//打开菜单后执行的方法
 		beforeHide:function(){},//关闭菜单前执行的方法
@@ -140,7 +141,7 @@ $(function(){
 			})
 			return formatArr;*/
 		},
-		isMultiple:false,
+		isMultiple:true,
 		formatTemplate:"2",
 		onSelect:function (a,b) {
 			var data={};

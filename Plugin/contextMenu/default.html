@@ -48,7 +48,11 @@
 <script type="text/javascript" src="ui/web.contextmenu.js"></script>
 <script type="text/javascript">
 $(function(){
-	$("#table td").WEB_contextMenu();
+	$("#table td").WEB_contextMenu("init",{
+		menu:[{"text":"delete","method":function(){}},
+			{"text":"add","method":function(){}}
+		]
+	});
 })
 </script>
 </body>

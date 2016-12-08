@@ -9,10 +9,9 @@
     }
     Theme.VERSION="1.0.0";
     Theme.DEFAULTS={
-        "backgroundColor":"#ffffff",
+        "backgroundColor":"#000000",
         init: true
     }
-
     Theme.prototype={
         set:function (_relatedTarget) {
             this.$element.css(_relatedTarget||this.options)
@@ -21,7 +20,6 @@
             this.set(_relatedTarget)
         }
     }
-
     function Plugin(option,_relatedTarget) {
         return this.each(function () {
             var $this   = $(this),

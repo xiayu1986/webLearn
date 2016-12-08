@@ -49,10 +49,8 @@
   }
 
   Modal.prototype.show = function (_relatedTarget) {
-    console.log(_relatedTarget)
     var that = this
-    var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget })
-
+    var e    = $.Event('show.bs.modal', { relatedTarget: _relatedTarget });
     this.$element.trigger(e)
 
     if (this.isShown || e.isDefaultPrevented()) return
@@ -184,7 +182,7 @@
   Modal.prototype.backdrop = function (callback) {
     var that = this
     var animate = this.$element.hasClass('fade') ? 'fade' : ''
-
+    console.log(this.options.backdrop)
     if (this.isShown && this.options.backdrop) {
       var doAnimate = $.support.transition && animate
 

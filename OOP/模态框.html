@@ -28,7 +28,9 @@
 <script src="js/modal.js"></script>
 <script>
 $(function () {
-    $("#modal").modal({backdrop:false});
+    $("#modal").modal();
+    $("#modal").on("hide.bs.modal",function(e){
+    })
 })
 </script>
 </body>

@@ -182,7 +182,6 @@
   Modal.prototype.backdrop = function (callback) {
     var that = this
     var animate = this.$element.hasClass('fade') ? 'fade' : ''
-    console.log(this.options.backdrop)
     if (this.isShown && this.options.backdrop) {
       var doAnimate = $.support.transition && animate
 
@@ -339,3 +338,4 @@
   })
 
 }(jQuery);
+

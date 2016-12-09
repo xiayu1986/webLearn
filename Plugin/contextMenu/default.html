@@ -13,8 +13,8 @@
 	<div class="panel-body">
 		<table class="table table-bordered table-striped" id="table">
 			<tr>
-				<td>1</td>
-				<td>2</td>
+				<td class="td1">1</td>
+				<td class="td2">2</td>
 				<td>3</td>
 				<td>4</td>
 				<td>5</td>
@@ -49,10 +49,19 @@
 <script type="text/javascript">
 $(function(){
 	$("#table td").WEB_contextMenu("init",{
-		menu:[{"text":"delete","method":function(){}},
-			{"text":"add","method":function(){}}
+		disY:5,
+		menu:[{"text":'复制',"method":function(){
+		}},
+			{"text":"跳转","method":function(){}}
 		]
-	});
+	}).on("WEB.contextMenu.create",function(a){
+		if($(this).hasClass("td1")){
+			console.log($(this).text());
+		}
+		console.log("创建")
+	}).on("WEB.contextMenu.destroy",function(a){
+		console.log("收起")
+	})
 })
 </script>
 </body>

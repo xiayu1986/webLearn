@@ -1,13 +1,12 @@
 <template>
   <div>
-    <name :name="name"></name>
+  	<pageNav></pageNav>
   </div>
 </template>
 
 <script>
-import area from './components/area.vue';
+import pageNav from './components/pageNav.vue';
 export default {
-  props:["name"],
-  components:{"name":area}
+  components:{"pageNav":pageNav}
 }
 </script>

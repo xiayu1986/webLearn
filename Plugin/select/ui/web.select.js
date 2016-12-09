@@ -2,6 +2,21 @@
  * Created by Administrator on 2015/8/9.
  */
 ;(function($,window,document,undefined){
+	$.extend({//增加对低版本IE浏览器的校验
+        isBrowerSupportWebPlugin:function(){
+            var result=false,ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,""),
+                matchArray=["MSIE8.0","MSIE7.0","MSIE6.0","MSIE5.0"];
+                $.each(matchArray,function(i,k){
+                    if(ieVersion==k){
+                        alert("您的浏览器版本过低，本插件无法提供支持，请升级！");
+                        result=false;
+                        return false;
+                    }
+                    result=true;
+                })
+            return result;
+        }
+    });
 	$.support.cors = true;
 	var defaults={//默认配置
 		trigger:"click",//触发事件：click
@@ -730,11 +745,9 @@
 	}
     
     $.fn.WEB_selectMenu=function(){
-		var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,"");
-		if(ieVersion=="MSIE7.0" || ieVersion=="MSIE6.0"|| ieVersion=="MSIE5.0"){
-			alert("您的浏览器版本过低，本插件无法提供支持，请升级！");
-			return;
-		}
+		if(!$.isBrowerSupportWebPlugin()){
+            return;
+        }
 		var method=arguments[0],ARG;
 		if(methods[method] && method.charAt(0)!="_"){
 		    method=methods[method];

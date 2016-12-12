@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-inverse no-border" role="navigation">
+  <nav class="navbar navbar-inverse no-bordered" role="navigation">
   	<div class="navbar-header">
           <button type="button" class="navbar-toggle">
             <span class="sr-only">Toggle navigation</span>
@@ -32,4 +32,6 @@ export default {
   props:[]
 }
 </script>
-
+<style>
+.navbar.navbar-inverse.no-bordered{ border-radius:0px;}
+</style>

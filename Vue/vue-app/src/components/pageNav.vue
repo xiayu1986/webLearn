@@ -7,7 +7,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" :href="brand.link">{{brand.text}}</a>
+          <span class="navbar-brand">{{brand.text}}</span>
     </div>
     <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav" v-if='nav.length'>

@@ -36,4 +36,5 @@ export default {
 
 <style>
 .content{ padding-top:65px;}
+#container{text-shadow:1px 1px 5px rgba(102, 175, 233, 0.8)}
 </style>

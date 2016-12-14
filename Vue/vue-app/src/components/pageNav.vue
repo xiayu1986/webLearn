@@ -1,5 +1,6 @@
 <template>
   <nav class="navbar navbar-inverse navbar-fixed-top no-bordered" role="navigation">
+  <div class="container-fluid">
   	<div class="navbar-header">
           <button type="button" class="navbar-toggle">
             <span class="sr-only">Toggle navigation</span>
@@ -22,6 +23,7 @@
           <ul  class="nav navbar-nav navbar-right" v-if='option.length'>
             <li @click='setActiveNav(navRight.text)' :class="{active:active==navRight.text}" v-for='navRight in option'><a :href="navRight.link">{{navRight.text}}</a></li>
           </ul>
+    </div>
     </div>
   </nav>
 </template>

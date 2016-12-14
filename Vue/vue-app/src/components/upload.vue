@@ -12,6 +12,10 @@
 		 		<div class="col-sm-9"><input type="text" class="form-control"></div>
 	 		</div>
 	 		<div class="form-group row">
+		 		<div class="col-sm-3">作者：</div>
+		 		<div class="col-sm-9"><input type="text" class="form-control"></div>
+	 		</div>
+	 		<div class="form-group row">
 		 		<div class="col-sm-3">选择文件：</div>
 		 		<div class="col-sm-9"><input type="text" class="form-control"></div>
 	 		</div>

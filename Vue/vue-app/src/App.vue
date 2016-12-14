@@ -2,7 +2,7 @@
 	<div>
   	<pageNav :active="navData.activeName" :brand='navData.brand' :search="navData.search" :nav='navData.navLeftList' :option='navData.navRightList'>
   	</pageNav>
-  	<div class="content clearfix">
+  	<div class="content container-fluid clearfix" >
 	  	<div v-if="showView">
 		  	<sideMenu :menu="sideMenu"></sideMenu>
 		  	<contentPanel></contentPanel>

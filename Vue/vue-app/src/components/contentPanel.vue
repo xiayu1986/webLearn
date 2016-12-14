@@ -23,8 +23,4 @@ export default {
 
 }
 </script>
-<style>
-.panel.panel-primary{border-color: #222222;}
-.panel.panel-primary > .panel-heading{background-color:#222222;color: #337ab7;}
-</style>
 

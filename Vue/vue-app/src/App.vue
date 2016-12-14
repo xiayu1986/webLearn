@@ -3,7 +3,13 @@
   	<pageNav :active="navData.activeName" :brand='navData.brand' :search="navData.search" :nav='navData.navLeftList' :option='navData.navRightList'>
   	</pageNav>
   	<div class="content clearfix">
-  		<router-view></router-view>
+	  	<div v-if="showView">
+		  	<sideMenu :menu="sideMenu"></sideMenu>
+		  	<contentPanel></contentPanel>
+		</div>
+		<div v-if="!showView">
+			<router-view></router-view>
+		</div>
   	</div>
   	</div>
 </template>
@@ -16,6 +22,7 @@ export default {
   components:{"pageNav":pageNav,'sideMenu':sideMenu,'contentPanel':contentPanel},
   data:function(){
   	 return {
+  	 "showView":true,
   	 "navData":{
   	 	"navLeftList":[{"text":"说明文档","link":"/document"},
   	 	{"text":"下载插件","link":"/download"},

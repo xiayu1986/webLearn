@@ -31,7 +31,8 @@ export default {
   props:['brand','nav','option','active','search'],
   methods:{
     setActiveNav:function(name){
-      this.$parent.navData.activeName=name
+      this.$parent.navData.activeName=name;
+      this.$parent.showView=name==='说明文档'?true:false;
     }
   }
 }

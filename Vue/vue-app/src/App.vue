@@ -3,8 +3,7 @@
   	<pageNav :active="navData.activeName" :brand='navData.brand' :search="navData.search" :nav='navData.navLeftList' :option='navData.navRightList'>
   	</pageNav>
   	<div class="content clearfix">
-  	<sideMenu :menu="sideMenu"></sideMenu>
-  	<contentPanel></contentPanel>
+  		<router-view></router-view>
   	</div>
   	</div>
 </template>
@@ -18,9 +17,12 @@ export default {
   data:function(){
   	 return {
   	 "navData":{
-  	 	"navLeftList":[{"text":"说明文档","active":false,"link":"#"},{"text":"下载插件","active":false,"link":"#"},{"text":"提交BUG","active":false,"link":"#"},{"text":"上传插件","active":false,"link":"#"}],
+  	 	"navLeftList":[{"text":"说明文档","link":"/document"},
+  	 	{"text":"下载插件","link":"/download"},
+  	 	{"text":"提交BUG","link":"/bug"},
+  	 	{"text":"上传插件","link":"/upload"}],
   	 	"navRightList":[],
-  	 	"brand":{"text":"插件无忧","link":"#"},"activeName":"文档",
+  	 	"brand":{"text":"插件无忧","link":"#"},"activeName":"说明文档",
   	 	"search":{"show":true,"placeHolder":"请输入关键字搜索","btnText":"搜索"}
       },
       "sideMenu":{"active":"弹出框","list":['弹出框','下拉列表','数据格式化','树形菜单','右键菜单','数据表格','分页']}

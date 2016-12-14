@@ -30,7 +30,7 @@
   //Vue.use(VueRouter);
   const Home={template:'<div>首页</div>'};
   const Detail={template:'<div>详情页</div>'};
-  const routes=[{path:"/",component:Home},{path:"/home",component:Home},{path:"/detail",component:Detail}];
+  const routes=[{path:"/",component:Home},{path:"/document",component:Home},{path:"/detail",component:Detail}];
   const router=new VueRouter({routes:routes});
   new Vue({router:router}).$mount('#app')
 </script>

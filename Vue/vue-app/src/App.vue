@@ -15,11 +15,10 @@
 
 <script>
 import pageNav from './components/pageNav.vue';
-import sideMenu from './components/sideMenu.vue';
 import contentPanel from './components/contentPanel.vue';
 import doc from './components/document.vue';
 export default {
-  components:{"pageNav":pageNav,'sideMenu':sideMenu,'contentPanel':contentPanel,"docTag":doc},
+  components:{"pageNav":pageNav,'contentPanel':contentPanel,"docTag":doc},
   data:function(){
   	 return {
   	 "showView":true,

@@ -1,1 +1,9 @@
-{"active":"弹出框","list":["弹出框","下拉列表","数据格式化","树形菜单","右键菜单","数据表格","分页"]}
+{"active":"弹出框","list":[
+  {"text":"弹出框","link":"/document/dialog"},
+  {"text":"下拉列表","link":"/document/select"},
+  {"text":"数据格式化","link":"/document/format"},
+  {"text":"右键菜单","link":"/document/context"},
+  {"text":"树形菜单","link":"/document/treeMenu"},
+  {"text":"数据表格","link":"/document/dataTable"},
+  {"text":"分页","link":"/document/pager"}]
+}

@@ -12,6 +12,7 @@
     "css-loader": "^0.25.0",
     "style-loader": "^0.13.1",
     "vue": "^2.1.0",
+    "vue-resource": "^1.0.3",
     "vue-router": "^2.1.1"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 .arrow {display: inline-block;vertical-align: middle; width: 0;height: 0;margin-left: 5px;}
 .arrow.asc {border-left: 4px solid transparent;border-right: 4px solid transparent;border-bottom: 4px solid #222222;}
 .arrow.desc {border-left: 4px solid transparent;border-right: 4px solid transparent;border-top: 4px solid #222222;}
-
+.content{ padding-top:65px;}
+#container{text-shadow:1px 1px 5px rgba(102, 175, 233, 0.8)}
 .panel.panel-primary{border-color: #222222;}
 .panel.panel-primary > .panel-heading,.panel.panel-primary > .panel-footer{background-color:#222222;color: #337ab7;}

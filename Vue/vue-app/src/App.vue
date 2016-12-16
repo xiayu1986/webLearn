@@ -32,13 +32,24 @@ export default {
   	 	"brand":{"text":"插件无忧","link":"#"},"activeName":"说明文档",
   	 	"search":{"show":true,"placeHolder":"请输入关键字搜索","btnText":"搜索"}
       },
-      "sideMenu":{"active":"弹出框","list":['弹出框','下拉列表','数据格式化','树形菜单','右键菜单','数据表格','分页']}
+      "sideMenu":{"active":"","list":[]}
+    }
+  },
+  mounted:function(){
+  	this.getRemoteData();
+  },
+  methods:{
+  	getRemoteData:function () {
+      this.$http.get('./src/data/page.json')
+              .then(function (res) {
+              	this.sideMenu=res.body;
+              },function (res) {
+
+              })
+              .catch(function (response) {
+
+              })
     }
   }
 }
 </script>
-
-<style>
-.content{ padding-top:65px;}
-#container{text-shadow:1px 1px 5px rgba(102, 175, 233, 0.8)}
-</style>

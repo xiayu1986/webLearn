@@ -1,6 +1,7 @@
 <template>
 <div>
- 说明文档
+ <sideMenu :menu="menu"></sideMenu>
+	<router-view></router-view>
 </div>
 </template>
 

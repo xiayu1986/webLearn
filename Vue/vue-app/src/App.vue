@@ -4,8 +4,7 @@
   	</pageNav>
   	<div class="content container-fluid clearfix" >
 	  	<div v-if="showView">
-		  	<sideMenu :menu="sideMenu"></sideMenu>
-		  	<contentPanel></contentPanel>
+		  	<doc :menu="sideMenu"></doc>
 		</div>
 		<div v-if="!showView">
 			<router-view></router-view>
@@ -18,8 +17,9 @@
 import pageNav from './components/pageNav.vue';
 import sideMenu from './components/sideMenu.vue';
 import contentPanel from './components/contentPanel.vue';
+import doc from './components/document.vue';
 export default {
-  components:{"pageNav":pageNav,'sideMenu':sideMenu,'contentPanel':contentPanel},
+  components:{"pageNav":pageNav,'sideMenu':sideMenu,'contentPanel':contentPanel,"doc":doc},
   data:function(){
   	 return {
   	 "showView":true,
@@ -29,7 +29,7 @@ export default {
   	 	{"text":"提交BUG","link":"/bug"},
   	 	{"text":"上传插件","link":"/upload"}],
   	 	"navRightList":[],
-  	 	"brand":{"text":"插件无忧","link":"#"},"activeName":"说明文档",
+  	 	"brand":{"text":"我的插件","link":"#"},"activeName":"说明文档",
   	 	"search":{"show":true,"placeHolder":"请输入关键字搜索","btnText":"搜索"}
       },
       "sideMenu":{"active":"","list":[]}

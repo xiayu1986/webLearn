@@ -4,7 +4,7 @@
   	</pageNav>
   	<div class="content container-fluid clearfix" >
 	  	<div v-if="showView">
-		  	<doc :menu="sideMenu"></doc>
+		  	<docTag :menu="sideMenu"></docTag>
 		</div>
 		<div v-if="!showView">
 			<router-view></router-view>
@@ -19,7 +19,7 @@ import sideMenu from './components/sideMenu.vue';
 import contentPanel from './components/contentPanel.vue';
 import doc from './components/document.vue';
 export default {
-  components:{"pageNav":pageNav,'sideMenu':sideMenu,'contentPanel':contentPanel,"doc":doc},
+  components:{"pageNav":pageNav,'sideMenu':sideMenu,'contentPanel':contentPanel,"docTag":doc},
   data:function(){
   	 return {
   	 "showView":true,

@@ -5,9 +5,10 @@
 #container{text-shadow:1px 1px 5px rgba(102, 175, 233, 0.8)}
 .panel.panel-primary{border-color: #222222;}
 .panel.panel-primary > .panel-heading,.panel.panel-primary > .panel-footer{background-color:#222222;color: #337ab7;}
-.list-group > .list-group-item{background-color: #222222;border-color: #080808; color: #337ab7; cursor:pointer;}
+.list-group > .list-group-item{background-color: #222222;border-color: #080808; color: #337ab7; padding: 0;}
 .list-group > .itemActive{background-color: #111111;}
-.list-group-item:hover{background-color: #111111;}
+.list-group > .list-group-item:hover{background-color: #111111;}
+.list-group > .list-group-item a{ display: block;padding:10px 15px;text-decoration: none;}
 
 
 .navbar.navbar-inverse.no-bordered{ border-radius:0px; margin:0;}

@@ -8,11 +8,13 @@ import document from './components/document.vue';
 import download from './components/download.vue';
 import bug from './components/bug.vue';
 import upload from './components/upload.vue';
+import panel from './components/contentPanel.vue';
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
 const routes=[
 	{path:"/document",component:document},
+	{path:"/document/:link",component:panel},
 	{path:"/bug",component:bug},
 	{path:"/upload",component:upload},
 	{path:"/download",component:download}

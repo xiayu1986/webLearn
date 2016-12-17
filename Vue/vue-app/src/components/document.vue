@@ -2,9 +2,9 @@
 <div>
  	<div class="col-sm-3">
 	 <ul class="list-group" v-if="menu.list.length">
-	      <router-link tag="li" @click="setActiveItem(item.text)" v-for="item in menu.list" :to="item.link" class="list-group-item" :class="{itemActive:item.text==menu.active}">
-			  {{item.text}}
-		  </router-link>
+	      <li  @click="setActiveItem(item.text)" v-for="item in menu.list" class="list-group-item" :class="{itemActive:item.text==menu.active}">
+			 <router-link :to="item.link">{{item.text}}</router-link>
+		  </li>
 	 </ul>
 </div>
 	<div class="col-sm-9">
@@ -19,7 +19,6 @@ export default {
 	props:['menu'],
 	methods:{
         setActiveItem:function(activeName){
-        	console.log(activeName)
           this.$parent.sideMenu.active=activeName;
         }
     }

@@ -12,7 +12,7 @@
     </div>
     <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav" v-if='nav.length'>
-            <li  @click='setActiveNav(navLeft.text)' v-for="navLeft in nav" :class="{active:active==navLeft.text}"><router-link :to="navLeft.link">{{navLeft.text}}</router-link></li>
+            <li  @click='setActiveNav(navLeft.text,$event)' v-for="navLeft in nav" :class="{active:active==navLeft.text}"><router-link :to="navLeft.link">{{navLeft.text}}</router-link></li>
           </ul>
           <form class="navbar-form navbar-right" role="search" v-if="search.show">
             <div class="form-group">
@@ -21,7 +21,7 @@
             <button type="submit" class="btn btn-blue">{{search.btnText}}</button>
           </form>
           <ul  class="nav navbar-nav navbar-right" v-if='option.length'>
-            <li @click='setActiveNav(navRight.text)' :class="{active:active==navRight.text}" v-for='navRight in option'><a :href="navRight.link">{{navRight.text}}</a></li>
+            <li @click='setActiveNav(navRight.text,$event)' :class="{active:active==navRight.text}" v-for='navRight in option'><a :href="navRight.link">{{navRight.text}}</a></li>
           </ul>
     </div>
     </div>
@@ -32,9 +32,20 @@
 export default {
   props:['brand','nav','option','active','search'],
   methods:{
-    setActiveNav:function(name){
+    setActiveNav:function(name,event){
       this.$parent.navData.activeName=name;
       this.$parent.showView=name==='说明文档'?true:false;
+      if(name==="下载插件" && !event.currentTarget.className){
+        this.$http.get('./src/data/panel.json')
+              .then(function (res) {
+              
+              },function (res) {
+
+              })
+              .catch(function (response) {
+
+              })
+      }
     }
   }
 }

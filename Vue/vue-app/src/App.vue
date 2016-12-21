@@ -10,6 +10,7 @@
 			<router-view></router-view>
 		</div>
   	</div>
+    <div class="prompt" ref="prompt" v-show="prompt.showPrompt" :style="prompt.type">{{prompt.text}}<span class="triangle"></span></div>
   	</div>
 </template>
 
@@ -21,6 +22,7 @@ export default {
   components:{"pageNav":pageNav,'contentPanel':contentPanel,"docTag":doc},
   data:function(){
   	 return {
+     "prompt":{"showPrompt":false,"text":"提示信息","type":{"left":0,"top":0}},
   	 "showView":true,
   	 "navData":{
   	 	"navLeftList":[{"text":"说明文档","link":"/document"},

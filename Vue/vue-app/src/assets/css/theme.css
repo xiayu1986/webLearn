@@ -22,3 +22,13 @@
 .btn.btn-blue{ color:#337ab7;background:#323232;border-color:#337ab7;}
 .btn.btn-blue:hover,.btn.btn-blue:focus{ color:#337ab7; box-shadow:0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6)}
 .navbar-form .form-control{ background:#111111;border-color:#337ab7;color:#337ab7;}
+.prompt{position: absolute;  background: #323232;border: #337ab7 1px solid;color: #337ab7; padding:10px;  border-radius: 4px;}
+.prompt .triangle{ position:absolute;width:0px;height: 0px; line-height: 0; font-size: 0; 
+overflow: hidden;
+border-top: 8px solid transparent;
+border-bottom: 8px solid transparent;
+border-right:none;
+border-left: 10px solid #323232; 
+right:-11px; 
+top:9px;
+}

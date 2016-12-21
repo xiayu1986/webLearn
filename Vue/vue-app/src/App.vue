@@ -4,7 +4,7 @@
   	</pageNav>
   	<div class="content container-fluid clearfix" >
 	  	<div v-if="showView">
-		  	<docTag :menu="sideMenu"></docTag>
+		  	<docTag :menu="sideMenu" :panel="panelData"></docTag>
 		</div>
 		<div v-if="!showView">
 			<router-view></router-view>
@@ -31,7 +31,8 @@ export default {
   	 	"brand":{"text":"我的插件","link":"#"},"activeName":"说明文档",
   	 	"search":{"show":true,"placeHolder":"请输入关键字搜索","btnText":"搜索"}
       },
-      "sideMenu":{"active":"","list":[]}
+      "sideMenu":{"active":"","list":[]},
+      "panelData":{"eventsDetail":"加载插件说明"}
     }
   },
   mounted:function(){

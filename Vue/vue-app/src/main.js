@@ -14,7 +14,7 @@ Vue.use(VueRouter);
 Vue.use(VueResource);
 const routes=[
 	{path:"/document",component:document},
-	{path:"/document/:link",component:panel},
+	{path:"/document/:link",components:{default:panel,panel:panel}},
 	{path:"/bug",component:bug},
 	{path:"/upload",component:upload},
 	{path:"/download",component:download}

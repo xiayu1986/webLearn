@@ -14,6 +14,16 @@ export default {
       methods:{
         setActiveItem:function(activeName){
           this.$parent.sideMenu.active=activeName;
+          console.log(activeName)
+          this.$http.get('./src/data/page.json')
+              .then(function (res) {
+              	this.sideMenu=res.body;
+              },function (res) {
+
+              })
+              .catch(function (response) {
+
+              })
         }
       }
 }

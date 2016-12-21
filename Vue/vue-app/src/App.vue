@@ -10,7 +10,7 @@
 			<router-view></router-view>
 		</div>
   	</div>
-    <div class="prompt" ref="prompt" v-show="prompt.showPrompt" :style="prompt.type">{{prompt.text}}<span class="triangle"></span></div>
+    <div class="prompt" ref="prompt" v-if="prompt.showPrompt" :style="prompt.type">{{prompt.text}}<span class="triangle"></span></div>
   	</div>
 </template>
 

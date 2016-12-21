@@ -49,11 +49,13 @@ export default {
 				this.$parent.prompt.showPrompt=true;
 				this.$parent.prompt.text="请填写插件名称";
 				var x=this.$refs.name.getBoundingClientRect().left,
+				h=this.$refs.name.getBoundingClientRect().height,
 				y=this.$refs.name.getBoundingClientRect().top;
 				var promptDom=this.$parent.$refs.prompt;
 				if(promptDom){
-					var promptDomWidth=promptDom.getBoundingClientRect().width;
-					this.$parent.prompt.type={"left":(x-promptDomWidth-10)+"px","top":y+"px"}
+					var promptDomWidth=promptDom.getBoundingClientRect().width,
+						promptDomHeight=promptDom.getBoundingClientRect().height;
+					this.$parent.prompt.type={"left":(x-promptDomWidth-10)+"px","top":(y+(y-h)/2)+"px"}
 				}
 				
 			}
@@ -68,7 +70,7 @@ export default {
 	},
 	watch:{
 		setPromptPos:function(){
-			
+
 		}
 	}
 }

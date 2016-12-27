@@ -13,6 +13,7 @@ import panel from './components/contentPanel.vue';
 Vue.use(VueRouter);
 Vue.use(VueResource);
 const routes=[
+	{path:"/",redirect:"/document/dialog",component:document},
 	{path:"/document",component:document},
 	{path:"/document/:link",components:{default:panel,panel:panel}},
 	{path:"/bug",component:bug},

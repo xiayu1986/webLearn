@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>更新数据</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+  </head>
+  <body>
+  <div class="container-fluid">
+   <div class="panel panel-primary">
+     <div class="panel-heading">行程单</div>
+     <div class="panel-body">
+       <form role="form" name="trip" id="trip" class="form-horizontal">
+         <div class="form-group">
+           <div class="col-xs-12 col-sm-4 col-md-3 form-group">
+             <label for="" class="col-xs-6 control-label">行程类型：</label>
+             <div class="col-xs-6">
+               <select autocomplete="off" class="form-control" v-model="tripType">
+                  <option value="">全部</option>
+                  <option value="OW">单程</option>
+                  <option value="RT">往返</option>
+                  <option value="OT">其他</option>
+               </select>
+             </div>
+           </div>
+         </div>
+       </form>
+     </div>
+   </div>
+   <div class="panel panel-primary">
+     <div class="panel-heading">
+       行程单列表
+     </div>
+     <div class="panel-body">
+
+       <data-table :data-list="list" :head-list="header"></data-table>
+       
+     </div>
+   </div>
+ </div>
+ <template id="dataTableHtml">
+    <table class="table table-bordered table-striped">
+      <thead>
+      <tr>
+        <th v-for="head in headList">{{head}}</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr v-for="D in dataList">
+          <td>{{D.name}}</td>
+          <td>{{D.userId}}</td>
+          <td>{{D.project}}</td>
+          <td>{{D.class}}</td>
+        </tr>
+      </tbody>
+    </table>
+</template>
+  <script src="js/jquery.min.js" type="text/javascript"></script>
+  <script src="js/bootstrap.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="http://static.runoob.com/assets/vue/1.0.11/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/vue.resource/1.0.2/vue-resource.min.js"></script>
+<script type="text/javascript">
+$(function(){
+  Vue.component("dataTable",{//定义组件
+    template:"#dataTableHtml",
+    props:["dataList","headList"]//定义props
+  })
+
+  new Vue({
+    el:"body",
+    data:function(){
+      return {
+        tripType:"",
+         "header":[],//定义表头的数据
+          "list":[]//定义列表的数据
+      }
+    },
+    watch:{
+      tripType:function(a){//监听select值的变化，请求数据
+        var _this=this;
+        $.ajax({
+          url:"./data/user.json"
+        }).done(function(res){
+            _this.header=res.header;//改变表头的数据
+            _this.list=res.list;//改变列表的数据
+        }).fail(function(){
+
+        })
+      }
+    }
+  })
+})
+</script>
+  </body>
+</html>

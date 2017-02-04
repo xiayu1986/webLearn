@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="theme/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="theme/web.dataSort.css">
+<title>数据排序</title>
+</head>
+<body>
+<div class="container">
+<div class="panel panel-primary">
+<div class="panel-heading">数据排序</div>
+	<div class="panel-body">
+		<table class="table table-bordered table-striped" id="table">
+		<thead>
+			<tr>
+				<th>出发城市</th>
+				<th>到达城市</th>
+				<th>出发日期</th>
+				<th>到达日期</th>
+				<th>飞行时长</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>	
+		</table>
+	</div>
+</div>
+</div>
+<script type="text/javascript" src="lib/jquery.min.js"></script>
+<script type="text/javascript" src="lib/template.js"></script>
+<script type="text/javascript" src="ui/web.dataSort.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#table").WEB_dataTable({
+		data:[//指定数据源，必须是数组类型
+			{"departCity":"BJS","arriveCity":"SEL","departDate":"2017/02/03","arriveDate":"2017-02-03",
+			"time":80,"duration":"1小时20分"},
+			{"departCity":"SHA","arriveCity":"HKG","departDate":"2017-03-03","arriveDate":"2017-03-05",
+			"time":70,"duration":"1小时10分"},
+			{"departCity":"SEL","arriveCity":"WHU","departDate":"2017-02-05","arriveDate":"2017-02-06",
+			"time":"122","duration":"2小时2分"},
+			{"departCity":"CAN","arriveCity":"XMN","departDate":"2017-02-18","arriveDate":"2017-02-18",
+			"time":"50","duration":"50分"},
+			{"departCity":"SIA","arriveCity":"TNA","departDate":"2017-02-20","arriveDate":"2017-02-20",
+			"time":"90","duration":"1小时30分"}
+		],
+		sortColumns:[//定义排序字段 key指按照对象中哪个键排序
+			{sort:true,key:"departCity"},
+			{sort:true,key:"arriveCity"},
+			{sort:true,key:"departDate"},
+			{sort:true,key:"arriveDate"},
+			{sort:true,key:"time",isPrimaryKey:true,type:"Desc"},//指定默认排序字段
+		],
+		beforeSort:function(e){//排序前触发的事件
+
+		},
+		afterSort:function(resource){//排序后触发的事件
+			var resultHtml = template('renderResult', resource);
+	        $("#table tbody").html(resultHtml);
+		}
+	})
+})
+</script>
+<script type="text/html" id="renderResult">
+	{{each sortedData as D}}
+		<tr>
+			<td>{{D.departCity}}</td>
+			<td>{{D.arriveCity}}</td>
+			<td>{{D.departDate}}</td>
+			<td>{{D.arriveDate}}</td>
+			<td>{{D.duration}}</td>
+		</tr>
+	{{/each}}
+</script>
+</body>
+</html>

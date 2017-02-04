@@ -1,0 +1,14 @@
+*{ margin:0; padding:0;}
+body{ font:12px/14px "微软雅黑"; color:#000;}
+a{ text-decoration:none; color:#000;}
+img{ border:none;}
+li{ list-style:none;}
+
+.WEB_sortColumn{ position:relative; float:right;width:10px;}
+.WEB_sortIcon{display:block;width:0px;height: 0px; cursor: pointer; line-height: 0; font-size: 0; overflow: hidden;border-left: 5px solid transparent; border-right: 5px solid transparent;border-bottom:none;border-top: 6px solid #1C0978;opacity:0.5;}
+.WEB_sortAsc{border-bottom: 6px solid #1C0978;border-top:none; margin-bottom: 1px;}
+.WEB_sort{ cursor:pointer; }
+.WEB_sortByAsc .WEB_sortDesc{ opacity:0;}
+.WEB_sortByDesc .WEB_sortAsc{ opacity:0;}
+.WEB_sortByAsc .WEB_sortAsc{opacity:1;}
+.WEB_sortByDesc .WEB_sortDesc{opacity:1;}

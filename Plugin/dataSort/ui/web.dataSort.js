@@ -18,11 +18,11 @@
         }
     });
 
-	var DataTable=function(element,options){
-	 	this.$element=$(element);
+    var DataTable=function(element,options){
+        this.$element=$(element);
         this.options=options;
-	}
-	DataTable.VERSION="1.0.0";
+    }
+    DataTable.VERSION="1.0.0";
     DataTable.DEFAULTS={
         sortColumns:[]
     }
@@ -31,7 +31,9 @@
             this.create(_relatedTarget);
         },
         destroy:function(){//销毁
-        	this.$element.removeData("WEB.dataTable");
+            this.$element.find("thead:first >tr > th").removeClass("WEB_sortByDesc WEB_sortByAsc WEB_activeSort WEB_sort");
+            this.$element.find(".WEB_sortColumn").remove();
+            this.$element.removeData("WEB.dataTable");
         },
         create:function(_relatedTarget){//生成icon
             var sortTh=this.$element.find("thead:first >tr > th"),_this=this;
@@ -42,7 +44,7 @@
                         var sortable=sortCol.sort,//取排序属性
                             isPrimaryKey=sortCol.isPrimaryKey;//取是否是默认排序字段
                         if(sortable){
-                            $(this).addClass('WEB_sort').append($('<div class="WEB_sortColumn"><span class="WEB_sortIcon WEB_sortAsc"></span><span class="WEB_sortIcon WEB_sortDesc"></span></div>'));  
+                            $(this).addClass('WEB_sort').find(".WEB_sortColumn").remove().end().append($('<div class="WEB_sortColumn"><span class="WEB_sortIcon WEB_sortAsc"></span><span class="WEB_sortIcon WEB_sortDesc"></span></div>'));
                         }
                         if(isPrimaryKey){
                             _this.clear();
@@ -57,7 +59,7 @@
         },
         event:function(_relatedTarget){//绑定点击事件
             var _this=this;
-            this.$element.on("click",".WEB_sort",function(i,e){
+            this.$element.off("click").on("click",".WEB_sort",function(){
                 _relatedTarget.beforeSort.call(_this,{ relatedTarget: _relatedTarget});
                 _this.switch($(this),_relatedTarget);
             })
@@ -73,17 +75,26 @@
             if(sortCol){
                 var sortKey=sortCol.key;
                 var sortedData=sourceData.sort(function(a,b){
-                    var keyType=$.type(a[sortKey]);
-                    if($.isNumeric(a[sortKey])){//处理数字
-                        var aSortKey=a[sortKey],bSortKey=b[sortKey];
-                    }else{//处理非数字
-                        if(keyType==="string"){
-                             var isDate=/\d{4}([-\/])\d{1,2}([-\/])\d{1,2}(\s{1}\d{1,2}:\d{1,2}(:\d{1,2})?)?/g;
-                             if(isDate.test(a[sortKey])){//处理日期格式,转成时间戳
-                                var aSortKey=Date.parse(a[sortKey].replace(/-/g,"/")),bSortKey=Date.parse(b[sortKey].replace(/-/g,"/"));
-                             }else{//处理非日期格式
-                                return isDesc?b[sortKey].localeCompare(a[sortKey]):a[sortKey].localeCompare(b[sortKey]);
-                             }
+                    var aSortKey,bSortKey,keyType;
+                    if($.type(sortKey)==="object"){
+                        if(sortKey.type==="array"){
+                            aSortKey=a[sortKey.objKey][sortKey.index][sortKey.orderKey];
+                            bSortKey=b[sortKey.objKey][sortKey.index][sortKey.orderKey];
+                        }
+                    }else{
+                       aSortKey=a[sortKey];
+                       bSortKey=b[sortKey];
+                    }
+                    aSortKey=$.trim(aSortKey);
+                    bSortKey=$.trim(bSortKey);
+                    keyType=$.type(aSortKey);
+                    if(!$.isNumeric(aSortKey) && keyType==="string"){//处理非数字
+                        var isDate=/\d{4}([-\/])\d{1,2}([-\/])\d{1,2}(\s{1}\d{1,2}:\d{1,2}(:\d{1,2})?)?/g;
+                        if(isDate.test(aSortKey)){//处理日期格式,转成时间戳
+                            aSortKey=Date.parse(aSortKey.replace(/-/g,"/"));
+                            bSortKey=Date.parse(bSortKey.replace(/-/g,"/"));
+                        }else{//处理非日期格式
+                            return isDesc?bSortKey.localeCompare(aSortKey):aSortKey.localeCompare(bSortKey);
                         }
                     }
                     return isDesc?(bSortKey-aSortKey):(aSortKey-bSortKey);
@@ -102,10 +113,10 @@
     }
 
     function Plugin(method,option) {
-    	var len=arguments.length,settings=arguments[1];
-    	if(len===1){
-    		settings=$.type(arguments[0])==="object"?arguments[0]:{}
-    	}
+        var len=arguments.length,settings=arguments[1];
+        if(len===1){
+            settings=$.type(arguments[0])==="object"?arguments[0]:{}
+        }
         return this.each(function () {
             var $this   = $(this),
                 data    = $this.data('WEB.dataTable'),

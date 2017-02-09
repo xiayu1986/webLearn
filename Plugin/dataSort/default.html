@@ -11,6 +11,9 @@
 <div class="panel panel-primary">
 <div class="panel-heading">数据排序</div>
 	<div class="panel-body">
+		<div class="form-group" id="filter">
+			<input type="text" class="form-control" id="WEB_dataTable_filter" />
+		</div>
 		<table class="table table-bordered table-striped" id="table">
 		<thead>
 			<tr>
@@ -33,6 +36,12 @@
 <script type="text/javascript" src="ui/web.dataSort.js"></script>
 <script type="text/javascript">
 $(function(){
+	/*测试数据排序功能*/
+	/*var data=["2017/02/05 13:10:09","2017/02/01 19:30:01","2017/02/01 09:30:01","2017/02-20 06:30:01"]
+	var sortData=data.sort(function(a,b){
+		return b.localeCompare(a)
+	})
+	alert(sortData)*/
 	$("#table").WEB_dataTable({
 		data:[//指定数据源，必须是数组类型
 			{"departCity":"BJS","arriveCity":"SEL","departDate":"2017/02/03","arriveDate":"2017-02-03",
@@ -46,6 +55,7 @@ $(function(){
 			{"departCity":"SIA","arriveCity":"TNA","departDate":"2017-02-20","arriveDate":"2017-02-20",
 			"time":"90","duration":"1小时30分"}
 		],
+		filterContainer:$("#filter"),
 		sortColumns:[//定义排序字段 key指按照对象中哪个键排序
 			{sort:true,key:"departCity"},
 			{sort:true,key:"arriveCity"},
@@ -59,7 +69,8 @@ $(function(){
 		afterSort:function(resource){//排序后触发的事件
 			var resultHtml = template('renderResult', resource);
 	        $("#table tbody").html(resultHtml);
-		}
+		},
+		ignoreKey:["time","list"]//配置忽略掉的键
 	})
 })
 </script>

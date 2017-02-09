@@ -24,18 +24,36 @@
     }
     DataTable.VERSION="1.0.0";
     DataTable.DEFAULTS={
-        sortColumns:[]
+        isFilter:true,
+        data:[],
+        sortColumns:[],
+        beforeSort:$.noop(),
+        afterSort:$.noop,
+        ignoreKey:[],
+        filterContainer:$("body")
     }
     DataTable.prototype={//为原型添加方法
         init:function(_relatedTarget){
+            if($.type(_relatedTarget.data)!="array"){
+                alert("数据源必须为数组！");
+                return;
+            }
+            if(_relatedTarget.data.length==0){
+                alert("数据源不能为空！");
+                return;
+            }
             this.create(_relatedTarget);
+            this._filter(_relatedTarget);
         },
         destroy:function(){//销毁
             this.$element.find("thead:first >tr > th").removeClass("WEB_sortByDesc WEB_sortByAsc WEB_activeSort WEB_sort");
-            this.$element.find(".WEB_sortColumn").remove();
             this.$element.removeData("WEB.dataTable");
         },
         create:function(_relatedTarget){//生成icon
+            if(_relatedTarget.data.length==1){
+                _relatedTarget.afterSort.call(this,{ relatedTarget: _relatedTarget,sortedData:_relatedTarget.data});
+                return;
+            }
             var sortTh=this.$element.find("thead:first >tr > th"),_this=this;
             if(sortTh.length>0){
                 sortTh.each(function(i,e){
@@ -44,7 +62,7 @@
                         var sortable=sortCol.sort,//取排序属性
                             isPrimaryKey=sortCol.isPrimaryKey;//取是否是默认排序字段
                         if(sortable){
-                            $(this).addClass('WEB_sort').find(".WEB_sortColumn").remove().end().append($('<div class="WEB_sortColumn"><span class="WEB_sortIcon WEB_sortAsc"></span><span class="WEB_sortIcon WEB_sortDesc"></span></div>'));
+                            $(this).addClass('WEB_sort');
                         }
                         if(isPrimaryKey){
                             _this.clear();
@@ -71,7 +89,7 @@
             var i=$(".WEB_activeSort").index()||0,
                 _this=this,
                 sortCol=_relatedTarget.sortColumns[i],
-                sourceData=_relatedTarget.data;
+                sourceData=_relatedTarget.source?_relatedTarget.source:_relatedTarget.data;
             if(sortCol){
                 var sortKey=sortCol.key;
                 var sortedData=sourceData.sort(function(a,b){
@@ -109,6 +127,58 @@
             isDesc?obj.removeClass('WEB_sortByDesc').addClass('WEB_sortByAsc'):obj.removeClass('WEB_sortByAsc').addClass('WEB_sortByDesc');
             isDesc=!isDesc;
             this.sort(_relatedTarget,isDesc);
+        },
+        _filter:function(_relatedTarget){
+            if(!_relatedTarget.isFilter){
+                return;
+            }
+            var f=$("#WEB_dataTable_filter"),
+                fList=[],
+                _this=this;
+                source=_relatedTarget.data;
+            if(f.length===0){
+                _relatedTarget.filterContainer.append('<input type="txt" class="WEB_dataTable_filter" id="WEB_dataTable_filter" />');
+                f=$("#WEB_dataTable_filter");
+            }
+            f.off("input").on("input",function(e){
+                var w=$(this).val(),
+                rule=new RegExp(w,'gi');
+                fList=[];
+                _relatedTarget.source=null;
+                recursion(source,rule,0);
+                var result=toJSON(fList);
+                var isDesc=$(".WEB_activeSort").hasClass('WEB_sortByDesc');//是否是降序
+                _relatedTarget.source=result;
+                _this.sort(_relatedTarget,isDesc);
+            })
+            function recursion(data,rule,count){
+                count++;
+                $.each(data,function(i,d){
+                    if($.inArray(i,_relatedTarget.ignoreKey)>-1){//跳过忽略的键
+                        return;
+                    }
+                    if(typeof d ==="object"){
+                        recursion(d,rule,count);//递归处理
+                    }else{
+                        if(rule.test(d)){
+                            if(count==2){//将第二级数据添加到结果集中
+                                var dataStr=JSON.stringify(data);
+                                if($.inArray(dataStr,fList)===-1){
+                                    fList.push(dataStr);
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            function toJSON(list){//将字符串转换成JSON
+                var res=[];
+                $.each(list,function(n,str){
+                    res.push($.parseJSON(str));
+                })
+                return res;
+            }
         }
     }
 
@@ -125,7 +195,7 @@
                 $this.data('WEB.dataTable', (data = new DataTable(this, options)));
             }
 
-            if ($.type(method) === 'string'){
+            if ($.type(method) === 'string' && method.charAt(0)!="_"){
                 data[method]?data[method](options):$.error("不支持的方法！");
             } else{//执行初始化方法
                 data.init(options);

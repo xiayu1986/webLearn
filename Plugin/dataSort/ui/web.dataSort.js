@@ -30,7 +30,10 @@
         beforeSort:$.noop(),
         afterSort:$.noop,
         ignoreKey:[],
-        filterContainer:$("body")
+        filterContainer:$("body"),
+        emptyFilter:function () {
+            
+        }
     }
     DataTable.prototype={//为原型添加方法
         init:function(_relatedTarget){
@@ -134,39 +137,37 @@
             }
             var f=$("#WEB_dataTable_filter"),
                 fList=[],
-                _this=this;
+                _this=this,
                 source=_relatedTarget.data;
             if(f.length===0){
                 _relatedTarget.filterContainer.append('<input type="txt" class="WEB_dataTable_filter" id="WEB_dataTable_filter" />');
                 f=$("#WEB_dataTable_filter");
             }
-            f.off("input").on("input",function(e){
-                var w=$(this).val(),
-                rule=new RegExp(w,'gi');
+            f.off("input").on("input",function(){
+                var w=$(this).val();
                 fList=[];
                 _relatedTarget.source=null;
-                recursion(source,rule,0);
+                recursion(source,w,0);
                 var result=toJSON(fList);
+                if($.isEmptyObject(result)){
+                    _relatedTarget.emptyFilter.call(_this);
+                    return;
+                }
                 var isDesc=$(".WEB_activeSort").hasClass('WEB_sortByDesc');//是否是降序
                 _relatedTarget.source=result;
                 _this.sort(_relatedTarget,isDesc);
+
             })
-            function recursion(data,rule,count){
-                count++;
+            function recursion(data,w,count){
                 $.each(data,function(i,d){
-                    if($.inArray(i,_relatedTarget.ignoreKey)>-1){//跳过忽略的键
+                    if(!d){
                         return;
                     }
-                    if(typeof d ==="object"){
-                        recursion(d,rule,count);//递归处理
-                    }else{
-                        if(rule.test(d)){
-                            if(count==2){//将第二级数据添加到结果集中
-                                var dataStr=JSON.stringify(data);
-                                if($.inArray(dataStr,fList)===-1){
-                                    fList.push(dataStr);
-                                }
-                            }
+                    var dataStr=JSON.stringify(d);
+                    var rule=new RegExp(w,'gi');
+                    if(rule.test(dataStr)){
+                        if(dataStr && $.inArray(dataStr,fList)===-1){
+                            fList.push(dataStr);
                         }
                     }
                 })

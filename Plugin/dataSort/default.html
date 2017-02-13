@@ -36,12 +36,22 @@
 <script type="text/javascript" src="ui/web.dataSort.js"></script>
 <script type="text/javascript">
 $(function(){
-	/*测试数据排序功能*/
 	/*var data=["2017/02/05 13:10:09","2017/02/01 19:30:01","2017/02/01 09:30:01","2017/02-20 06:30:01"]
-	var sortData=data.sort(function(a,b){
-		return b.localeCompare(a)
+	var words=["2017","02","05"];
+	var result=[];
+	$.each(data,function(i,d){
+		var matched=0;
+		$.each(words,function(n,k){
+			var rule=new RegExp(k,"gi");
+			if(rule.test(d) && $.inArray(d,result)){
+				matched++;
+			}
+			if(matched===words.length){
+				result.push(d)
+			}
+		})
 	})
-	alert(sortData)*/
+	console.log(result)*/
 	$("#table").WEB_dataTable({
 		data:[
 			{"departCity":"BJS","arriveCity":"SEL","departDate":"2017/02/03","arriveDate":"2017-02-03",
@@ -70,7 +80,9 @@ $(function(){
 			var resultHtml = template('renderResult', resource);
 	        $("#table tbody").html(resultHtml);
 		},
-		ignoreKey:["time","list"]//配置忽略掉的键
+		emptyFilter:function(){
+			$("#table tbody").html("未搜索到结果");
+		}
 	})
 })
 </script>

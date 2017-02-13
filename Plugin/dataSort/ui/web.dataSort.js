@@ -136,7 +136,6 @@
                 return;
             }
             var f=$("#WEB_dataTable_filter"),
-                fList=[],
                 _this=this,
                 source=_relatedTarget.data;
             if(f.length===0){
@@ -145,9 +144,8 @@
             }
             f.off("input").on("input",function(){
                 var w=$(this).val();
-                fList=[];
                 _relatedTarget.source=null;
-                recursion(source,w,0);
+                var fList=recursion(source,w);
                 var result=toJSON(fList);
                 if($.isEmptyObject(result)){
                     _relatedTarget.emptyFilter.call(_this);
@@ -158,19 +156,26 @@
                 _this.sort(_relatedTarget,isDesc);
 
             })
-            function recursion(data,w,count){
+            function recursion(data,w){
+                var res=[];
                 $.each(data,function(i,d){
                     if(!d){
                         return;
                     }
+                    var matchCount=0;
                     var dataStr=JSON.stringify(d);
-                    var rule=new RegExp(w,'gi');
-                    if(rule.test(dataStr)){
-                        if(dataStr && $.inArray(dataStr,fList)===-1){
-                            fList.push(dataStr);
+                    var words=w.split(" ");
+                    $.each(words,function(n,k){
+                        var rule=new RegExp(k,'gi');
+                        if(rule.test(dataStr)){
+                            matchCount++;
                         }
+                    })
+                    if(matchCount===words.length && dataStr && $.inArray(dataStr,res)===-1){
+                        res.push(dataStr);
                     }
                 })
+                return res;
             }
 
             function toJSON(list){//将字符串转换成JSON

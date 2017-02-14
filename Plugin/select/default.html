@@ -141,7 +141,7 @@ $(function(){
 			})
 			return formatArr;*/
 		},
-		isMultiple:true,
+		isMultiple:false,
 		formatTemplate:"2",
 		onSelect:function (a,b) {
 			var data={};
@@ -153,7 +153,7 @@ $(function(){
 				data={"data":[{"name":"国家","code":"country"},{"name":"大区","code":"country"},{"name":"区域","code":"country"},{"name":"城市","code":"city"}],"total":4}
 			}
 			$("#monitor").WEB_selectMenu({
-				"dataSource":"http://localhost/workspace/Plugin/select/test/code.json"
+				"dataSource":"http://localhost/webLearn/Plugin/select/test/code.json"
 			})
 		}
 	})

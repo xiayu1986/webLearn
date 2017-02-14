@@ -21,11 +21,9 @@
 	var defaults={//默认配置
 		trigger:"click",//触发事件：click
 		isEdit:true,//是否可输入
-		container:$("body"),
 		disabledScrollDom:$(window),
 		isScrollClose:false,
 		isMatchSelect:false,//筛选后是否直接选中，针对多选
-		isCreateIndent:true,//是否创建下拉菜单标识
 		beforeShow:function(){},//打开菜单前执行的方法 
 		afterShow:function(){},//打开菜单后执行的方法
 		beforeHide:function(){},//关闭菜单前执行的方法 
@@ -50,7 +48,6 @@
 		},
 		isRemoteFilter:false,//是否支持线上筛选
 		isRemotePager:false,//是否支持线上分页
-		indentX:10,//下拉菜单图标与输入框右侧的距离
 		separator:"|",//定义多选时写入到输入框的分隔符
 		baseNumber:10,//用以确定下拉菜单的最大高度也是每页显示的数据量
 		scrollRate:10,//每次滚过的数量
@@ -71,20 +68,9 @@
 				methods._createSelectContainer.call(this);//创建容器
 			})
 		},
-		_createSelectId:function () {//为每个select输入框生成随机ID
-			if(!this.uid){
-				this.uid="select"+Math.random()*10000000000;
-				this.uid=this.uid.replace(/(.*)\..*/gi,'$1');
-			}
-		},
 		_createSelectContainer:function(){//创建容器
-			methods._createSelectId.call(this);//生成用于将当前输入框及三角标识联系起来的唯一ID
 			methods._initSelectField.call(this);//初始化输入框
 			methods._initSelectContainer.call(this);//初始化容器
-			if(this.settings.isCreateIndent){
-				methods._createSelectIcon.call(this);//创建下拉标识
-			}
-
 			if(this.settings.isRemoteFilter){//从远程服务器筛选数据
 				var _this=this;
 				var ieVersion=navigator.appName == "Microsoft Internet Explorer" && navigator.appVersion .split(";")[1].replace(/[ ]/g,""),
@@ -97,10 +83,6 @@
 		},
 		_initSelectField:function () {//初始化输入框
 			$(this).addClass("WEB_select_field");
-			if(!$(this).attr("selectId")){
-				$(this).attr("selectId",this.uid);//为输入框添加Id
-			}
-
 			if(!this.settings.isEdit){//输入框是否只读
 				$(this).prop("readonly",true)
 			}else{
@@ -154,44 +136,6 @@
 				})
 			}
 		},
-		_createSelectIcon:function(){//创建下拉菜单标识
-			var _this=this,$this=$(this);
-			this.indent=$('<div class="WEB_selectIndent"></div>');
-			this.indent.attr("targetId",_this.uid);
-
-			if($(".WEB_selectIndent[targetId="+_this.uid+"]").length==0){
-				this.indent.appendTo(this.settings.container||$("body"));
-			}
-			methods.setSelectIconPosition.call(this);//设置下拉菜单标志符的位置
-
-			this.indent.off("click").on("click",function (e) {
-				if(!$this.hasClass('WEB_select_current')){
-					methods._openSelectMenu.call(_this);//打开下拉菜单
-				}else{
-					methods._closeSelectMenu.call(_this);//收起下拉菜单
-				}
-				e.preventDefault();
-				e.stopPropagation();
-			})
-			$(window).on("resize",function(){//视口大小改变时重置下拉菜单标志符的位置
-				methods.setSelectIconPosition.call(_this);
-			})
-		},
-		setSelectIconPosition:function(){//设置标识的位置
-			var _this=this;
-			$(".WEB_selectIndent").each(function () {
-				var uid=$(this).attr("targetId"),selectDom=$("input[selectId="+uid+"]");
-				if(selectDom.length>0){
-					var X=selectDom.offset().left,
-					Y=selectDom.offset().top,
-					H=selectDom.outerHeight(),
-					W=selectDom.outerWidth(),
-					inW=$(this).outerWidth(),
-					inH=$(this).outerHeight();
-					$(this).css({"left":X+W-inW-_this.settings.indentX,"top":Y+(H-inH)/2});
-				}	
-			})
-		},
 		_openSelectMenu:function(){//打开下拉菜单
             if($.isFunction(this.settings.beforeShow)){
                 this.settings.beforeShow.call(this);
@@ -200,8 +144,6 @@
 			container.off("mousewheel").css("display","block").html('<div class="WEB_selectMenu_loading"></div>');
 			$(".WEB_select_current").removeClass('WEB_select_current');//移除当前输入框高亮
 			$(this).addClass('WEB_select_current');//为当前输入框添加高亮
-			$(".WEB_selectIndent_active").removeClass('WEB_selectIndent_active');//移除当前下拉菜单展开标志
-			$(".WEB_selectIndent[targetId="+this.uid+"]").addClass('WEB_selectIndent_active');//为下拉添加展开标志
 			methods._position.call(this);//设置下拉菜单位置
 			methods._getSelectMenuData.call(this);//获取下拉菜单数据
 			$(window).on("resize",function(){//可视区大小改变重置下拉菜单位置
@@ -219,7 +161,6 @@
                 this.settings.beforeHide.call(this);
             }
 			$("#WEB_selectMenu_container").html("").css({"display":"none"}).off("mousewheel");
-			$(".WEB_selectIndent[targetId="+this.uid+"]").removeClass('WEB_selectIndent_active');
 			$(this).removeClass('WEB_select_current');
             if($.isFunction(this.settings.afterHide)){
                 this.settings.afterHide.call(this);
@@ -233,7 +174,6 @@
 				W=$(this).outerWidth()-(2*parseInt(container.css("borderLeftWidth"))||0),
 				BW=parseInt($(this).css("borderTopWidth"))||parseInt($(this).css("borderBottomWidth"))||0;
 			container.css({"width":W,"left":X,"top":Y+H-BW});
-			methods.setSelectIconPosition.call(this);//设置小三角标志的位置
 		},
 		_getSelectMenuData:function(){//获取下拉菜单数据
 			var _this=this,
@@ -691,7 +631,7 @@
 			if(numberArr.length>0){
 				numberArr= numberArr.sort(function(a,b){return a-b});
 			}
-			charArr=charArr.sort(function(a,b){return a.charAt(0).localeCompare(b.charAt(0))});
+			charArr=charArr.sort(function(a,b){return a.localeCompare(b)});
 			return charArr.concat(numberArr);
 		},
 		_setWaitIconPosition:function(){//设置加载中状态的位置

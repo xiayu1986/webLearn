@@ -3,7 +3,7 @@
 .WEB_dialog_title .title{padding: 0 10px;}
 .WEB_dialog_close{ position: absolute; right: 7px; top: 5px; padding: 0px 5px;line-height: 20px;cursor: pointer; z-index: 3; font-size: 20px; font-weight: bold;color: #ffffff;}
 .WEB_dialog_footer{ overflow: hidden; font-size: 0px; text-align: right; min-width: 200px; white-space: nowrap;}
-.WEB_dialog_footer .WEB_dialog_button{display: inline-block;*display: inline;zoom:1; font-size: 12px; line-height: 30px;  margin: 0 5px 0 0;border:#eee 1px solid;}
+.WEB_dialog_footer .WEB_dialog_button{display: inline-block;*display: inline;zoom:1; font-size: 12px; line-height: 30px;  margin: 0 5px 0 0;border:#eee 1px solid;vertical-align:middle;}
 .WEB_dialog_footer .WEB_dialog_button .dialog_button{display: inline-block;*display: inline;zoom:1;padding: 0 20px;cursor: pointer;}
 .WEB_dialog_button{background: #428bca;border-radius:3px; color: #ffffff;}
 .WEB_dialog_scroll{ position: relative; overflow: hidden; min-height: 200px; padding:10px;}

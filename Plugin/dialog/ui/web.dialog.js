@@ -197,7 +197,13 @@
                         if(data.userClass){
                             userClassName=" "+data.userClass;
                         }
-                        var eachBtn=$('<div class="WEB_dialog_button'+userClassName+'"><span class="dialog_button">'+data.btnText+'</span></div>');
+                        var userBtn='<div class="WEB_dialog_button'+userClassName+'"><span class="dialog_button">'+data.btnText+'</span></div>',
+                            htmlRule=/<[^>]+>/g;
+                        
+                        if(data.btnHtml && htmlRule.test(data.btnHtml)){
+                            userBtn=data.btnHtml
+                        }
+                        var eachBtn=$(userBtn);
                         eachBtn.off("click").on("click",function(e){
                             if($.isFunction(data.btnFn)){
                                 data.btnFn(e);

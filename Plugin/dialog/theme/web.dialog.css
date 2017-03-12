@@ -11,3 +11,4 @@
 .WEB_dialog_scroll_slider{ width: 6px; min-height: 20px; font-size:0; line-height: 0; height: 20%; position: absolute; background: #ccc; left:0px; overflow: hidden;border-radius:6px; cursor: move;}
 #WEB_dialog_back{ width: 100%;height:100%;position:fixed;left:0;top:0;}
 .WEB_dialog_body{ min-height: 50px;}
+.WEB_dialog_footer .btn{ margin-right: 5px;}

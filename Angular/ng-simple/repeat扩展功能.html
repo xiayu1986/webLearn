@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>列表</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <script type="text/javascript" src="js/angular.min.js"></script>
+	<script>
+		var app=angular.module("app",[]);
+		app.controller("stripedTable",["$scope",function ($scope) {
+			$scope.list=["JS高级程序设计","JS权威指南","DOM编程艺术","JS精粹"]
+		}])
+	</script>
+</head>
+<body>
+<div class="panel panel-primary" ng-controller="stripedTable">
+	<div class="panel-heading">
+		<div class="panel-title">
+			列表的奇偶性
+		</div>
+	</div>
+	<div class="panel-body">
+		<table class="table table-bordered">
+			<tbody>
+			<tr ng-repeat="data in list" class="{{$even?'even':'odd'}}">
+				<td>{{$index}}</td>
+				<td>{{$first}}</td>
+				<td>{{$middle}}</td>
+				<td>{{data}}</td>
+				<td>{{$last}}</td>
+			</tr>
+			</tbody>
+		</table>
+		<div class="list-group">
+			<div class="list-group-item" ng-repeat-start="data in list">{{$index}}</div>
+			<p>{{data}}</p>
+			<div class="item" ng-repeat-end="">{{$first}}</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

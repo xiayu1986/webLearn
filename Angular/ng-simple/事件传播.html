@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>事件传播</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+</head>
+<body>
+<div class="container">
+	<div class="panel panel-primary">
+		<div class="panel-heading">向上传播</div>
+		<div class="panel-body">
+			<div class="form-group" ng-controller="eventBroadcast">
+				<button class="btn btn-primary" ng-bind="count"></button>
+				<div class="form-group" ng-controller="eventBroadcast">
+						<button class="btn btn-primary" ng-click="$emit('event1')" ng-bind="count"></button>
+					<div class="form-group" ng-controller="eventBroadcast">
+						<button class="btn btn-primary" ng-bind="count"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">向下传播</div>
+		<div class="panel-body">
+			<div class="form-group" ng-controller="eventBroadcast">
+				<button class="btn btn-primary" ng-bind="count"></button>
+				<div class="form-group" ng-controller="eventBroadcast">
+						<button class="btn btn-primary" ng-click="$broadcast('event1')" ng-bind="count"></button>
+					<div class="form-group" ng-controller="eventBroadcast">
+						<button class="btn btn-primary" ng-bind="count"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="js/angular.js"></script>
+<script>
+var app=angular.module("app",[]);
+app.controller('eventBroadcast', ['$scope', function($scope){
+	$scope.count=0;
+	$scope.$on("event1",function(event){
+		$scope.count++;
+		console.log(event.targetScope===event.currentScope)
+	})
+}])
+</script>
+</body>
+</html>

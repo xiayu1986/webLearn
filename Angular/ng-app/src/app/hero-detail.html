@@ -1,0 +1,8 @@
+<div *ngIf="hero" class="form form-inline">
+	<label class="control-label">姓名：</label>
+	<input type="text" class="form-control" [(ngModel)]="hero.name" />
+</div>
+<div *ngIf="!hero" class="form form-inline">
+	<label class="control-label">姓名：</label>
+	<input type="text" class="form-control" value="无" />
+</div>

@@ -1,32 +1,24 @@
 import { Component } from '@angular/core';
-
-export class Hero {
-	id:number;
-	name:string;
-};
-
-const HEROES:Hero[]=[
-  { id: 11, name: 'Mr. Nice' },
-  { id: 12, name: 'Narco' },
-  { id: 13, name: 'Bombasto' },
-  { id: 14, name: 'Celeritas' },
-  { id: 15, name: 'Magneta' },
-  { id: 16, name: 'RubberMan' },
-  { id: 17, name: 'Dynama' },
-  { id: 18, name: 'Dr IQ' },
-  { id: 19, name: 'Magma' },
-  { id: 20, name: 'Tornado' }
-];
-
+import { Hero } from './hero';
+import { HeroService } from './hero.service';
 
 @Component({
   selector: 'my-app',
-  templateUrl: `/app/template.html`
+  templateUrl: `/app/template.html`,
+  providers:[HeroService]
 })
 export class AppComponent  { 
+  constructor(private heroService:HeroService);
   heroes=HEROES;
-  selectedHero=this.heroes[0];
-  onSelect=function (hero){
+  selectedHero:Hero;
+  heroes:Hero[];
+  getHeroes(): void {
+    this.heroService.getHeroes().then(heroes => this.heroes = heroes);
+  }
+  ngOnInit(): void {
+    this.getHeroes();
+  }
+  onSelect(hero:Hero):void{
     this.selectedHero = hero;
   }
  }

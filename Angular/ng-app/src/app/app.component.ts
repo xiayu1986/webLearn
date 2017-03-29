@@ -8,10 +8,9 @@ import { HeroService } from './hero.service';
   providers:[HeroService]
 })
 export class AppComponent  { 
-  constructor(private heroService:HeroService);
-  heroes=HEROES;
   selectedHero:Hero;
   heroes:Hero[];
+  constructor(private heroService:HeroService){};
   getHeroes(): void {
     this.heroService.getHeroes().then(heroes => this.heroes = heroes);
   }

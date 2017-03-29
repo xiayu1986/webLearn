@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 
 export class Hero {
-	id:number,
-	name:string
+	id:number;
+	name:string;
 };
 
 const HEROES:Hero[]=[
@@ -17,20 +17,16 @@ const HEROES:Hero[]=[
   { id: 19, name: 'Magma' },
   { id: 20, name: 'Tornado' }
 ];
-heroes = HEROES;
+
 
 @Component({
   selector: 'my-app',
-  template: `
-		  <h1>{{title}}</h1>
-		  <h2>Heroes</h2>
-		  <ul class="heroes">
-		  	<li *ngFor="let hero of heros">
-		  		<span class="badge">{{hero.id}}</span> {{hero.name}}
-		  	</li>
-		  </ul>
-		  `
+  templateUrl: `/app/template.html`
 })
 export class AppComponent  { 
-	title = 'Tour of Heroes';
+  heroes=HEROES;
+  selectedHero=this.heroes[0];
+  onSelect=function (hero){
+    this.selectedHero = hero;
+  }
  }

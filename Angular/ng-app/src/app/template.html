@@ -1,0 +1,14 @@
+
+<div class="container-fluid">
+<div class="panel panel-primary">
+	<div class="panel-heading">{{selectedHero.name}}</div>
+	<div class="panel-body">
+		<ul class="list-group">
+			<li (click)="onSelect(hero)" class="list-group-item" [class.active]="selectedHero.id==hero.id?'active':''" 
+				*ngFor="let hero of heroes;let i=index">
+			  <span class="badge">{{hero.id}}</span> {{hero.name}}
+			</li>
+		</ul>
+	</div>
+</div>
+</div>

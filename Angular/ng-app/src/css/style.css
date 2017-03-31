@@ -1,0 +1,27 @@
+/**
+ * 页面独立CSS样式
+ */
+..gride-group{ 
+  font-size:0;
+ }
+.gride{ 
+  width:160px; 
+  height:160px; 
+  display:inline-block;
+  background:#222d32; 
+  color:#ffffff; 
+  text-align:center;
+  line-height:140px;
+  padding:10px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-size:14px;
+  font-family:sans-serif;
+  margin:10px;
+  text-decoration:none;
+ }
+ .gride:hover,.gride.active{
+  background:#337ab7;
+  color:#ffffff; 
+  text-decoration:none;
+ }

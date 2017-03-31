@@ -25,6 +25,9 @@ import { DashboardComponent } from './dashboard.component';
 		path: '',
 		redirectTo: '/dashboard',
 		pathMatch: 'full'
+	},{
+		path: 'detail/:id',
+		component: HeroDetailComponent
 	}])
 ],
   declarations: [ AppComponent ,HeroDetailComponent,HeroesComponent,DashboardComponent],

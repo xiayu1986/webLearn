@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>模板</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid" id="app">
+	<div class="panel panel-primary">
+		<div class="panel-heading">修饰符</div>
+		<div class="panel-body">
+			<input type="text" v-model.trim="picked" placeholder="自动过滤首尾空格" class="form-control">
+			<input type="text" v-model.lazy="picked" placeholder="失去焦点绑定" class="form-control">
+			<input type="text" v-model.number="picked" placeholder="输入值自动转换为数字" class="form-control">
+			{{picked}}
+		</div>
+	</div>
+</div>
+<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+new Vue({
+	el:"#app",
+	data:{
+		picked:''
+	}
+})
+</script>
+</body>
+</html>

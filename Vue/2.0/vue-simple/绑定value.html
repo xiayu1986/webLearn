@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>模板</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid" id="app">
+	<div class="panel panel-primary">
+		<div class="panel-heading">绑定value</div>
+		<div class="panel-body">
+			<div class="form">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" v-model="picked" :true-value="1" :false-value="0">
+					</label>
+					<span>{{picked}}</span>
+				</div>
+				<div class="form-group">
+					<select v-model="item" class="form-control">
+						<option :value="{name:'小明'}">A</option>
+						<option :value="{name:'小李'}">B</option>
+						<option :value="{name:'小张'}">C</option>
+						<option :value="{name:'小王'}">D</option>
+					</select>
+				</div>
+				
+				<div>{{item.name}}</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+new Vue({
+	el:"#app",
+	data:{
+		picked:'',
+		item:''
+	}
+})
+</script>
+</body>
+</html>

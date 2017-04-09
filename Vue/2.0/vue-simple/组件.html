@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>模板</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid" id="app">
+	<div class="panel panel-primary">
+		<div class="panel-heading">全局注册</div>
+		<div class="panel-body">
+			<loader></loader>
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">局部注册</div>
+		<div class="panel-body">
+			<done></done>
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">模板解析</div>
+		<div class="panel-body">
+			<table class="table table-bordered table-striped">
+				<tr is='row' :product-id='pid' :product-name='name'></tr>
+			</table>
+		</div>
+	</div>
+</div>
+<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+Vue.component("loader",{
+	template:'<div class="form">载入中。。。。。。</div>'
+})
+Vue.component("row",{
+	template:'<tr><td>{{productId}}</td><td>{{productName}}</td></tr>',
+	props:['productId','productName']
+})
+var tpl={
+	template:'<div class="form">处理成功！</div>'
+}
+
+new Vue({
+	el:"#app",
+	data:function(){
+		return {
+			pid:1,
+			name:'商品'
+		}
+	},
+	components:{
+		'done':tpl
+	}
+})
+</script>
+</body>
+</html>

@@ -24,6 +24,15 @@
 				<th>飞行时长</th>
 			</tr>
 		</thead>
+		<thead>
+			<tr>
+				<th><input type="text" /></th>
+				<th><input type="text" /></th>
+				<th><input type="text" /></th>
+				<th><input type="text" /></th>
+				<th><input type="text" /></th>
+			</tr>
+		</thead>
 		<tbody>
 			
 		</tbody>	
@@ -55,19 +64,19 @@ $(function(){
 	$("#table").WEB_dataTable({
 		data:[
 			{"departCity":"BJS","arriveCity":"SEL","departDate":"2017/02/03","arriveDate":"2017-02-03",
-			"time":80,"duration":"1小时20分","segments":[{"cityName":"SEL"}]},
+			"time":80,"duration":"1小时20分","segments":[{"cityName":"BJS"}]},
 			{"departCity":"SHA","arriveCity":"HKG","departDate":"2017-03-03","arriveDate":"2017-03-05",
-			"time":70,"duration":"1小时10分","segments":[{"cityName":"SEL"}]},
+			"time":70,"duration":"1小时10分","segments":[{"cityName":"SHA"}]},
 			{"departCity":"SEL","arriveCity":"WHU","departDate":"2017-02-05","arriveDate":"2017-02-06",
 			"time":"122","duration":"2小时2分","segments":[{"cityName":"SEL"}]},
 			{"departCity":"CAN","arriveCity":"XMN","departDate":"2017-02-18","arriveDate":"2017-02-18",
-			"time":"50","duration":"50分","segments":[{"cityName":"SEL"}]},
+			"time":"50","duration":"50分","segments":[{"cityName":"CAN"}]},
 			{"departCity":"SIA","arriveCity":"TNA","departDate":"2017-02-20","arriveDate":"2017-02-20",
-			"time":"90","duration":"1小时30分","segments":[{"cityName":"SEL"}]}
+			"time":"90","duration":"1小时30分","segments":[{"cityName":"SIA"}]}
 		],
 		filterContainer:$("#filter"),
 		sortColumns:[//定义排序字段 key指按照对象中哪个键排序
-			{sort:true,key:"departCity"},
+			{sort:true,key:"segments[0].cityName"},
 			{sort:true,key:"arriveCity"},
 			{sort:true,key:"departDate"},
 			{sort:true,key:"arriveDate"},

@@ -96,8 +96,10 @@
             if(sortCol){
                 var sortKey=sortCol.key;
                 var sortedData=sourceData.sort(function(a,b){
-                    var aSortKey,bSortKey,keyType;
-                    if($.type(sortKey)==="object"){
+                    var aSortKey=eval('a.'+sortKey),
+                        bSortKey=eval('b.'+sortKey),
+                        keyType;
+                    /*if($.type(sortKey)==="object"){
                         if(sortKey.type==="array"){
                             aSortKey=a[sortKey.objKey][sortKey.index][sortKey.orderKey];
                             bSortKey=b[sortKey.objKey][sortKey.index][sortKey.orderKey];
@@ -105,7 +107,7 @@
                     }else{
                        aSortKey=a[sortKey];
                        bSortKey=b[sortKey];
-                    }
+                    }*/
                     aSortKey=$.trim(aSortKey);
                     bSortKey=$.trim(bSortKey);
                     keyType=$.type(aSortKey);

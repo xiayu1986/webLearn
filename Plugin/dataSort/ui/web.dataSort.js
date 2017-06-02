@@ -22,11 +22,12 @@
         this.$element=$(element);
         this.options=options;
     }
-    DataTable.VERSION="1.0.0";
+    DataTable.VERSION="1.0.2";
     DataTable.DEFAULTS={
         isFilter:true,
         data:[],
         sortColumns:[],
+        filterColumns:[],
         beforeSort:$.noop(),
         afterSort:$.noop,
         ignoreKey:[],
@@ -46,7 +47,8 @@
                 return;
             }
             this.create(_relatedTarget);
-            this._filter(_relatedTarget);
+            this._filterSource(_relatedTarget);
+            this._filterColumns(_relatedTarget);
         },
         destroy:function(){//销毁
             this.$element.find("thead:first >tr > th").removeClass("WEB_sortByDesc WEB_sortByAsc WEB_activeSort WEB_sort");
@@ -96,18 +98,16 @@
             if(sortCol){
                 var sortKey=sortCol.key;
                 var sortedData=sourceData.sort(function(a,b){
-                    var aSortKey=eval('a.'+sortKey),
-                        bSortKey=eval('b.'+sortKey),
-                        keyType;
-                    /*if($.type(sortKey)==="object"){
+                    var aSortKey,bSortKey,keyType;
+                    if($.type(sortKey)==="object"){
                         if(sortKey.type==="array"){
                             aSortKey=a[sortKey.objKey][sortKey.index][sortKey.orderKey];
                             bSortKey=b[sortKey.objKey][sortKey.index][sortKey.orderKey];
                         }
                     }else{
-                       aSortKey=a[sortKey];
-                       bSortKey=b[sortKey];
-                    }*/
+                        aSortKey=eval('a.'+sortKey);
+                        bSortKey=eval('b.'+sortKey);
+                    }
                     aSortKey=$.trim(aSortKey);
                     bSortKey=$.trim(bSortKey);
                     keyType=$.type(aSortKey);
@@ -133,7 +133,7 @@
             isDesc=!isDesc;
             this.sort(_relatedTarget,isDesc);
         },
-        _filter:function(_relatedTarget){
+        _filterSource:function(_relatedTarget){//全局筛选
             if(!_relatedTarget.isFilter){
                 return;
             }
@@ -147,8 +147,8 @@
             f.off("input").on("input",function(){
                 var w=$(this).val();
                 _relatedTarget.source=null;
-                var fList=recursion(source,w);
-                var result=toJSON(fList);
+                var fList=recursion(source,w),
+                    result=toJSON(fList);
                 if($.isEmptyObject(result)){
                     _relatedTarget.emptyFilter.call(_this);
                     return;
@@ -164,9 +164,9 @@
                     if(!d){
                         return;
                     }
-                    var matchCount=0;
-                    var dataStr=JSON.stringify(d);
-                    var words=w.split(" ");
+                    var matchCount=0,
+                        dataStr=JSON.stringify(d),
+                        words=w.split(" ");
                     $.each(words,function(n,k){
                         var rule=new RegExp(k,'gi');
                         if(rule.test(dataStr)){
@@ -187,6 +187,77 @@
                 })
                 return res;
             }
+        },
+        _filterColumns:function(_relatedTarget){//按列筛选
+            var _this=this,
+                filterColumnsData=_relatedTarget.filterColumns,
+                isFilterByColumns=this._affirmFilterByColumns(filterColumnsData),
+                source=_relatedTarget.data;
+            if(!isFilterByColumns){
+                return;
+            }
+            this.$element.find("thead:first tr.WEB_dataTable_filterColumns").remove();
+            var filterInput=[];
+            $.each(filterColumnsData,function(key,data){
+                var isFilter=data.filter,
+                    inputHtml=isFilter?'<input type="text" class="WEB_dataTable_filterKey" />':'<input type="text" class="WEB_dataTable_filterKey WEB_dataTable_filterDisabled" disabled />',
+                    filterInputHtml='<th>'+inputHtml+'</th>';
+                   filterInput.push(filterInputHtml);
+            })
+            filterInput.unshift('<tr class="WEB_dataTable_filterColumns">');
+            filterInput.push('</tr>');
+            var filterColumnsTr=filterInput.join("");
+            this.$element.find("thead:first").append(filterColumnsTr);
+            filterColumnsTr=this.$element.find("thead:first tr.WEB_dataTable_filterColumns");
+            
+            filterColumnsTr.off("input").on("input",".WEB_dataTable_filterKey",function(e){
+                var w=$(this).val(),
+                    keyInd=$(this).parent().index();
+                _relatedTarget.source=null;
+                var fList=recursion(source,w,keyInd);
+                if($.isEmptyObject(fList)){
+                    _relatedTarget.emptyFilter.call(_this);
+                    return;
+                }
+                var isDesc=$(".WEB_activeSort").hasClass('WEB_sortByDesc');//是否是降序
+                _relatedTarget.source=fList;
+                _this.sort(_relatedTarget,isDesc);
+
+            })
+            function recursion(data,w,keyInd){
+                var res=[],
+                    filterKey=_relatedTarget.filterColumns[keyInd].key;
+                    console.log(filterKey)
+                $.each(data,function(i,d){
+                    if(!d){
+                        return;
+                    }
+                    var matchCount=0,
+                        targetData=eval('d.'+filterKey),
+                        dataStr=JSON.stringify(targetData),
+                        words=w.split(" ");
+                    $.each(words,function(n,k){
+                        var rule=new RegExp(k,'gi');
+                        if(rule.test(dataStr)){
+                            matchCount++;
+                        }
+                    })
+                    if(matchCount===words.length && dataStr && $.inArray(dataStr,res)===-1){
+                        res.push(d);
+                    }
+                })
+                return res;
+            }
+        },
+        _affirmFilterByColumns:function(filterData){//确认是否按列排序
+            var result=false;
+            $.each(filterData,function(i,d){
+                if(d.filter){
+                    result=true;
+                    return false;
+                }
+            })
+            return result;
         }
     }
 

@@ -7,3 +7,7 @@ li{ list-style:none;}
 .WEB_sort{ cursor:pointer; background:url(sort_both.png) right center no-repeat;}
 .WEB_sortByDesc{background:url(sort_desc.png) right center no-repeat;}
 .WEB_sortByAsc{background:url(sort_asc.png) right center no-repeat;}
+.WEB_dataTable_filterKey{background-color: #fff;background-image: none;border: 1px solid #ccc;border-radius: 4px;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;color: #555;
+    display: block;font-size: 14px;height: 34px;line-height: 1.42857;padding: 6px 12px;font-weight: normal;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;width: 100%;}
+    .WEB_dataTable_filterDisabled{ background-color:#eeeeee; cursor: not-allowed;}

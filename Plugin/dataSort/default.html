@@ -24,15 +24,6 @@
 				<th>飞行时长</th>
 			</tr>
 		</thead>
-		<thead>
-			<tr>
-				<th><input type="text" /></th>
-				<th><input type="text" /></th>
-				<th><input type="text" /></th>
-				<th><input type="text" /></th>
-				<th><input type="text" /></th>
-			</tr>
-		</thead>
 		<tbody>
 			
 		</tbody>	
@@ -42,7 +33,7 @@
 </div>
 <script type="text/javascript" src="lib/jquery.min.js"></script>
 <script type="text/javascript" src="lib/template.js"></script>
-<script type="text/javascript" src="ui/web.dataSort.js"></script>
+<script type="text/javascript" src="ui/web.dataSort.min.js"></script>
 <script type="text/javascript">
 $(function(){
 	/*var data=["2017/02/05 13:10:09","2017/02/01 19:30:01","2017/02/01 09:30:01","2017/02-20 06:30:01"]
@@ -75,6 +66,13 @@ $(function(){
 			"time":"90","duration":"1小时30分","segments":[{"cityName":"SIA"}]}
 		],
 		filterContainer:$("#filter"),
+		filterColumns:[//定义筛选字段 key指按照对象中哪个键筛选
+			{filter:true,key:"segments"},
+			{filter:false,key:"arriveCity"},
+			{filter:true,key:"departDate"},
+			{filter:true,key:"arriveDate"},
+			{filter:true,key:"duration"}
+		],
 		sortColumns:[//定义排序字段 key指按照对象中哪个键排序
 			{sort:true,key:"segments[0].cityName"},
 			{sort:true,key:"arriveCity"},
@@ -90,7 +88,7 @@ $(function(){
 	        $("#table tbody").html(resultHtml);
 		},
 		emptyFilter:function(){
-			$("#table tbody").html("未搜索到结果");
+			$("#table tbody").html('<tr style="text-align:center"><td colspan="5">未搜索到结果</td></tr>');
 		}
 	})
 })

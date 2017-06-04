@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+<script type="text/javascript" src="js/extend.js"></script>
+<script type="text/javascript" src="js/interface.js"></script>
+<script type="text/javascript">
+var Bicycle=function () {}
+Bicycle.prototype={
+	constructor:Bicycle,
+	assemble:function(){
+		console.log("装配中。。。。。。");
+	},
+	wash:function(){
+		console.log("清洗中。。。。。。");
+	},
+	ride:function(){},
+	repair:function(){}
+}
+
+var BicycleInterface=new Interface("Bicycle",["assemble","wash","ride","repair"]);
+
+var Speedster=function () {}
+Speedster.extend(Bicycle);
+Speedster.prototype.assemble=function(){
+	console.log("Acme公司自行车装配中")
+}
+Speedster.prototype.wash=function(){
+	console.log("Acme公司自行车清洗中")
+}
+
+var Cruiser=function () {}
+Cruiser.extend(Bicycle);
+
+var BicycleShop=function(){}
+BicycleShop.prototype={
+	constructor:BicycleShop,
+	sellBicycle:function(model){
+		var bicycle=this.createBicycle(model);
+		bicycle.assemble();
+		bicycle.wash();
+		return bicycle;
+	},
+	createBicycle:function(model){
+		throw new Error("无法操作抽象类")
+	}
+}
+
+var AcmeBicycleShop=function(){}
+AcmeBicycleShop.extend(BicycleShop);
+AcmeBicycleShop.prototype.createBicycle=function(model){
+	var bicycle;
+	switch(model){
+		case "Speedster":
+			bicycle=new Speedster();
+			break;
+		case "Cruiser":
+			bicycle=new Cruiser();
+			break;
+	}
+	Interface.ensureImplements(bicycle,BicycleInterface);
+	return bicycle;
+}
+
+var acmeBicycleShop=new AcmeBicycleShop();
+acmeBicycleShop.sellBicycle("Speedster");
+</script>
+</body>
+</html>

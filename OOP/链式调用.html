@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container">
+	<div class="panel panel-primary">
+		<div class="panel-heading">链式调用</div>
+		<div class="panel-body">
+			<div class="btn-group form-group"><button class="btn btn-primary" id="btn">显示/隐藏</button></div>
+			<div class="form-group bg-primary" id="box">测试部分</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="js/factory.js"></script>
+<script type="text/javascript">
+window.com=window.com||{};
+com.example=com.example||{};
+com.example.utils=com.example.utils||{};
+installer(com.example.utils,"get");
+var get=com.example.utils.get;
+get(window).bind("load",function(e){
+	var flag=true;
+	get("btn").bind("click",function(e){
+		if(flag){
+			get("box").hide();
+		}else{
+			get("box").show();
+		}
+		flag=!flag;
+	})
+})
+</script>
+</body>
+</html>

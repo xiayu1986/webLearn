@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板</title>
+</head>
+<body>
+<script src="js/jquery.min.js"></script>
+<script>
+var Book=(function(){
+	var instanceNumber=0;
+	function checkBookNumber(isbn){
+		var rule=/\D/gi;
+		if(rule.test(isbn)){
+			alert("图书编号错误");
+			return false;
+		}
+		return true;
+	}
+
+	return function(bookNumber,bookName,bookAuthor){
+		var no,name,author;
+		this.getBookNumber=function(){
+			return no;
+		}
+		this.setBookNumber=function(bookNumber){
+			if(!checkBookNumber(bookNumber)){
+				return;
+			}
+			no=bookNumber;
+		}
+		this.getBookName=function(){
+			return bookName;
+		}
+		this.setBookName=function(bookName){
+			name=bookName||"未获取到书名";
+		}
+		this.getBookAuthor=function(){
+			return author;
+		}
+		this.setBookAuthor=function(bookAuthor){
+			author=bookAuthor||"未获取到作者姓名"
+		}
+		if((instanceNumber++)>2){
+			alert("实例数量已达到上限");
+			return;
+		}
+		this.setBookNumber(bookNumber);
+		this.setBookName(bookName);
+		this.setBookAuthor(bookAuthor);
+	}
+
+})();
+Book.prototype={
+	constructor:Book,
+	display:function(){
+		console.log("书名："+this.getBookName()+" 编号"+this.getBookNumber()+" 作者："+this.getBookAuthor())
+	}
+}
+var book=new Book("8900988","夜","张小娴");
+book.display();
+</script>
+</body>
+</html>

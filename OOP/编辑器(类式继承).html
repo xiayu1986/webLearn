@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<style type="text/css">
+	.padding-sm{ padding: 15px;cursor: pointer;}
+</style>
+<body>
+<div class="container">
+	<div class="panel panel-primary">
+		<div class="panel-heading">类式继承编辑器</div>
+		<div class="panel-body">
+			<div id="editorOfClass"></div>
+		</div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">编辑器派生类</div>
+		<div class="panel-body">
+			<div id="subEditorOfClass"></div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="js/extend.js"></script>
+<script>
+/*基类*/
+function Editor (id,parent,value) {
+	this.id=id;
+	this.value=value||"默认值";
+	this.parentElement=parent;
+	this.createElements();
+	this.attachEvents();
+}
+Editor.prototype={
+	constructor:Editor,
+	createElements:function(){
+		var editorHtml='<p class="bg-primary padding-sm">'+this.value+'</p>\
+		<div class="form-group"><input type="text" class="form-control"/></div>\
+		<div class="btn-group"><button class="btn btn-primary">保存</button>\
+		<button class="btn btn-primary">重置</button></div>';
+		this.parentElement.innerHTML=editorHtml;
+		this.staticElement=this.parentElement.getElementsByTagName("p")[0];
+		this.fieldElement=this.parentElement.getElementsByTagName("input")[0];
+		this.saveElement=this.parentElement.getElementsByTagName("button")[0];
+		this.cancelElement=this.parentElement.getElementsByTagName("button")[1];
+		this.convertText();
+	},
+	attachEvents:function(){
+		var _this=this;
+		this.addEvent(this.staticElement,"click",function(){
+			_this.convertToEditor()
+		});
+		this.addEvent(this.saveElement,"click",function(){
+			_this.save()
+		});
+		this.addEvent(this.cancelElement,"click",function(){
+			_this.cancel();
+		});
+	},
+	addEvent:function(element,e,handle){
+		if(element.attachEvent){
+			element.attachEvent("on"+e,handle);
+		}else{
+			element.addEventListener(e,handle,false);
+		}
+	},
+	convertToEditor:function(){
+		this.staticElement.style.display="none";
+		this.fieldElement.style.display="inline";
+		this.saveElement.style.display="inline";
+		this.cancelElement.style.display="inline";
+		this.setValue(this.value);
+	},
+	save:function(){
+		this.value=this.getValue();
+		alert("保存成功");
+	},
+	cancel:function(){
+		this.convertText();
+	},
+	convertText:function(){
+		this.staticElement.style.display="block";
+		this.fieldElement.style.display="none";
+		this.saveElement.style.display="none";
+		this.cancelElement.style.display="none";
+		this.setValue(this.value);
+	},
+	setValue:function(value){
+		this.fieldElement.value=this.staticElement.innerHTML=value;
+	},
+	getValue:function(){
+		return this.fieldElement.value;
+	}
+}
+
+/*子类*/
+function MultipleEditor (id,parent,value) {
+	this.constructor.superClass.constructor.call(this,id,parent,value);
+}
+MultipleEditor.extend(Editor);
+MultipleEditor.prototype.createElements=function(){
+	var editorHtml='<p class="bg-success padding-sm">'+this.value+'</p>\
+		<div class="form-group"><textarea class="form-control"></textarea></div>\
+		<div class="btn-group"><button class="btn btn-success">保存</button>\
+		<button class="btn btn-success">重置</button></div>';
+		this.parentElement.innerHTML=editorHtml;
+		this.staticElement=this.parentElement.getElementsByTagName("p")[0];
+		this.fieldElement=this.parentElement.getElementsByTagName("textarea")[0];
+		this.saveElement=this.parentElement.getElementsByTagName("button")[0];
+		this.cancelElement=this.parentElement.getElementsByTagName("button")[1];
+		this.convertText();
+}
+window.onload=function(){
+	var editorContainer=document.getElementById("editorOfClass"),
+		editor=new Editor("editor01",editorContainer,"类式继承编辑器");
+
+	var subEditorContainer=document.getElementById("subEditorOfClass"),
+		subEditor=new MultipleEditor("editor02",subEditorContainer,"类式继承编辑器派生类");
+}
+</script>
+</body>
+</html>

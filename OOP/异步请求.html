@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+	<div class="panel panel-primary">
+		<div class="panel-heading">异步请求</div>
+		<div class="panel-body">
+			<button class="btn btn-primary" id="sendBtn">发送请求</button>
+		</div>
+	</div>
+</div>
+<script src="js/ajax.js"></script>
+<script>
+window.onload=function(){
+	var btn=document.getElementById("sendBtn");
+	btn.onclick=function(){
+		var ajax=new Ajax();
+		ajax.request("POST","http://localhost/webLearn/OOP/booklist.json",{"userId":100001},{
+			success:function(res,xhr){
+				alert(res)
+			},
+			fail:function(status){
+				alert("请求失败")
+			}
+		})
+	}
+}
+</script>
+</body>
+</html>

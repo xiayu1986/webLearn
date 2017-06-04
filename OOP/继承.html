@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模板</title>
+</head>
+<body>
+<script src="js/extend.js"></script>
+<script>
+/*类式继承*/
+console.log("=========================类式继承=========================")
+function Person(name){
+	this.name=name;
+}
+Person.prototype={
+	constructor:Person,
+	getName:function(){
+		return this.name;
+	}
+}
+
+function Author(name,books){
+	this.constructor.superClass.constructor.call(this,name);
+	this.books=books;
+}
+Author.extend(Person);
+Author.prototype.getBooks=function(){
+		return this.books;
+}
+var author=new Author("小明","《疯狂的石头》");
+console.log("作者："+author.getName()+" 作品:"+author.getBooks());
+/*原型式继承*/
+console.log("=========================原型式继承=========================")
+var Mixin=function(){}
+Mixin.prototype={
+	serialize:function(){
+		var output=[];
+		for(key in this){
+			output.push(key+":"+this[key]);
+		}
+		return output.join(", ");
+	},
+	init:function(){
+		return "初始化"
+	}
+}
+var Animal=function(){}
+Animal.prototype={
+	init:function(){
+		return "未定义方法"
+	}
+}
+merge(Animal,Mixin);
+var animal=new Animal();
+console.log(animal.serialize())
+</script>
+</body>
+</html>

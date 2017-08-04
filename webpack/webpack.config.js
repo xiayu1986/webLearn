@@ -8,7 +8,7 @@ module.exports = {
         //"main":["page1.js","page2.js"]//可支持数组形式,例如这样的形式
     },
     output: {//output是对应输出项配置(即入口文件最终要生成什么名字的文件、存放到哪里)
-        path:"./main/",
+        path:"/main/",
         filename: "[name].js"
     },
     module: {

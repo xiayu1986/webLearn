@@ -4,11 +4,15 @@ import Vue from 'vue';
 import App from './App';
 import Router from 'vue-router';
 import Goods from '@/components/goods/goods';
+import Ratings from '@/components/ratings/ratings';
+import Seller from '@/components/seller/seller';
 
 Vue.config.productionTip = false;
 Vue.use(Router);
 let routes = [
   {path: '/goods', component: Goods, hidden: true},
+  {path: '/ratings', component: Ratings, hidden: true},
+  {path: '/seller', component: Seller, hidden: true},
   {path: '*', redirect: '/goods'}
 ];
 let router = new Router({

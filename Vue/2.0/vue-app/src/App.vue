@@ -18,9 +18,14 @@
   </div>
 </template>
 
-<script>
+<script type="es6">
   import header from './components/header/header';
   export default {
+    data() {
+      return {
+        seller: {}
+      };
+    },
     components: {
       'v-header': header
     }
@@ -37,7 +42,7 @@
     height: 40px
     line-height: 40px
     text-align: center
-    borderBottom(rgba(7,17,27,0.1))
+    borderBottom(rgba(7, 17, 27, 0.1))
     .tab-item
       flex: 1
       & > a

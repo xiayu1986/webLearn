@@ -22,6 +22,34 @@ var proxyTable = config.dev.proxyTable
 
 var app = express()
 var compiler = webpack(webpackConfig)
+var appData=require("../data.json")
+var goods=appData.goods
+var ratings=appData.ratings
+var seller=appData.seller
+var apiRouter=express.Router()
+
+apiRouter.get('/seller',function (req,res) {
+  res.json({
+    status:0,
+    seller:seller
+  })
+})
+
+apiRouter.get('/goods',function (req,res) {
+  res.json({
+    status:0,
+    goods:goods
+  })
+})
+
+apiRouter.get('/ratings',function (req,res) {
+  res.json({
+    status:0,
+    ratings:ratings
+  })
+})
+
+app.use('/api',apiRouter);
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,

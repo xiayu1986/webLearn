@@ -24,7 +24,8 @@
   </div>
 </template>
 
-<style rel="stylesheet/stylus" type="text/stylus">
+<style rel="stylesheet/stylus" lang="stylus">
+  @import "../../common/stylus/mixin.styl";
   .header
     color: rgb(255, 255, 255)
     background:rgb(0,0,0)
@@ -44,12 +45,13 @@
           font-size:0
           line-height 18px
           font-weight :bold
+          margin :2px 0 8px
           .brand
             display: inline-block
             vertical-align :top
             width :30px
             height:18px
-            background-image:url('brand@2x.png')
+            bg-image:('brand')
             background-size:30px 18px
             background-repeat:no-repeat
             margin-right :12px
@@ -76,6 +78,7 @@
             font-size:10px
             line-height :12px
             display:inline-block
+
 </style>
 
 <script type="es6">
@@ -87,3 +90,4 @@
     }
   };
 </script>
+

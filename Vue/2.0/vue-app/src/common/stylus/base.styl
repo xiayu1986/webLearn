@@ -1,3 +1,16 @@
+body, html
+  line-height :1
+  font-weight:200
+  font-family :'PingFang SC','STHeitiSC-Light','Helvetica-Light',SimSun,arial,sans-serif
+.clearfix
+  display:inline-block
+  &:after
+    display:block
+    content: '.'
+    height :0
+    clear :both
+    visibility :hidden
+    line-height :0
 @media (-webkit-device-pixel-ratio: 1.5),(device-pixel-ratio: 1.5)
   .borderBottom
     &::after

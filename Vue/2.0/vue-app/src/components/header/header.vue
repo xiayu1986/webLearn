@@ -67,9 +67,7 @@
 </template>
 
 <style rel="stylesheet/stylus" lang="stylus">
-  @import "../../common/stylus/icon.styl";
-  @import "../../common/stylus/base.styl";
-  @import "../../common/stylus/mixin.styl";
+  @import "../../common/stylus/index.styl";
   .header
     color: rgb(255, 255, 255)
     position :relative

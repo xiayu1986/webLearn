@@ -43,7 +43,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import "../../common/stylus/mixin.styl";
+  @import "../../common/stylus/index.styl";
   .star
     font-size: 0
     .star-item

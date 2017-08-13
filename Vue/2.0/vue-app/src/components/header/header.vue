@@ -29,6 +29,7 @@
     <div class="background">
       <img width="100%" height="100%" :src="seller.avatar" />
     </div>
+    <transition name="fade">
     <div v-show="detailShow" class="detail" @click="hideDetail">
       <div class="detail-wrapper clearfix">
         <div class="detail-main">
@@ -47,12 +48,21 @@
               <span class="text">{{seller.supports[index].description}}</span>
             </li>
           </ul>
+          <div class="title">
+            <div class="line"></div>
+            <div class="text">商家公告</div>
+            <div class="line"></div>
+          </div>
+          <div class="bulletin">
+            <p class="content">{{seller.bulletin}}</p>
+          </div>
         </div>
       </div>
       <div class="detail-close">
         <i class="icon-close"></i>
       </div>
     </div>
+    </transition>
   </div>
 </template>
 
@@ -175,7 +185,6 @@
       height :100%
       overflow :auto
       z-index: 100
-      background :rgba(7,17,27,0.8)
       left: 0
       top:0
       position :fixed
@@ -223,6 +232,27 @@
                 vertical-align :top
                 margin-right:6px
                 background-size:16px 16px
+                background-repeat:no-repeat
+                &.decrease
+                  bg-image('decrease_2')
+                &.discount
+                  bg-image('discount_2')
+                &.guarantee
+                  bg-image('guarantee_2')
+                &.invoice
+                  bg-image('invoice_2')
+                &.special
+                  bg-image('special_2')
+              .text
+                line-height:16px
+                font-size:12px
+          .bulletin
+            width: 80%
+            margin:0 auto
+            .content
+              padding:0 12px
+              line-height :24px
+              font-size:12px
       .detail-close
         width: 32px
         height :32px
@@ -230,7 +260,17 @@
         clear: both
         font-size :32px
         position :relative
-
+  .fade-enter-active,.fade-leave-active
+    transition:  1s all ease
+  .fade-enter-to,.fade-leao
+    opacity: 0
+    background :rgba(7,17,27,0)
+  .fade-enter-active
+    opacity: 1
+    background :rgba(7,17,27,0.8)
+  .fade-leave-active
+    opacity: 0
+    background :rgba(7,17,27,0)
 </style>
 
 <script type="es6">

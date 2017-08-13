@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-header :seller='seller'></v-header>
-    <div class="tab borderBottom">
+    <div class="tab">
       <div class="tab-item">
         <router-link to="/goods">商品</router-link>
       </div>
@@ -51,13 +51,14 @@
     height: 40px
     line-height: 40px
     text-align: center
-    borderBottom(rgba(7, 17, 27, 0.1))
     .tab-item
       flex: 1
       & > a
         display: block
         font-size: 14px
         color: rgb(77, 85, 93)
+        border-1px(rgb(77, 85, 93))
         &.active
           color: rgb(240, 20, 20)
+          border-1px(rgb(240, 20, 20))
 </style>

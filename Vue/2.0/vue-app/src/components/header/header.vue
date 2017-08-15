@@ -260,13 +260,7 @@
         position :relative
   .fade-enter-active,.fade-leave-active
     transition:  1s all ease
-  .fade-enter-to,.fade-leao
-    opacity: 0
-    background :rgba(7,17,27,0)
-  .fade-enter-active
-    opacity: 1
-    background :rgba(7,17,27,0.8)
-  .fade-leave-active
+  .fade-enter,.fade-leave-active
     opacity: 0
     background :rgba(7,17,27,0)
 </style>
